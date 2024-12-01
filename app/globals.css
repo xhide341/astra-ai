@@ -6,6 +6,10 @@
   --background: #ffffff;
   --foreground: #040615;
   --primary-color: #3D806E;
+  --secondary-color: #63BFAE;
+  --tertiary-color: #99D9C9;
+  --accent-color: #03392B;
+  --highlight-color: #F2F2F2;
   --obsidian: #040615;
 }
 

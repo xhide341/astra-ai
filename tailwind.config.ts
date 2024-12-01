@@ -23,7 +23,10 @@ export default {
       },
       backgroundImage: {
         'hero-gradient': 'radial-gradient(80% 50% at 50% -20%, var(--primary-color), var(--obsidian))'
-      }
+      },
+      boxShadow: {
+        glow: '0 0 20px var(--primary-color)',
+      },      
     },
   },
   plugins: [],

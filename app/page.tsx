@@ -1,20 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import PlayButton from "@/components/buttons/play-button";
-
+import GlowingButton from "@/components/buttons/glowing-button";
+import BenefitsSection from "@/components/BenefitsSection";
 
 export default function Home() {
   return (
     <div className="flex flex-col font-poppins w-full relative min-h-screen overflow-clip">
-      <header className="px-2 sm:px-4 flex items-center w-full p-2 justify-around z-10">
+      <header className="flex items-center justify-between mx-auto w-full max-w-7xl p-2 z-10">
         <Image src="/logo.png" alt="Aura" width={64} height={64} priority />
         <nav className="flex items-center gap-6 tracking-wide">
-          <Link href="/login">Login</Link>
-          <Link href="/register">
-            <button className="hover:text-gray-200 text-highlight font-medium py-2 px-4 rounded bg-primary">
-              Register
-            </button>
-          </Link>
+          <Link href="/login" className="text-highlight font-medium text-sm hover:text-gray-300">Login</Link>
+          <GlowingButton text="Register" />
         </nav>
       </header>
 
@@ -34,22 +30,23 @@ export default function Home() {
         </svg>
       </div>
 
-      <main className="z-10 px-2 sm:px-4 flex flex-col items-center justify-center w-full min-h-[calc(100vh-300px)]">
+      <main className="z-10 py-24 sm:py-32 lg:pb-40 flex flex-col items-center justify-center w-full px-6 lg:px-8">
         {/* hero section */}
-        <section className="flex items-center justify-between w-full max-w-7xl mx-auto">
-          <div className="flex flex-col gap-4">
-            <h1 className="text-4xl sm:text-5xl font-bold">Meet Aura</h1>
-            <p className="text-lg text-gray-600">
-              Your Academic Understanding and Resource Assistant
+        <section className="flex items-center justify-center w-full max-w-7xl mx-auto">
+          <div className="flex flex-col gap-4 items-center">
+            <h1 className="text-5xl/[1.25] sm:text-6xl/[1.25] font-bold text-highlight max-w-2xl text-center leading-normal">
+              AI-Powered Learning, Personalized for You
+            </h1>
+            <p className="text-lg text-gray-300 max-w-2xl text-center">
+              Your intelligent study companion that adapts to your learning style
+              <br />
+              and helps you master any subject
             </p>
             <div className="flex items-center gap-4">
-              <button className="hover:text-gray-200 text-highlight font-medium py-2 px-4 rounded bg-primary">
-                Get Started
-              </button>
-              <PlayButton text="Learn More" />
+              <GlowingButton text="Get started" />
             </div>
           </div>
-          <div className="hidden sm:block">
+          {/* <div className="hidden sm:block">
             <Image
               src="/logo.png"
               alt="Aura Logo"
@@ -58,10 +55,27 @@ export default function Home() {
               priority
               className="object-contain"
             />
-          </div>
+          </div> */}
         </section>
+
         {/* features section */}
-        <section className="flex items-center justify-between w-full max-w-7xl mx-auto">
+        <section className="flex flex-col items-center w-full max-w-7xl mx-auto mt-[30vh]">
+          <div className="flex flex-col gap-4">
+            <h1 className="text-3xl sm:text-4xl font-bold relative text-highlight text-center">
+              Empower your learning with <span className="text-secondary relative transition-all duration-300 hover:text-tertiary hover:shadow-tertiary">
+                Aura
+                <span className="absolute inset-x-0 bottom-0 h-px w-full bg-gradient-to-r from-secondary/0 via-secondary/90 to-secondary/0"></span>
+              </span>
+            </h1>
+            <p className="text-lg text-gray-300 max-w-3xl text-center mt-2">
+              AURA empowers users to learn more efficiently with personalized summaries, interactive notes, and AI-generated insights tailored to their needs.
+            </p>
+          </div>
+          <BenefitsSection />
+        </section>
+
+        {/* how it works section */}
+        <section className="flex items-center justify-between w-full max-w-7xl mx-auto mt-[30vh]">
           <div className="flex flex-col gap-4">
             <h1 className="text-4xl sm:text-5xl font-bold relative bg-gradient-to-r from-primary from-40% to-highlight bg-clip-text text-transparent">
               How can AURA
@@ -70,7 +84,11 @@ export default function Home() {
               <span className="bg-gradient-to-t from-primary from-20% to-highlight bg-clip-text text-transparent">ic journey?</span>
             </h1>
           </div>
+          <p className="text-lg text-gray-300 max-w-3xl text-center mt-2">
+            AURA illuminates learning by transforming complex topics into clear, digestible insights through AI-generated summaries and smart question suggestions. Its adaptive learning approach dynamically tailors study materials to individual learning styles, ensuring personalized and efficient knowledge acquisition.
+          </p>
         </section>
+
       </main>
 
       <footer className="">
