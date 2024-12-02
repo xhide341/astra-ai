@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import GlowingButton from "@/components/buttons/glowing-button";
-import BenefitsSection from "@/components/BenefitsSection";
+import BenefitsSection from "@/components/benefits-section";
+import FooterSection from "@/components/footer-section";
 
 export default function Home() {
   return (
@@ -30,9 +31,9 @@ export default function Home() {
         </svg>
       </div>
 
-      <main className="z-10 py-24 sm:py-32 lg:pb-40 flex flex-col items-center justify-center w-full px-6 lg:px-8">
+      <main className="z-10 sm:pt-32 pt-24 flex flex-col items-center justify-center w-full px-6 lg:px-8">
         {/* hero section */}
-        <section className="flex items-center justify-center w-full max-w-7xl mx-auto">
+        <section className="flex items-center justify-center w-full max-w-7xl mx-auto py-24">
           <div className="flex flex-col gap-4 items-center">
             <h1 className="text-5xl/[1.25] sm:text-6xl/[1.25] font-bold text-highlight max-w-2xl text-center leading-normal">
               AI-Powered Learning, Personalized for You
@@ -46,20 +47,10 @@ export default function Home() {
               <GlowingButton text="Get started" />
             </div>
           </div>
-          {/* <div className="hidden sm:block">
-            <Image
-              src="/logo.png"
-              alt="Aura Logo"
-              width={300}
-              height={300}
-              priority
-              className="object-contain"
-            />
-          </div> */}
         </section>
 
         {/* features section */}
-        <section className="flex flex-col items-center w-full max-w-7xl mx-auto mt-[30vh]">
+        <section className="flex flex-col items-center w-full max-w-7xl mx-auto py-24 relative">
           <div className="flex flex-col gap-4">
             <h1 className="text-3xl sm:text-4xl font-bold relative text-highlight text-center">
               Empower your learning with <span className="text-secondary relative transition-all duration-300 hover:text-tertiary hover:shadow-tertiary">
@@ -75,24 +66,23 @@ export default function Home() {
         </section>
 
         {/* how it works section */}
-        <section className="flex items-center justify-between w-full max-w-7xl mx-auto mt-[30vh]">
-          <div className="flex flex-col gap-4">
-            <h1 className="text-4xl sm:text-5xl font-bold relative bg-gradient-to-r from-primary from-40% to-highlight bg-clip-text text-transparent">
-              How can AURA
-              <span className="text-highlight absolute ml-2">brighten</span>
-              <br />your academ
-              <span className="bg-gradient-to-t from-primary from-20% to-highlight bg-clip-text text-transparent">ic journey?</span>
-            </h1>
+        <section className="mx-auto max-w-7xl py-24 lg:px-8">
+          <div className="grid items-start md:items-center justify-between gap-5 lg:grid-cols-2">
+            <div className="flex flex-col items-center">
+              <h1 className="text-3xl/[1.10] sm:text-4xl/[1.10] xl:text-5xl/[1.10] font-bold relative bg-gradient-to-r from-primary from-30% to-highlight bg-clip-text text-transparent tracking-tight">
+                How can AURA
+                <span className="text-highlight absolute ml-2">brighten</span>
+                <br />your academ
+                <span className="bg-gradient-to-t from-primary from-20% to-highlight bg-clip-text text-transparent">ic journey?</span>
+              </h1>
+            </div>
+            <p className="text-md xl:text-lg text-gray-300 lg:mt-2 text-center lg:text-left text-wrap">
+              AURA illuminates learning by transforming complex topics into clear, digestible insights through AI-generated summaries and smart question suggestions. Its adaptive learning approach dynamically tailors study materials to individual learning styles, ensuring personalized and efficient knowledge acquisition.
+            </p>
           </div>
-          <p className="text-lg text-gray-300 max-w-3xl text-center mt-2">
-            AURA illuminates learning by transforming complex topics into clear, digestible insights through AI-generated summaries and smart question suggestions. Its adaptive learning approach dynamically tailors study materials to individual learning styles, ensuring personalized and efficient knowledge acquisition.
-          </p>
         </section>
-
       </main>
-
-      <footer className="">
-      </footer>
+      <FooterSection />
     </div>
   );
 }
