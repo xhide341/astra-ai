@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import GlowingButton from "@/components/buttons/glowing-button";
-import BenefitsSection from "@/components/benefits-section";
-import FooterSection from "@/components/footer-section";
+import GlowingButton from "@/components/ui/buttons/glowing-button";
+import BenefitsSection from "@/components/(root)/benefits-section/benefits-section";
+import FooterSection from "@/components/(root)/footer-section";
 
 export default function Home() {
   return (
@@ -11,7 +11,7 @@ export default function Home() {
         <Image src="/logo.png" alt="Aura" width={64} height={64} priority />
         <nav className="flex items-center gap-6 tracking-wide">
           <Link href="/login" className="text-highlight font-medium text-sm hover:text-gray-300">Login</Link>
-          <GlowingButton text="Register" />
+          <GlowingButton text="Register" href="/register" ariaLabel="Navigate to register page" />
         </nav>
       </header>
 
@@ -44,7 +44,7 @@ export default function Home() {
               and helps you master any subject
             </p>
             <div className="flex items-center gap-4">
-              <GlowingButton text="Get started" />
+              <GlowingButton text="Get started" href="/register" ariaLabel="Navigate to register page" />
             </div>
           </div>
         </section>
@@ -72,8 +72,8 @@ export default function Home() {
               <h1 className="text-3xl/[1.10] sm:text-4xl/[1.10] xl:text-5xl/[1.10] font-bold relative bg-gradient-to-r from-primary from-30% to-highlight bg-clip-text text-transparent tracking-tight">
                 How can AURA
                 <span className="text-highlight absolute ml-2">brighten</span>
-                <br />your academ
-                <span className="bg-gradient-to-t from-primary from-20% to-highlight bg-clip-text text-transparent">ic journey?</span>
+                <br /> your acad
+                <span className="bg-gradient-to-t from-primary from-25% to-highlight bg-clip-text text-transparent">emic journey?</span>
               </h1>
             </div>
             <p className="text-md xl:text-lg text-gray-300 lg:mt-2 text-center lg:text-left text-wrap">

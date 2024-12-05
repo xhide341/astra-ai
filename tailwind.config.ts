@@ -1,33 +1,75 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 export default {
-  content: [
+    darkMode: ["class"],
+    content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        primary: "#3D806E",
-        secondary: "#63BFAE",
-        tertiary: "#99D9C9",
-        accent: "#03392B",
-        highlight: "#F2F2F2",
-        obsidian: "#040615",
-      },
-      fontFamily: {
-        poppins: "var(--font-poppins)",
-      },
-      backgroundImage: {
-        'hero-gradient': 'radial-gradient(80% 40% at 50% -20%, var(--primary-color), var(--obsidian))'
-      },
-      boxShadow: {
-        glow: '0 0 20px var(--primary-color)',
-      },
-    },
+  	extend: {
+  		colors: {
+  			background: 'hsl(var(--background))',
+  			foreground: 'hsl(var(--foreground))',
+  			primary: {
+  				DEFAULT: 'var(--primary)',
+  				foreground: 'var(--primary-foreground)'
+  			},
+  			secondary: {
+  				DEFAULT: 'var(--secondary)',
+  				foreground: 'var(--secondary-foreground)'
+  			},
+  			tertiary: '#99D9C9',
+  			accent: {
+  				DEFAULT: 'hsl(var(--accent))',
+  				foreground: 'hsl(var(--accent-foreground))'
+  			},
+  			highlight: '#F2F2F2',
+  			obsidian: '#040615',
+  			card: {
+  				DEFAULT: 'hsl(var(--card))',
+  				foreground: 'hsl(var(--card-foreground))'
+  			},
+  			popover: {
+  				DEFAULT: 'hsl(var(--popover))',
+  				foreground: 'hsl(var(--popover-foreground))'
+  			},
+  			muted: {
+  				DEFAULT: 'hsl(var(--muted))',
+  				foreground: 'hsl(var(--muted-foreground))'
+  			},
+  			destructive: {
+  				DEFAULT: 'hsl(var(--destructive))',
+  				foreground: 'hsl(var(--destructive-foreground))'
+  			},
+  			border: 'hsl(var(--border))',
+  			input: 'hsl(var(--input))',
+  			ring: 'hsl(var(--ring))',
+  			chart: {
+  				'1': 'hsl(var(--chart-1))',
+  				'2': 'hsl(var(--chart-2))',
+  				'3': 'hsl(var(--chart-3))',
+  				'4': 'hsl(var(--chart-4))',
+  				'5': 'hsl(var(--chart-5))'
+  			}
+  		},
+  		fontFamily: {
+  			poppins: 'var(--font-poppins)'
+  		},
+  		backgroundImage: {
+  			'hero-gradient': 'radial-gradient(80% 40% at 50% -20%, var(--primary-color), var(--obsidian))'
+  		},
+  		boxShadow: {
+  			glow: '0 0 20px var(--primary-color)'
+  		},
+  		borderRadius: {
+  			lg: 'var(--radius)',
+  			md: 'calc(var(--radius) - 2px)',
+  			sm: 'calc(var(--radius) - 4px)'
+  		}
+  	}
   },
-  plugins: [],
+  plugins: [animate],
 } satisfies Config;

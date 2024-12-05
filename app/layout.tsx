@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
-
-const poppins = localFont({
-  src: "./fonts/Poppins-Regular.ttf",
-  variable: "--font-poppins",
-  weight: "100",
-});
+import "@/app/globals.css";
+import { poppins } from "@/app/ui/fonts";
 
 export const metadata: Metadata = {
   title: "Create Next App",

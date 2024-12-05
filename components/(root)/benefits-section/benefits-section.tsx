@@ -1,6 +1,6 @@
 'use client';
 
-import { BenefitCard } from './cards/benefit-card';
+import { BenefitCard } from '@/components/(root)/benefits-section/benefit-card';
 import { 
   IconContext,
   GraduationCap, 
@@ -50,7 +50,7 @@ export default function BenefitsSection() {
       value={{
         size: 24,
         weight: "duotone",
-        color: "white",
+        color: "var(--primary-foreground)",
       }}
     >
       <div className="py-8 px-4 flex flex-col gap-6 max-w-screen-xl mx-auto relative">
