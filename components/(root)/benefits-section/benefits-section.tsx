@@ -4,7 +4,7 @@ import { BenefitCard } from '@/components/(root)/benefits-section/benefit-card';
 import { 
   IconContext,
   GraduationCap, 
-  BookOpen, 
+  Notebook, 
   PencilSimple, 
   ChatCircleDots, 
   DeviceMobile, 
@@ -19,7 +19,7 @@ export default function BenefitsSection() {
       description: "Tailor your learning journey with content that adapts to your needs."
     },
     {
-      icon: BookOpen,
+      icon: Notebook,
       title: "Effortless Summaries",
       description: "Get concise and clear summaries of complex topics for efficient learning."
     },
@@ -49,7 +49,7 @@ export default function BenefitsSection() {
     <IconContext.Provider
       value={{
         size: 24,
-        weight: "duotone",
+        weight: "fill",
         color: "var(--primary-foreground)",
       }}
     >

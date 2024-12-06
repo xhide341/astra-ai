@@ -55,7 +55,7 @@ export default function Home() {
             <h1 className="text-3xl sm:text-4xl font-bold relative text-highlight text-center">
               Empower your learning with <span className="text-secondary relative transition-all duration-300 hover:text-tertiary hover:shadow-tertiary">
                 Aura
-                <span className="absolute inset-x-0 bottom-0 h-px w-full bg-gradient-to-r from-secondary/0 via-secondary/90 to-secondary/0"></span>
+                <span className="absolute inset-x-0 bottom-0 h-px w-full bg-gradient-to-r from-teal-400/0 via-teal-400/90 to-teal-400/0"></span>
               </span>
             </h1>
             <p className="text-lg text-gray-300 max-w-3xl text-center mt-2">
@@ -69,11 +69,11 @@ export default function Home() {
         <section className="mx-auto max-w-7xl py-24 lg:px-8">
           <div className="grid items-start md:items-center justify-between gap-5 lg:grid-cols-2">
             <div className="flex flex-col items-center">
-              <h1 className="text-3xl/[1.10] sm:text-4xl/[1.10] xl:text-5xl/[1.10] font-bold relative bg-gradient-to-r from-primary from-30% to-highlight bg-clip-text text-transparent tracking-tight">
+              <h1 className="text-3xl/[1.10] sm:text-4xl/[1.10] xl:text-5xl/[1.10] font-bold relative bg-gradient-to-r from-primary from-50% to-highlight bg-clip-text text-transparent tracking-tight">
                 How can AURA
                 <span className="text-highlight absolute ml-2">brighten</span>
-                <br /> your acad
-                <span className="bg-gradient-to-t from-primary from-25% to-highlight bg-clip-text text-transparent">emic journey?</span>
+                <br /> your academ
+                <span className="bg-gradient-to-t from-primary from-25% to-highlight bg-clip-text text-transparent">ic journey?</span>
               </h1>
             </div>
             <p className="text-md xl:text-lg text-gray-300 lg:mt-2 text-center lg:text-left text-wrap">
