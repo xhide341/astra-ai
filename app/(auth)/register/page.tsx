@@ -9,6 +9,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { SocialLoginButtons } from "@/components/auth/social-login-buttons";
+import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export default function RegisterPage() {
@@ -76,6 +78,21 @@ export default function RegisterPage() {
           <Button className="w-full" type="submit">
             Create account
           </Button>
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+            <div className="mt-6">
+              <SocialLoginButtons />
+            </div>
+          </div>
           <div className="text-center text-sm">
             <Link 
               className="text-primary hover:underline"
