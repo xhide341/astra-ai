@@ -9,6 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { Checkbox } from "@/components/ui/checkbox"
 
 export default function LoginPage() {
   return (
@@ -40,12 +41,10 @@ export default function LoginPage() {
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <input
-                  id="remember"
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-primary-700 bg-primary-800 text-primary focus:ring-primary focus:ring-offset-primary-900"
-                />
-                <Label htmlFor="remember">Remember me</Label>
+                <Checkbox id="remember" />
+                <Label htmlFor="remember" className="text-sm leading-none">
+                  Remember me
+                </Label>
               </div>
               <Link 
                 className="text-sm text-primary hover:underline"
