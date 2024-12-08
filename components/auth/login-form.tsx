@@ -38,8 +38,8 @@ export const LoginForm = () => {
   });
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
-    setError(undefined);
-    setSuccess(undefined);
+    setError("");
+    setSuccess("");
     
     startTransition(async () => {
       const response = await login(values);
@@ -47,6 +47,14 @@ export const LoginForm = () => {
       if (response.error) {
         // Handle field-specific errors through react-hook-form
         const fieldErrors = response.error;
+        
+        // Add this to handle _form errors
+        if (fieldErrors._form) {
+          setError(fieldErrors._form[0]);
+          return;
+        }
+
+        // Handle other field errors
         for (const [field, messages] of Object.entries(fieldErrors)) {
           form.setError(field as keyof typeof values, {
             message: messages?.[0]
@@ -159,7 +167,7 @@ export const LoginForm = () => {
         <div className="mt-4 text-center text-sm">
           <Link 
             className="text-primary hover:underline"
-            href="/register"
+            href="/auth/register"
           >
             Don&apos;t have an account? Sign up
           </Link>

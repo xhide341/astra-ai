@@ -1,7 +1,7 @@
 import { CheckCircle2 } from "lucide-react";
 
 interface FormSuccessProps {
-  message?: string;
+  message?: string | undefined;
 }
 
 export const FormSuccess = ({ message }: FormSuccessProps) => {

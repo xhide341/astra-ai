@@ -36,8 +36,8 @@ export const RegisterForm = () => {
   });
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
-    setError(undefined);
-    setSuccess(undefined);
+    setError("");
+    setSuccess("");
     
     startTransition(async () => {
       const response = await register(values);
@@ -127,7 +127,7 @@ export const RegisterForm = () => {
         <div className="mt-4 text-center text-sm">
           <Link 
             className="text-primary hover:underline"
-            href="/login"
+            href="/auth/login"
           >
             Already have an account?
           </Link>

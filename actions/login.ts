@@ -31,28 +31,28 @@ export const login = async (
 
     try {
         await signIn("credentials", { 
-          email, 
-          password, 
-          redirectTo: DEFAULT_LOGIN_REDIRECT 
+            email,
+            password,
+            redirectTo: DEFAULT_LOGIN_REDIRECT
         });
         
         return { success: "Logged in successfully!" };
     } catch (error) {
         if (error instanceof AuthError) {
-          switch (error.type) {
-            case "CredentialsSignin":
-              return { 
-                error: { 
-                  _form: ["Invalid email or password"]
-                } 
-              };
-            default:
-              return { 
-                error: { 
-                  _form: ["An unexpected error occurred. Please try again."]
-                } 
-              };
-          }
+            switch (error.type) {
+                case "CredentialsSignin":
+                    return { 
+                        error: { 
+                            _form: ["Invalid email or password"]
+                        } 
+                    };
+                default:
+                    return { 
+                        error: { 
+                            _form: ["Something went wrong with authentication"]
+                        } 
+                    };
+            }
         }
         throw error;
     }
