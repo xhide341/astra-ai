@@ -21,7 +21,22 @@ export const {
     signOut
 } = NextAuth(
     {
+        pages: {
+            signIn: "/auth/login",
+            error: "/auth/error",
+        },
+        events: {
+            async linkAccount({ user }) {
+                await db.user.update({
+                    where: { id: user.id },
+                    data: {
+                        emailVerified: new Date()
+                    }
+                });
+            }
+        },
         callbacks: {
+            // Transform JWT data into Session data
             async session({ session, token }) {
                 if (token.sub && session.user) {
                     session.user.id = token.sub;
@@ -33,6 +48,7 @@ export const {
 
                 return session;
             },
+            // Enhance JWT token with additional data
             async jwt ({ token }) {
                 if (!token.sub) return token;
 
