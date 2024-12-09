@@ -10,8 +10,8 @@ export default function Home() {
       <header className="flex items-center justify-between mx-auto w-full max-w-7xl p-2 z-10">
         <Image src="/logo.png" alt="Aura" width={64} height={64} priority />
         <nav className="flex items-center gap-6 tracking-wide">
-          <Link href="/login" className="text-highlight font-medium text-sm hover:text-gray-300">Login</Link>
-          <GlowingButton text="Register" href="/register" ariaLabel="Navigate to register page" />
+          <Link href="/auth/login" className="text-highlight font-medium text-sm hover:text-gray-300">Login</Link>
+          <GlowingButton text="Register" href="/auth/register" ariaLabel="Navigate to register page" />
         </nav>
       </header>
 

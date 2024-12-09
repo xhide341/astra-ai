@@ -22,11 +22,14 @@ import {
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { SocialLoginButtons } from "@/components/auth/social-login-buttons";
+import { useSearchParams } from "next/navigation";
 
 export const LoginForm = () => {
+  const searchParams = useSearchParams();
+  const urlError = searchParams.get("error") === "OAuthAccountNotLinked" ? "Email already linked to another provider" : "";
   const [isPending, startTransition] = useTransition();
   const [success, setSuccess] = useState<string | undefined>("");
-  const [error, setError] = useState<string | undefined>("");
+  const [error, setError] = useState<string | undefined>(urlError || "");
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -48,13 +51,13 @@ export const LoginForm = () => {
         // Handle field-specific errors through react-hook-form
         const fieldErrors = response.error;
         
-        // Add this to handle _form errors
+        // Handle _form errors
         if (fieldErrors._form) {
           setError(fieldErrors._form[0]);
           return;
         }
 
-        // Handle other field errors
+        // Handle field errors
         for (const [field, messages] of Object.entries(fieldErrors)) {
           form.setError(field as keyof typeof values, {
             message: messages?.[0]
