@@ -7,6 +7,7 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
 import { generateVerificationToken } from "@/lib/verification-token";
 import { getUserByEmail } from "@/data/user";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export type LoginResponse = {
   error?: { 
@@ -41,6 +42,7 @@ export const login = async (
 
     if (!existingUser.emailVerified) {
         const verificationToken = await generateVerificationToken(existingUser.email);
+        await sendVerificationEmail(existingUser.email, verificationToken);
         return {
             success: "Confirmation email sent!",
         };
