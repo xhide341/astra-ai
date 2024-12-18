@@ -5,9 +5,12 @@ import bcryptjs from "bcryptjs";
 import { registerSchema } from "@/schemas";
 import db from "@/lib/db";
 import { getUserByEmail } from "@/data/user";
+import { generateVerificationToken } from "@/lib/verification-token";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export type RegisterResponse = {
   error?: { 
+    name?: string[];
     email?: string[];
     password?: string[];
   } | undefined;
@@ -25,7 +28,7 @@ export const register = async (
         };
     }
 
-    const { email, password } = validatedFields.data;
+    const { name, email, password } = validatedFields.data;
     const hashedPassword = await bcryptjs.hash(password, 10);
 
     const existingUser = await getUserByEmail(email);
@@ -37,12 +40,14 @@ export const register = async (
     }
 
     await db.user.create({
-      data: { email, password: hashedPassword },
+      data: { name, email, password: hashedPassword },
     });
 
     // TODO: Send verification token to email
+    const verificationToken = await generateVerificationToken(email);
+    await sendVerificationEmail(email, verificationToken);
 
     return {
-      success: "User created!",
+      success: "Confirmation email sent!",
     }
 }

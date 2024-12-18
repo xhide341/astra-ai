@@ -26,11 +26,23 @@ export const generateVerificationToken = async (identifier: string): Promise<str
   const token = crypto.randomBytes(32).toString('hex');
   const expires = new Date(Date.now() + 1000 * 60 * 60 * 24); // 24 hours
 
-  const existingToken = await getVerificationTokenByIdentifier(identifier, token);
-  if (existingToken) {
-    return generateVerificationToken(identifier);
+  try {
+    await db.verificationToken.deleteMany({
+      where: {
+        identifier
+      }
+    });
+  } catch (error) {
+    console.error("Error deleting existing tokens:", error);
   }
 
-  await createVerificationToken(identifier, token, expires);
-  return token;
+  const newToken = await db.verificationToken.create({
+    data: {
+      identifier,
+      token,
+      expires
+    },
+  });
+
+  return newToken.token;
 };

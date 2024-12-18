@@ -36,6 +36,20 @@ export const {
             }
         },
         callbacks: {
+            async signIn({ user, account }) {
+                // Allow OAuth without email verification
+                if (account?.provider !== "credentials") {
+                    return true;
+                }
+
+                // Prevent sign in if email is not verified
+                const existingUser = await getUserById(user.id!);
+                if (!existingUser?.emailVerified) return false;
+
+                // TODO: Add 2FA
+
+                return true;
+            },
             // Transform JWT data into Session data
             async session({ session, token }) {
                 if (token.sub && session.user) {

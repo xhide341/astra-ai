@@ -5,6 +5,8 @@ import { loginSchema } from "@/schemas";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
+import { generateVerificationToken } from "@/lib/verification-token";
+import { getUserByEmail } from "@/data/user";
 
 export type LoginResponse = {
   error?: { 
@@ -28,6 +30,21 @@ export const login = async (
     }
 
     const { email, password } = validatedFields.data;
+
+    const existingUser = await getUserByEmail(email);
+
+    if (!existingUser || !existingUser.email || !existingUser.password) {
+        return {
+            error: { _form: ["User not found"] },
+        };
+    }
+
+    if (!existingUser.emailVerified) {
+        const verificationToken = await generateVerificationToken(existingUser.email);
+        return {
+            success: "Confirmation email sent!",
+        };
+    }
 
     try {
         await signIn("credentials", { 
