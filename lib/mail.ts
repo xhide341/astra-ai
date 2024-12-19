@@ -15,7 +15,7 @@ export const sendVerificationEmail = async (
     const confirmLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/new-verification?token=${token}`;
 
     await resend.emails.send({
-        from: "YourApp <onboarding@resend.dev>",
+        from: "AURA Bot <onboarding@resend.dev>",
         to: email,
         subject: "Confirm your email",
         react: SendVerificationEmail({ confirmLink })
@@ -32,11 +32,9 @@ export const sendPasswordResetEmail = async (
     const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/reset-password?token=${token}`;
 
     await resend.emails.send({
-        from: "YourApp <onboarding@resend.dev>",
+        from: "AURA Bot <onboarding@resend.dev>",
         to: email,
         subject: "Reset your password",
         react: PasswordResetEmail({ resetLink })
     });
 }
-
-
