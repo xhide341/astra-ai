@@ -1,25 +1,25 @@
 import { Html, Head, Body, Container, Text, Link, Preview, Section, Heading } from '@react-email/components';
 
-interface EmailTemplateProps {
-  confirmLink: string;
+interface PasswordResetEmailProps {
+  resetLink: string;
 }
 
-export const EmailTemplate = ({ confirmLink }: EmailTemplateProps) => (
+export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
   <Html>
     <Head />
-    <Preview>Verify your email address to get started</Preview>
+    <Preview>Reset your password</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Welcome! 👋</Heading>
+        <Heading style={h1}>Reset Your Password</Heading>
         <Section style={section}>
           <Text style={text}>
-            Thanks for signing up! Please verify your email address to get started.
+            Click the button below to reset your password. If you didn&apos;t request this, you can safely ignore this email.
           </Text>
-          <Link style={button} href={confirmLink}>
-            Verify Email Address
+          <Link style={button} href={resetLink}>
+            Reset Password
           </Link>
           <Text style={footer}>
-            If you didn&apos;t request this email, you can safely ignore it.
+            This link will expire in 1 hour.
           </Text>
         </Section>
       </Container>
@@ -84,4 +84,4 @@ const footer = {
   lineHeight: '24px',
   textAlign: 'center' as const,
   marginTop: '32px',
-};
+}; 

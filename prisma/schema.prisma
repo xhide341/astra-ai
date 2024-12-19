@@ -51,7 +51,7 @@ model Account {
 model VerificationToken {
   identifier String
   token      String   @unique
-  expires    DateTime
+  expiresAt  DateTime
 
   @@unique([identifier, token])
   @@map("verification_tokens")
