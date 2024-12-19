@@ -136,7 +136,7 @@ export const LoginForm = () => {
             )}
           />
           <Link
-            href="/auth/forgot-password"
+            href="/auth/reset-password"
             className="text-sm text-primary hover:underline"
           >
             Forgot password?

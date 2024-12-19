@@ -6,8 +6,10 @@ import { useSearchParams } from "next/navigation";
 import { newVerification } from "@/actions/new-verification";
 import { Card, CardHeader, CardDescription, CardContent } from "@/components/ui/card";
 import { CheckCircle2, XCircle } from "lucide-react";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 
-export function NewVerificationForm() {
+export const NewVerificationForm = () => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const searchParams = useSearchParams();
@@ -57,16 +59,16 @@ export function NewVerificationForm() {
         {success && (
           <div className="flex flex-col items-center gap-2">
             <CheckCircle2 className="h-8 w-8 text-emerald-500" />
-            <p className="text-sm text-muted-foreground">{success}</p>
+            <FormSuccess message={success} />
           </div>
         )}
         {error && (
           <div className="flex flex-col items-center gap-2">
             <XCircle className="h-8 w-8 text-destructive" />
-            <p className="text-sm text-muted-foreground">{error}</p>
+            <FormError message={error} />
           </div>
         )}
       </CardContent>
     </Card>
   );
-} 
+}
