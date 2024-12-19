@@ -29,12 +29,12 @@ export const sendPasswordResetEmail = async (
     const user = await getUserByEmail(email);
     if (!user) return;
 
-    const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/reset-password?token=${token}`;
+    const newPasswordLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/new-password?token=${token}`;
 
     await resend.emails.send({
         from: "AURA Bot <onboarding@resend.dev>",
         to: email,
         subject: "Reset your password",
-        react: PasswordResetEmail({ resetLink })
+        react: PasswordResetEmail({ newPasswordLink })
     });
 }

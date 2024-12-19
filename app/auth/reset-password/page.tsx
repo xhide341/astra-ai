@@ -5,8 +5,8 @@ const ResetPasswordPage = () => {
   return (
     <div className="flex items-center justify-center">
       <AuthCard
-        title="Create an account"
-        description="Enter your details to create your account"
+        title="Enter your email"
+        description="Enter your email to reset your password"
       >
         <ResetPasswordForm />
       </AuthCard>
