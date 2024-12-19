@@ -50,7 +50,7 @@ export const getVerificationTokenByToken = async (token: string) => {
 
 export const generateVerificationToken = async (identifier: string): Promise<string> => {
   const token = crypto.randomBytes(32).toString('hex');
-  const expires = new Date(Date.now() + 1000 * 60 * 60 * 24); // 24 hours
+  const expires = new Date(Date.now() + 1000 * 60 * 60 * 1); // 1 hour
 
   try {
     await db.verificationToken.deleteMany({
