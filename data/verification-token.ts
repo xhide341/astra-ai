@@ -2,32 +2,50 @@ import db from "@/lib/db";
 import crypto from "crypto";
 
 export const createVerificationToken = async (identifier: string, token: string, expires: Date) => {
-  await db.verificationToken.create({
-    data: {
-      identifier,
-      token,
-      expires
+  try {
+    await db.verificationToken.create({
+      data: {
+        identifier,
+        token,
+        expires
     },
-  });
+    });
+  } catch (error) {
+    console.error("Error creating verification token:", error);
+  }
 };
 
 export const getVerificationTokenByIdentifier = async (identifier: string, token: string) => {
-  return await db.verificationToken.findUnique({
-    where: { 
-      identifier_token: {
-        identifier,
-        token
+  try {
+    const verificationToken = await db.verificationToken.findUnique({
+      where: { 
+        identifier_token: {
+          identifier,
+          token
+        }
       }
-    },
-  });
+    });
+
+    return verificationToken;
+  } catch (error) {
+    console.error("Error getting verification token:", error);
+    return null;
+  }
 };
 
 export const getVerificationTokenByToken = async (token: string) => {
-  return await db.verificationToken.findFirst({
-    where: {
-      token: token
-    }
-  });
+  try {
+    const verificationToken = await db.verificationToken.findFirst({
+      where: {
+        token: token
+      }
+    });
+
+    return verificationToken;
+  } catch (error) {
+    console.error("Error getting verification token:", error);
+    return null;
+  }
 };
 
 export const generateVerificationToken = async (identifier: string): Promise<string> => {

@@ -2,7 +2,7 @@
 
 import db from "@/lib/db";
 import { getUserByEmail } from "@/data/user";
-import { getVerificationTokenByToken } from "@/lib/verification-token";
+import { getVerificationTokenByToken } from "@/data/verification-token";
 
 export const newVerification = async (token: string) => {
   // Step 1: Find the verification token in the database

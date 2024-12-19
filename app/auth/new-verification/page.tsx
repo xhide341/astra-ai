@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { VerificationForm } from "@/app/auth/new-verification/verification-form";
+import { NewVerificationForm } from "@/components/auth/new-verification-form";
 import { BeatLoader } from "react-spinners";
 
 export default function NewVerificationPage() {
@@ -13,7 +13,7 @@ export default function NewVerificationPage() {
             </div>
           }
         >
-          <VerificationForm />
+          <NewVerificationForm />
         </Suspense>
       </div>
     </div>

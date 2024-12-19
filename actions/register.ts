@@ -5,7 +5,7 @@ import bcryptjs from "bcryptjs";
 import { registerSchema } from "@/schemas";
 import db from "@/lib/db";
 import { getUserByEmail } from "@/data/user";
-import { generateVerificationToken } from "@/lib/verification-token";
+import { generateVerificationToken } from "@/data/verification-token";
 import { sendVerificationEmail } from "@/lib/mail";
 
 export type RegisterResponse = {

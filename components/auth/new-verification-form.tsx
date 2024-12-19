@@ -7,7 +7,7 @@ import { newVerification } from "@/actions/new-verification";
 import { Card, CardHeader, CardDescription, CardContent } from "@/components/ui/card";
 import { CheckCircle2, XCircle } from "lucide-react";
 
-export function VerificationForm() {
+export function NewVerificationForm() {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const searchParams = useSearchParams();
