@@ -50,10 +50,11 @@ model Account {
 
 model VerificationToken {
   identifier String
-  token      String
+  token      String   @unique
   expires    DateTime
 
-  @@id([identifier, token])
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }
 
 model PasswordResetToken {
@@ -63,4 +64,5 @@ model PasswordResetToken {
   expiresAt DateTime
 
   @@unique([email, token])
+  @@map("password_reset_tokens")
 }
