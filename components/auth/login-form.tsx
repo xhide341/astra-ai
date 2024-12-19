@@ -138,6 +138,7 @@ export const LoginForm = () => {
           <Link
             href="/auth/reset-password"
             className="text-sm text-primary hover:underline"
+            aria-label="Reset your password"
           >
             Forgot password?
           </Link>
