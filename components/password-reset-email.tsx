@@ -1,10 +1,10 @@
 import { Html, Head, Body, Container, Text, Link, Preview, Section, Heading } from '@react-email/components';
 
 interface PasswordResetEmailProps {
-  resetLink: string;
+  newPasswordLink: string;
 }
 
-export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
+export const PasswordResetEmail = ({ newPasswordLink }: PasswordResetEmailProps) => (
   <Html>
     <Head />
     <Preview>Reset your password</Preview>
@@ -15,7 +15,7 @@ export const PasswordResetEmail = ({ resetLink }: PasswordResetEmailProps) => (
           <Text style={text}>
             Click the button below to reset your password. If you didn&apos;t request this, you can safely ignore this email.
           </Text>
-          <Link style={button} href={resetLink}>
+          <Link style={button} href={newPasswordLink}>
             Reset Password
           </Link>
           <Text style={footer}>

@@ -6,6 +6,7 @@ import * as z from "zod";
 import { newPasswordSchema } from "@/schemas";
 import { newPassword } from "@/actions/new-password";
 import { useTransition, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
@@ -22,6 +23,9 @@ import {
 import Link from "next/link";
 
 export const NewPasswordForm = () => {
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
   const [isPending, startTransition] = useTransition();
   const [success, setSuccess] = useState<string | undefined>("");
   const [error, setError] = useState<string | undefined>("");
@@ -37,11 +41,9 @@ export const NewPasswordForm = () => {
   async function onSubmit(values: z.infer<typeof newPasswordSchema>) {
     setError("");
     setSuccess("");
-
-    console.log(values);
     
     startTransition(async () => {
-      const response = await newPassword(values);
+      const response = await newPassword(values, token);
       
       if (response.error) {
         setError(response.error);
@@ -67,7 +69,7 @@ export const NewPasswordForm = () => {
                   {...field}                  
                   id="password"
                   type="password"
-                  placeholder="Enter your new password"
+                  placeholder=""
                   disabled={isPending}
                 />
               </FormControl>
@@ -87,7 +89,7 @@ export const NewPasswordForm = () => {
                   {...field}                  
                   id="confirmPassword"
                   type="password"
-                  placeholder="Confirm your new password"
+                  placeholder=""
                   disabled={isPending}
                 />
               </FormControl>
