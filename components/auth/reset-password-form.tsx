@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { resetPasswordSchema } from "@/schemas";
 import { resetPassword } from "@/actions/reset-password";
+import { useTransition, useState } from "react";
+
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
-import { useTransition, useState } from "react";
-
 import {
   Form,
   FormControl,
