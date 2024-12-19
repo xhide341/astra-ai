@@ -22,6 +22,14 @@ export const getVerificationTokenByIdentifier = async (identifier: string, token
   });
 };
 
+export const getVerificationTokenByToken = async (token: string) => {
+  return await db.verificationToken.findFirst({
+    where: {
+      token: token
+    }
+  });
+};
+
 export const generateVerificationToken = async (identifier: string): Promise<string> => {
   const token = crypto.randomBytes(32).toString('hex');
   const expires = new Date(Date.now() + 1000 * 60 * 60 * 24); // 24 hours
