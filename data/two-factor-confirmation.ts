@@ -14,4 +14,3 @@ export const getTwoFactorConfirmationByUserId = async (userId: string) => {
         throw new Error("Failed to get two factor confirmation by user id!");
     }
 }
-

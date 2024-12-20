@@ -20,7 +20,7 @@ export const newVerification = async (token: string) => {
   }
 
   // Step 3: Find the user associated with the token's email
-  const existingUser = await getUserByEmail(existingToken.identifier);
+  const existingUser = await getUserByEmail(existingToken.email);
 
   if (!existingUser) {
     return { error: "Email does not exist!" };
@@ -31,17 +31,14 @@ export const newVerification = async (token: string) => {
     where: { id: existingUser.id },
     data: { 
       emailVerified: new Date(),
-      email: existingToken.identifier,
+      email: existingToken.email,
     }
   });
 
   // Step 5: Clean up by removing the used verification token
   await db.verificationToken.delete({
     where: { 
-      identifier_token: {
-        identifier: existingToken.identifier,
-        token: existingToken.token
-      }
+      id: existingToken.id
     }
   });
 

@@ -5,9 +5,12 @@ import { loginSchema } from "@/schemas";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
-import { generateVerificationToken } from "@/lib/tokens";
+import { generateVerificationToken,
+         generateTwoFactorToken } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
-import { sendVerificationEmail } from "@/lib/mail";
+import { sendVerificationEmail,
+         sendTwoFactorEmail } from "@/lib/mail";
+import * as bcryptjs from "bcryptjs";
 
 export type LoginResponse = {
   error?: { 
@@ -17,6 +20,7 @@ export type LoginResponse = {
     _form?: string[];
   } | undefined;
   success?: string;
+  twoFactor?: boolean;
 }
 
 export const login = async (
@@ -47,6 +51,20 @@ export const login = async (
             success: "Confirmation email sent!",
         };
     }
+        
+    const passwordsMatch = await bcryptjs.compare(password, existingUser.password);
+    if (!passwordsMatch) {
+        return { error: { password: ["Invalid credentials"] } };
+    }  
+
+    if (existingUser.isTwoFactorEnabled && existingUser.email) {
+        console.log("Starting 2FA flow for user:", existingUser.email);
+    
+        const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+        await sendTwoFactorEmail(twoFactorToken.email, twoFactorToken.token);
+
+        return { twoFactor: true };
+    }
 
     try {
         await signIn("credentials", { 
@@ -62,13 +80,13 @@ export const login = async (
                 case "CredentialsSignin":
                     return { 
                         error: { 
-                            _form: ["Invalid email or password"]
+                            _form: ["Invalid credentials"]
                         } 
                     };
                 default:
                     return { 
                         error: { 
-                            _form: ["Something went wrong with authentication"]
+                            _form: ["Something went wrong"]
                         } 
                     };
             }

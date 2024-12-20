@@ -64,18 +64,20 @@ export const generatePasswordResetToken = async (email: string) => {
 }
 
 export const generateTwoFactorToken = async (email: string) => {
-    const token = crypto.randomBytes(32).toString('hex');
-    const expires = new Date(Date.now() + 1000 * 60 * 60 * 1); // 1 hour
+    const token = Math.floor(100000 + Math.random() * 900000).toString();
+    const expires = new Date(Date.now() + 1000 * 60 * 60 * 1); // 1 hour  
 
     try {
+        // Delete any existing tokens for this email
         const existingToken = await getTwoFactorTokenByEmail(email);
 
         if (existingToken) {
             await db.twoFactorToken.delete({
-                where: { id : existingToken.id }
+                where: { id: existingToken.id }
             });
         }
 
+        // Create new token
         const twoFactorToken = await db.twoFactorToken.create({
             data: {
                 email,
@@ -84,10 +86,17 @@ export const generateTwoFactorToken = async (email: string) => {
             }
         });
 
+        console.log("Generated 2FA token:", {
+            email,
+            token,
+            expiresAt: expires
+        });
+
+        console.log("Two factor token:", twoFactorToken);
         return twoFactorToken;
     } catch (error) {
-        console.error("Error generating two factor token:", error);
-        throw error;
+        console.error("Error generating 2FA token:", error);
+        throw new Error("Failed to generate 2FA token");
     }
 }
 
