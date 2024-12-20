@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { useSearchParams } from "next/navigation";
 import { newVerification } from "@/actions/new-verification";
-import { CheckCircle2, XCircle } from "lucide-react";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 
@@ -50,16 +49,10 @@ export const NewVerificationForm = () => {
         </div>
       )}
       {success && (
-        <div className="flex flex-col items-center gap-2">
-          <CheckCircle2 className="h-8 w-8 text-emerald-500" />
-          <FormSuccess message={success} />
-        </div>
+        <FormSuccess message={success} />
       )}
       {error && (
-        <div className="flex flex-col items-center gap-2">
-          <XCircle className="h-8 w-8 text-destructive" />
-          <FormError message={error} />
-        </div>
+        <FormError message={error} />
       )}
     </div>
   );
