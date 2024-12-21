@@ -6,7 +6,7 @@ import authConfig from "./auth.config";
 import { getUserById } from "@/data/user";
 import { UserRole } from "@prisma/client";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
-
+import { isDisposable } from "@/blocklist";
 
 declare module "next-auth" {
     interface Session {
@@ -45,6 +45,12 @@ export const {
                 }
 
                 const existingUser = await getUserById(user.id!);
+                
+                // Check if the email is disposable
+                const isDisposableEmail = await isDisposable(user.email!);
+                if (isDisposableEmail) {
+                    return false;
+                }
                 
                 // First check email verification
                 if (!existingUser?.emailVerified) return false;

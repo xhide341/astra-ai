@@ -7,6 +7,8 @@ import db from "@/lib/db";
 import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
+import { isDisposable } from "@/blocklist";
+
 
 export type RegisterResponse = {
   error?: { 
@@ -32,6 +34,14 @@ export const register = async (
     const hashedPassword = await bcryptjs.hash(password, 10);
 
     const existingUser = await getUserByEmail(email);
+
+    const isDisposableEmail = await isDisposable(email);
+    if (isDisposableEmail) {
+      return {
+        error: { email: ["Disposable email addresses are not allowed"] },
+      };
+    }
+
 
     if (existingUser) {
       return {

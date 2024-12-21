@@ -14,7 +14,7 @@ import * as bcryptjs from "bcryptjs";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import db from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
-
+import { isDisposable } from "@/blocklist";
 
 export type LoginResponse = {
   error?: { 
@@ -42,6 +42,11 @@ export const login = async (
     const { email, password, code } = validatedFields.data;
 
     const existingUser = await getUserByEmail(email);
+
+    const isDisposableEmail = await isDisposable(email);
+    if (isDisposableEmail) {
+        return { error: { email: ["Disposable email addresses are not allowed"] } };
+    }
 
     if (!existingUser || !existingUser.email || !existingUser.password) {
         return {
