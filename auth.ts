@@ -50,25 +50,24 @@ export const {
                 if (!existingUser?.emailVerified) return false;
 
                 // If 2FA is not enabled, allow sign in
-                if (!existingUser.isTwoFactorEnabled) {
-                    return true;
-                }
+                if (existingUser.isTwoFactorEnabled) {
 
-                // If 2FA is enabled, check for confirmation
-                const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
-                
-                if (!twoFactorConfirmation) {
-                    return false;  // Block sign in until 2FA is confirmed
-                }
+                    // Check for confirmation
+                    const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
 
-                // Clean up the 2FA confirmation
-                try {
-                    await db.twoFactorConfirmation.delete({
-                        where: { id: twoFactorConfirmation.id }
-                    });
-                } catch (error) {
-                    console.error("Error deleting 2FA confirmation:", error);
-                    return false;
+                    if (!twoFactorConfirmation) {
+                        return false;  // Block sign in until 2FA is confirmed
+                    }
+
+                    // Clean up the 2FA confirmation
+                    try {
+                        await db.twoFactorConfirmation.delete({
+                            where: { id: twoFactorConfirmation.id }
+                        });
+                    } catch (error) {
+                        console.error("Error deleting 2FA confirmation:", error);
+                        return false;
+                    }
                 }
 
                 return true;
