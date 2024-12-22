@@ -51,50 +51,45 @@ export const LoginForm = () => {
     setError("");
     setSuccess("");
     
-    try {
-      startTransition(async () => {
-        try {
-          console.log("Submitting form with values:", {
-            ...values,
-            password: "REDACTED" // Don't log passwords
-          });
+    startTransition(async () => {
+      try {
+        console.log("Submitting form with values:", {
+          ...values,
+          password: "REDACTED" // Don't log passwords
+        });
 
-          const response = await login(values);
-          console.log("Login response:", response);
-          
-          if (response.error) {
-            if (response.error._form) {
-              setError(response.error._form[0]);
-              return;
-            }
-            // Handle field errors
-            for (const [field, messages] of Object.entries(response.error)) {
-              form.setError(field as keyof typeof values, {
-                message: messages?.[0]
-              });
-            }
+        const response = await login(values);
+        console.log("Login response:", response);
+        
+        if (response.error) {
+          if (response.error._form) {
+            setError(response.error._form[0]);
             return;
           }
-
-          if (response.twoFactor) {
-            setShowTwoFactor(true);
-            setSuccess("Check your email for a two-factor code.");
-            return;
+          // Handle field errors
+          for (const [field, messages] of Object.entries(response.error)) {
+            form.setError(field as keyof typeof values, {
+              message: messages?.[0]
+            });
           }
-          
-          if (response.success) {
-            form.reset();
-            setSuccess(response.success);
-          }
-        } catch (error) {
-          console.error("Error during login:", error);
-          setError("An unexpected error occurred");
+          return;
         }
-      });
-    } catch (error) {
-      console.error("Error starting transition:", error);
-      setError("An unexpected error occurred");
-    }
+
+        if (response.twoFactor) {
+          setShowTwoFactor(true);
+          setSuccess("Check your email for a two-factor code.");
+          return;
+        }
+        
+        if (response.success) {
+          form.reset();
+          setSuccess(response.success);
+        }
+      } catch (error) {
+        console.error("Error during login:", error);
+        setError("An unexpected error occurred");
+      }
+    });
   };
 
   return (
