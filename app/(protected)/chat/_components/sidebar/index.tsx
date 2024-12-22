@@ -2,8 +2,8 @@
 
 const Sidebar = () => {
     return (
-        <div>
-            <h1>Sidebar</h1>
+        <div className="flex-1 h-full bg-gray-800 border-r border-gray-200 overflow-y-auto draggable">
+            
         </div>
     )
 }

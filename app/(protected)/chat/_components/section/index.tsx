@@ -2,8 +2,8 @@
 
 const Section = () => {
     return (
-        <div>
-            <h1>Section</h1>
+        <div className="flex-1 h-full p-4">
+            
         </div>
     )
 }
