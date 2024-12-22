@@ -12,7 +12,7 @@ export const publicRoutes = [
  * @type {string[]}
 **/  
 export const protectedRoutes = [
-    "/settings"
+    "/chat"
 ];
 
 /**
@@ -37,4 +37,4 @@ export const apiAuthPrefix = "/api/auth";
  * The default login redirect route.
  * @type {string}
 **/  
-export const DEFAULT_LOGIN_REDIRECT = "/settings";
+export const DEFAULT_LOGIN_REDIRECT = "/chat";
