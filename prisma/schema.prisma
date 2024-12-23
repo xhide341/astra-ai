@@ -13,6 +13,11 @@ enum UserRole {
   USER
 }
 
+enum MessageRole {
+  USER
+  ASSISTANT
+}
+
 model User {
   id                    String                 @id @default(cuid())
   name                  String?
@@ -106,13 +111,13 @@ model Chat {
 
 // Message model to store messages in a chat
 model Message {
-  id        String   @id @default(cuid())
-  content   String   @db.Text
-  role      String   @default("user") // "user" or "assistant"
+  id        String      @id @default(cuid())
+  content   String      @db.Text
+  role      MessageRole @default(USER)
   chatId    String
-  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  chat      Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 
   @@index([chatId])
 }

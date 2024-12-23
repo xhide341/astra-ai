@@ -1,3 +1,5 @@
+import { MessageRole } from "@prisma/client";
+
 // Chat Types
 export interface Chat {
     id: string;
@@ -11,7 +13,7 @@ export interface Chat {
 export interface Message {
     id: string;
     content: string;
-    role: "user" | "assistant";
+    role: MessageRole;
     chatId: string;
     createdAt: Date;
     updatedAt: Date;
