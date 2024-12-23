@@ -1,7 +1,7 @@
 <!-- Implementation Order:
 - [x] Start with database schema
 - [x] Create types/interfaces
-- [ ] Implement basic server actions
+- [x] Implement basic server actions
 - [ ] Update components with basic functionality
 - [ ] Add state management
 - [ ] Implement error handling

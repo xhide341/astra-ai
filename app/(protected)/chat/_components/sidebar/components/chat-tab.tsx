@@ -1,5 +1,8 @@
 'use client';
 
+import { cn } from "@/lib/utils";
+import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
+
 interface ChatTabProps {
     title: string;
     isActive?: boolean;
@@ -10,15 +13,14 @@ const ChatTab = ({ title, isActive, onClick }: ChatTabProps) => {
     return (
         <button
             onClick={onClick}
-            className={`
-                flex items-center gap-2 p-3 bg-gray-100 w-full rounded-sm transition-colors cursor-pointer
-                ${isActive 
-                    ? 'bg-gray-200 hover:bg-gray-300' 
-                    : 'hover:bg-gray-200'
-                }
-            `}
+            className={cn(
+                "flex items-center gap-2 p-3 w-full rounded-sm transition-colors",
+                "hover:bg-gray-200",
+                isActive && "bg-gray-200"
+            )}
         >
-            <p className="text-black text-sm font-medium leading-none">
+            <ChatBubbleLeftIcon className="h-4 w-4" />
+            <p className="text-black text-sm font-medium leading-none truncate">
                 {title}
             </p>
         </button>

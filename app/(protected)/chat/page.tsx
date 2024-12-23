@@ -3,7 +3,6 @@
 import Sidebar from '@/app/(protected)/chat/_components/sidebar/sidebar';
 import ChatSection from '@/app/(protected)/chat/_components/section/chat-section';
 
-
 const ChatPage = () => {
     return (
         <div className="flex h-screen w-full max-w-screen">
