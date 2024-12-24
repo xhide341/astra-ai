@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useCurrentUser } from '@/hooks/use-current-user';
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { BeatLoader } from "react-spinners";
 import ChatTab from './components/chat-tab';
 import { useChatStore } from '@/hooks/use-chat-store';
@@ -77,10 +77,10 @@ const Sidebar = () => {
                 onClick={toggleSidebar}
                 className={cn(
                     "absolute top-4 right-4 z-50 p-2 rounded-full hover:bg-gray-100",
-                    !isSidebarOpen && "opacity-0"
+                    !isSidebarOpen && "hidden"
                 )}
             >
-                <XMarkIcon className="h-4 w-4" />
+                <ChevronLeftIcon className="h-5 w-5" />
             </button>
 
             <div className={cn(
@@ -136,6 +136,9 @@ const Sidebar = () => {
                                 </p>
                             </button>
 
+                            {/* Divider */}
+                            <div className="h-px w-full bg-gray-200" />
+
                             {todayChats.length > 0 && (
                                 <>
                                     <p className="text-xs font-semibold text-gray-500 px-3 pt-2">Today</p>
@@ -152,21 +155,21 @@ const Sidebar = () => {
                                 </>
                             )}
 
-                            {lastWeekChats.length > 0 && (
-                                <>
-                                    <p className="text-xs font-semibold text-gray-500 px-3 pt-2">Last 7 Days</p>
-                                    <div className="flex flex-col gap-1">
-                                        {lastWeekChats.map((chat) => (
-                                            <ChatTab
-                                                key={chat.id}
-                                                title={chat.title}
-                                                isActive={activeChat?.id === chat.id}
-                                                onClick={() => setActiveChat(chat)}
-                                            />
-                                        ))}
-                                    </div>
-                                </>
-                            )}
+                                {lastWeekChats.length > 0 && (
+                                    <>
+                                        <p className="text-xs font-semibold text-gray-500 px-3 pt-2">Last 7 Days</p>
+                                        <div className="flex flex-col gap-1">
+                                            {lastWeekChats.map((chat) => (
+                                                <ChatTab
+                                                    key={chat.id}
+                                                    title={chat.title}
+                                                    isActive={activeChat?.id === chat.id}
+                                                    onClick={() => setActiveChat(chat)}
+                                                />
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
 
                             {olderChats.length > 0 && (
                                 <>
