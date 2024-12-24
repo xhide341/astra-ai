@@ -1,14 +1,22 @@
 'use client';
 
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
-import { FormEvent, useState, useEffect } from "react";
+import { FormEvent, useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useChatStore } from "@/hooks/use-chat-store";
 import { sendMessage } from "@/actions/chat/send-message";
 
 const MessageInput = () => {
     const [message, setMessage] = useState("");
-    const { activeChat, isLoading, setIsLoading, setError, addMessages } = useChatStore();
+    const inputRef = useRef<HTMLInputElement>(null);
+    const { 
+        activeChat, 
+        isLoading, 
+        setIsLoading, 
+        setError, 
+        addMessages,
+        updateChatTitle
+    } = useChatStore();
 
     // Auto-focus and set initial message for new chats
     useEffect(() => {
@@ -36,9 +44,15 @@ const MessageInput = () => {
 
             if (response.message && response.assistantMessage) {
                 addMessages([response.message, response.assistantMessage]);
+                
+                // Update title if provided
+                if (response.updatedTitle) {
+                    updateChatTitle(activeChat.id, response.updatedTitle);
+                }
             }
 
             setMessage("");
+            inputRef.current?.focus();
         } catch (error) {
             console.log("Error sending message", error);
             setError('Failed to send message');
@@ -54,6 +68,7 @@ const MessageInput = () => {
         >
             <div className="flex items-center gap-x-2">
                 <input
+                    ref={inputRef}
                     type="text"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}

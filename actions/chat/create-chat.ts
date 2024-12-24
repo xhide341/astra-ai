@@ -21,10 +21,11 @@ export const createChat = async (): Promise<CreateChatResponse> => {
             return { error: "Unauthorized" };
         }
 
+        // Create chat with default title first
         const chat = await db.chat.create({
             data: {
                 userId,
-                title: "New Chat",
+                title: "New Chat", // Default title
             },
         });
 

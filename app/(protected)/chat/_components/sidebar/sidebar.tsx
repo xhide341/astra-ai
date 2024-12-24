@@ -89,6 +89,7 @@ const Sidebar = () => {
                     </div>
                 </div>
 
+                {/* New Chat Button */}
                 <button
                     onClick={handleNewChat}
                     className="flex items-center gap-2 p-3 bg-gray-100 w-full rounded-sm hover:bg-gray-200 transition-colors"

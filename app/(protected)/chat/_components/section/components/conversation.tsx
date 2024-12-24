@@ -4,16 +4,16 @@ import { useEffect, useRef } from 'react';
 import { cn } from "@/lib/utils";
 import { useChatStore } from '@/hooks/use-chat-store';
 import { Message } from '@/types/chat';
+import { useCurrentUser } from '@/hooks/use-current-user';
+import Image from 'next/image';
 
 const Conversation = () => {
     const { messages, isLoading } = useChatStore();
-    const conversationRef = useRef<HTMLDivElement>(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const user = useCurrentUser();
 
-    // Auto-scroll to bottom when new messages arrive
     useEffect(() => {
-        if (conversationRef.current) {
-            conversationRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
     return (
@@ -22,10 +22,32 @@ const Conversation = () => {
                 <div 
                     key={message.id}
                     className={cn(
-                        "flex w-full",
-                        message.role === "USER" ? "justify-end" : "justify-start"
+                        "flex items-start gap-x-3",
+                        message.role === "USER" ? "flex-row-reverse" : "flex-row"
                     )}
                 >
+                    {/* Avatar */}
+                    <div className="flex-shrink-0">
+                        {message.role === "USER" ? (
+                            user?.image ? (
+                                <Image
+                                    src={user.image}
+                                    alt="User"
+                                    width={30}
+                                    height={30}
+                                    className="rounded-full"
+                                />
+                            ) : (
+                                <div className="w-[30px] h-[30px] bg-gray-200 rounded-full" />
+                            )
+                        ) : (
+                            <div className="w-[30px] h-[30px] bg-blue-500 rounded-full flex items-center justify-center">
+                                <span className="text-white text-sm font-semibold">AI</span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Message */}
                     <div className={cn(
                         "max-w-[80%] rounded-lg p-3",
                         message.role === "USER"
@@ -36,12 +58,13 @@ const Conversation = () => {
                     </div>
                 </div>
             ))}
+            
             {isLoading && (
                 <div className="flex items-center justify-center p-4">
                     <div className="animate-spin h-6 w-6 border-2 border-blue-500 rounded-full border-t-transparent" />
                 </div>
             )}
-            <div ref={conversationRef} />
+            <div ref={messagesEndRef} />
         </div>
     );
 };

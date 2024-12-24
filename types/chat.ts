@@ -32,6 +32,7 @@ export interface CreateChatResponse extends ApiResponse {
 export interface SendMessageResponse extends ApiResponse {
     message?: Message;
     assistantMessage?: Message;
+    updatedTitle?: string;
 }
 
 export interface GetChatsResponse extends ApiResponse {

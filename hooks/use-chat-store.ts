@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Chat, Message } from '@/types/chat';
+import { getMessages } from "@/actions/chat/get-messages";
 
 interface ChatStore {
     // State
@@ -17,6 +18,8 @@ interface ChatStore {
     setIsLoading: (isLoading: boolean) => void;
     setError: (error: string | null) => void;
     reset: () => void;
+    loadMessages: (chatId: string) => Promise<void>;
+    updateChatTitle: (chatId: string, newTitle: string) => void;
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
@@ -29,7 +32,19 @@ export const useChatStore = create<ChatStore>((set) => ({
 
     // Actions
     setChats: (chats) => set({ chats }),
-    setActiveChat: (chat) => set({ activeChat: chat, messages: [] }),
+    setActiveChat: async (chat) => {
+        set({ activeChat: chat, messages: [], isLoading: true });
+        if (chat) {
+            const response = await getMessages(chat.id);
+            if (response.messages) {
+                set({ messages: response.messages });
+            }
+            if (response.error) {
+                set({ error: response.error });
+            }
+        }
+        set({ isLoading: false });
+    },
     setMessages: (messages) => set({ messages }),
     addMessages: (newMessages) => 
         set((state) => ({ 
@@ -43,5 +58,32 @@ export const useChatStore = create<ChatStore>((set) => ({
         messages: [], 
         isLoading: false, 
         error: null 
-    })
+    }),
+    loadMessages: async (chatId) => {
+        set({ isLoading: true });
+        try {
+            const response = await getMessages(chatId);
+            if (response.messages) {
+                set({ messages: response.messages });
+            }
+            if (response.error) {
+                set({ error: response.error });
+            }
+        } catch (error) {
+            console.error("Error loading messages", error);
+            set({ error: "Failed to load messages" });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+    updateChatTitle: (chatId, newTitle) => set((state) => ({
+        chats: state.chats.map(chat => 
+            chat.id === chatId 
+                ? { ...chat, title: newTitle }
+                : chat
+        ),
+        activeChat: state.activeChat?.id === chatId 
+            ? { ...state.activeChat, title: newTitle }
+            : state.activeChat
+    })),
 })); 

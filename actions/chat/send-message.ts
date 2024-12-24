@@ -27,6 +27,7 @@ export const sendMessage = async (
             return { error: "Unauthorized" };
         }
 
+        // Create user message
         const userMessage = await db.message.create({
             data: {
                 content,
@@ -34,6 +35,21 @@ export const sendMessage = async (
                 chatId
             }
         });
+
+        let updatedTitle: string | undefined;
+
+        // Update chat title if this is the first message
+        const messageCount = await db.message.count({
+            where: { chatId }
+        });
+
+        if (messageCount === 1) {
+            updatedTitle = content.slice(0, 50) + (content.length > 50 ? "..." : "");
+            await db.chat.update({
+                where: { id: chatId },
+                data: { title: updatedTitle }
+            });
+        }
 
         // TODO: Integrate with AI service to get a response
         const aiResponse = "This is a mock AI response";
@@ -49,7 +65,11 @@ export const sendMessage = async (
 
         revalidatePath("/chat");
 
-        return { message: userMessage, assistantMessage };
+        return { 
+            message: userMessage, 
+            assistantMessage,
+            updatedTitle 
+        };
     } catch (error) {
         console.error("Error sending message", error);
         return { error: "Failed to send message" };

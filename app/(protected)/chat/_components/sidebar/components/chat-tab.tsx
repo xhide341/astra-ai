@@ -1,7 +1,6 @@
 'use client';
 
 import { cn } from "@/lib/utils";
-import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 
 interface ChatTabProps {
     title: string;
@@ -19,7 +18,6 @@ const ChatTab = ({ title, isActive, onClick }: ChatTabProps) => {
                 isActive && "bg-gray-200"
             )}
         >
-            <ChatBubbleLeftIcon className="h-4 w-4" />
             <p className="text-black text-sm font-medium leading-none truncate">
                 {title}
             </p>

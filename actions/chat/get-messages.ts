@@ -20,8 +20,15 @@ export const getMessages = async (chatId: string): Promise<GetMessagesResponse> 
         }
 
         const messages = await db.message.findMany({
-            where: { chatId },
-            orderBy: { createdAt: "asc" }
+            where: {
+                chatId,
+                chat: {
+                    userId: session.user.id
+                }
+            },
+            orderBy: {
+                createdAt: 'asc'
+            }
         });
 
         return { messages };
