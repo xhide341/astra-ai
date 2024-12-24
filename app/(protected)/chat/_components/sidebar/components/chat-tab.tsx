@@ -13,12 +13,12 @@ const ChatTab = ({ title, isActive, onClick }: ChatTabProps) => {
         <button
             onClick={onClick}
             className={cn(
-                "flex items-center gap-2 p-3 w-full rounded-sm transition-colors",
+                "flex items-center gap-2 w-full rounded-sm transition-colors",
                 "hover:bg-gray-200",
                 isActive && "bg-gray-200"
             )}
         >
-            <p className="text-black text-sm font-medium leading-none truncate">
+            <p className="text-black text-sm font-medium leading-relaxed px-3 py-2 truncate z-10">
                 {title}
             </p>
         </button>

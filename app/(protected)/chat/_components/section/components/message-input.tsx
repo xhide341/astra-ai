@@ -6,8 +6,14 @@ import { Button } from "@/components/ui/button";
 import { useChatStore } from "@/hooks/use-chat-store";
 import { createChat } from "@/actions/chat/create-chat";
 import { sendMessage, generateAIResponse } from "@/actions/chat/send-message";
+import { Input } from "@/components/ui/input";
+import { SendMessageResponse } from "@/types/chat";
 
-const MessageInput = () => {
+interface MessageInputProps {
+    onFocus: () => void;
+}
+
+const MessageInput = ({ onFocus }: MessageInputProps) => {
     const [message, setMessage] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
     const { 
@@ -30,7 +36,7 @@ const MessageInput = () => {
             setIsLoading(true);
             setError(null);
 
-            // If no active chat, create one first
+            // Create chat only when first message is being sent
             if (!activeChat) {
                 const chatResponse = await createChat();
                 if (chatResponse.error) {
@@ -41,7 +47,6 @@ const MessageInput = () => {
                     setChats([chatResponse.chat, ...chats]);
                     setActiveChat(chatResponse.chat);
                     
-                    // Now send the message with the new chat
                     const response = await sendMessage(chatResponse.chat.id, message);
                     if (response.error) {
                         setError(response.error);
@@ -50,9 +55,21 @@ const MessageInput = () => {
                     if (response.message) {
                         addMessage(response.message);
                     }
+
+                    // Generate AI response for the new chat
+                    const aiResponse: SendMessageResponse = await generateAIResponse(chatResponse.chat.id);
+                    if (aiResponse.error) {
+                        setError(aiResponse.error);
+                        return;
+                    }
+                    if (aiResponse.assistantMessage) {
+                        addMessage(aiResponse.assistantMessage);
+                        if (aiResponse.updatedTitle) {
+                            updateChatTitle(chatResponse.chat.id, aiResponse.updatedTitle);
+                        }
+                    }
                 }
             } else {
-                // Normal message flow for existing chat
                 const response = await sendMessage(activeChat.id, message);
                 if (response.error) {
                     setError(response.error);
@@ -61,18 +78,18 @@ const MessageInput = () => {
                 if (response.message) {
                     addMessage(response.message);
                 }
-            }
 
-            // Generate AI response
-            const aiResponse = await generateAIResponse(activeChat?.id || '');
-            if (aiResponse.error) {
-                setError(aiResponse.error);
-                return;
-            }
-            if (aiResponse.assistantMessage) {
-                addMessage(aiResponse.assistantMessage);
-                if (aiResponse.updatedTitle) {
-                    updateChatTitle(activeChat?.id || '', aiResponse.updatedTitle);
+                // Generate AI response for existing chat
+                const aiResponse: SendMessageResponse = await generateAIResponse(activeChat.id);
+                if (aiResponse.error) {
+                    setError(aiResponse.error);
+                    return;
+                }
+                if (aiResponse.assistantMessage) {
+                    addMessage(aiResponse.assistantMessage);
+                    if (aiResponse.updatedTitle) {
+                        updateChatTitle(activeChat.id, aiResponse.updatedTitle);
+                    }
                 }
             }
 
@@ -92,14 +109,15 @@ const MessageInput = () => {
             className="border-t p-4"
         >
             <div className="flex items-center gap-x-2">
-                <input
+                <Input
                     ref={inputRef}
                     type="text"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
+                    onFocus={onFocus}
                     placeholder="Type a message..."
-                    className="flex-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     disabled={isLoading}
+                    className="leading-relaxed py-5 resize-none focus-visible:ring-0 outline-none"
                 />
                 <Button 
                     type="submit" 

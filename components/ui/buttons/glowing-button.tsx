@@ -45,7 +45,7 @@ export default function GlowingButton({
         className="absolute inset-0 overflow-hidden rounded-full"
         aria-hidden="true"
       >
-        <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,var(--primary-color)_0%,var(--obsidian)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+        <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,#10b981_0%,var(--obsidian)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100">
         </span>
       </span>
       

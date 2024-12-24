@@ -7,7 +7,6 @@ import { PlusIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { BeatLoader } from "react-spinners";
 import ChatTab from './components/chat-tab';
 import { useChatStore } from '@/hooks/use-chat-store';
-import { createChat } from '@/actions/chat/create-chat';
 import { getChatHistory } from '@/actions/chat/get-chat-history';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -22,7 +21,8 @@ const Sidebar = () => {
         setActiveChat, 
         setError,
         isSidebarOpen,
-        toggleSidebar
+        toggleSidebar,
+        setMessages
     } = useChatStore();
 
     // Filter chats by date
@@ -59,16 +59,9 @@ const Sidebar = () => {
         loadChats();
     }, [setChats, setError]);
 
-    const handleNewChat = async () => {
-        const response = await createChat();
-        if (response.error) {
-            setError(response.error);
-            return;
-        }
-        if (response.chat) {
-            setChats([response.chat, ...chats]);
-            setActiveChat(response.chat);
-        }
+    const handleNewChat = () => {
+        setActiveChat(null);
+        setMessages([]);
     };
 
     return (
@@ -123,15 +116,14 @@ const Sidebar = () => {
 
                             <button
                                 onClick={handleNewChat}
-                                disabled={isLoading}
                                 className={cn(
                                     "flex items-center gap-2 p-3 bg-gray-100 w-full rounded-sm transition-colors",
                                     "hover:bg-gray-200",
-                                    isLoading && "opacity-50 cursor-not-allowed"
+                                    activeChat === null && "bg-gray-200"
                                 )}
                             >
                                 <PlusIcon className="h-4 w-4" />
-                                <p className="text-black text-sm font-medium leading-none">
+                                <p className="text-black text-sm font-medium leading-none z-10">
                                     New Chat
                                 </p>
                             </button>

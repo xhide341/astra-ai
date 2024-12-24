@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "@/app/globals.css";
-import { poppins } from "@/app/ui/fonts";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 
@@ -18,13 +17,7 @@ export default async function ProtectedLayout({
 
   return (
     <SessionProvider session={session}>
-        <html lang="en">
-          <body
-            className={`${poppins.variable} antialiased`}
-          >
-            {children}
-          </body>
-        </html>
+      {children}
     </SessionProvider>
   );
 }
