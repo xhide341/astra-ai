@@ -23,12 +23,12 @@ const Conversation = () => {
     }, [messages.length, isLoading]);
 
     return (
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="relative flex-1 overflow-y-auto p-4 space-y-4">
             {isLoadingConversation ? (
-                <div className="flex items-center justify-center h-full">
+                <div className="absolute inset-0 flex items-center justify-center">
                     <BeatLoader 
                         size={12}
-                        color="#3B82F6"
+                        color="#10b981"
                         speedMultiplier={0.7}
                     />
                 </div>
@@ -59,7 +59,7 @@ const Conversation = () => {
                                         <div className="w-[30px] h-[30px] bg-gray-200 rounded-full" />
                                     )
                                 ) : (
-                                    <div className="w-[30px] h-[30px] bg-blue-500 rounded-full flex items-center justify-center">
+                                    <div className="w-[30px] h-[30px] bg-teal rounded-full flex items-center justify-center">
                                         <span className="text-white text-sm font-semibold">AI</span>
                                     </div>
                                 )}
@@ -69,7 +69,7 @@ const Conversation = () => {
                             <div className={cn(
                                 "max-w-[80%] rounded-full py-3 px-3 text-sm",
                                 message.role === "USER"
-                                    ? "bg-blue-500 text-white" 
+                                    ? "bg-teal text-white" 
                                     : "bg-transparent px-0 py-0 my-auto"
                             )}>
                                 {message.content}
@@ -79,13 +79,13 @@ const Conversation = () => {
                     
                     {isLoading && (
                         <div className="flex items-start gap-x-2">
-                            <div className="w-[30px] h-[30px] bg-blue-500 rounded-full flex items-center justify-center">
+                            <div className="w-[30px] h-[30px] bg-teal rounded-full flex items-center justify-center">
                                 <span className="text-white text-sm font-semibold">AI</span>
                             </div>
                             <div className="py-3 pl-0">
                                 <BeatLoader 
                                     size={8}
-                                    color="#3B82F6"
+                                    color="#10b981"
                                     speedMultiplier={0.7}
                                 />
                             </div>

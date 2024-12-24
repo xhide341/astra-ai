@@ -20,7 +20,7 @@ const ChatSection = () => {
                             isSidebarOpen && "hidden"
                         )}
                     >
-                        <Bars3Icon className="h-6 w-6" />
+                        <Bars3Icon className="h-5 w-5" />
                     </button>
                     <h2 className="text-xl font-semibold">
                         {activeChat?.title || 'New Chat'}

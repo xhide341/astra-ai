@@ -28,6 +28,7 @@ export default {
   			},
   			highlight: '#F2F2F2',
   			obsidian: '#040615',
+			teal: '#10b981',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
