@@ -4,7 +4,7 @@ import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { FormEvent, useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useChatStore } from "@/hooks/use-chat-store";
-import { sendMessage } from "@/actions/chat/send-message";
+import { sendMessage, generateAIResponse } from "@/actions/chat/send-message";
 
 const MessageInput = () => {
     const [message, setMessage] = useState("");
@@ -14,7 +14,7 @@ const MessageInput = () => {
         isLoading, 
         setIsLoading, 
         setError, 
-        addMessages,
+        addMessage,
         updateChatTitle
     } = useChatStore();
 
@@ -35,20 +35,27 @@ const MessageInput = () => {
             setIsLoading(true);
             setError(null);
             
-            const response = await sendMessage(activeChat.id, message);
-            
-            if (response.error) {
-                setError(response.error);
+            // Send user message first
+            const userResponse = await sendMessage(activeChat.id, message);
+            if (userResponse.error) {
+                setError(userResponse.error);
                 return;
             }
-
-            if (response.message && response.assistantMessage) {
-                addMessages([response.message, response.assistantMessage]);
-                
-                // Update title if provided
-                if (response.updatedTitle) {
-                    updateChatTitle(activeChat.id, response.updatedTitle);
+            if (userResponse.message) {
+                if (userResponse.updatedTitle) {
+                    updateChatTitle(activeChat.id, userResponse.updatedTitle);
                 }
+                addMessage(userResponse.message);
+            }
+
+            // Then generate AI response
+            const aiResponse = await generateAIResponse(activeChat.id);
+            if (aiResponse.error) {
+                setError(aiResponse.error);
+                return;
+            }
+            if (aiResponse.assistantMessage) {
+                addMessage(aiResponse.assistantMessage);
             }
 
             setMessage("");

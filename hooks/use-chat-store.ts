@@ -9,6 +9,7 @@ interface ChatStore {
     messages: Message[];
     isLoading: boolean;
     error: string | null;
+    isLoadingConversation: boolean;
 
     // Actions
     setChats: (chats: Chat[]) => void;
@@ -20,6 +21,8 @@ interface ChatStore {
     reset: () => void;
     loadMessages: (chatId: string) => Promise<void>;
     updateChatTitle: (chatId: string, newTitle: string) => void;
+    addMessage: (message: Message) => void;
+    setIsLoadingConversation: (loading: boolean) => void;
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
@@ -29,11 +32,12 @@ export const useChatStore = create<ChatStore>((set) => ({
     messages: [],
     isLoading: false,
     error: null,
+    isLoadingConversation: false,
 
     // Actions
     setChats: (chats) => set({ chats }),
     setActiveChat: async (chat) => {
-        set({ activeChat: chat, messages: [], isLoading: true });
+        set({ activeChat: chat, messages: [], isLoadingConversation: true });
         if (chat) {
             const response = await getMessages(chat.id);
             if (response.messages) {
@@ -43,7 +47,7 @@ export const useChatStore = create<ChatStore>((set) => ({
                 set({ error: response.error });
             }
         }
-        set({ isLoading: false });
+        set({ isLoadingConversation: false });
     },
     setMessages: (messages) => set({ messages }),
     addMessages: (newMessages) => 
@@ -86,4 +90,8 @@ export const useChatStore = create<ChatStore>((set) => ({
             ? { ...state.activeChat, title: newTitle }
             : state.activeChat
     })),
+    addMessage: (message) => set((state) => ({
+        messages: [...state.messages, message]
+    })),
+    setIsLoadingConversation: (loading) => set({ isLoadingConversation: loading }),
 })); 

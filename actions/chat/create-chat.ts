@@ -25,7 +25,7 @@ export const createChat = async (): Promise<CreateChatResponse> => {
         const chat = await db.chat.create({
             data: {
                 userId,
-                title: "New Chat", // Default title
+                title: "New Chat",
             },
         });
 
