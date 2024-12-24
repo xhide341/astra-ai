@@ -17,7 +17,9 @@ const Conversation = () => {
         const scrollToBottom = () => {
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
         };
-        scrollToBottom();
+        if (messages.length > 0) {
+            scrollToBottom();
+        }
     }, [messages.length, isLoading]);
 
     return (

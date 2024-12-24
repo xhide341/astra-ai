@@ -10,6 +10,7 @@ interface ChatStore {
     isLoading: boolean;
     error: string | null;
     isLoadingConversation: boolean;
+    isSidebarOpen: boolean;
 
     // Actions
     setChats: (chats: Chat[]) => void;
@@ -23,6 +24,7 @@ interface ChatStore {
     updateChatTitle: (chatId: string, newTitle: string) => void;
     addMessage: (message: Message) => void;
     setIsLoadingConversation: (loading: boolean) => void;
+    toggleSidebar: () => void;
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
@@ -33,6 +35,7 @@ export const useChatStore = create<ChatStore>((set) => ({
     isLoading: false,
     error: null,
     isLoadingConversation: false,
+    isSidebarOpen: true,
 
     // Actions
     setChats: (chats) => set({ chats }),
@@ -94,4 +97,5 @@ export const useChatStore = create<ChatStore>((set) => ({
         messages: [...state.messages, message]
     })),
     setIsLoadingConversation: (loading) => set({ isLoadingConversation: loading }),
+    toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
 })); 

@@ -1,23 +1,28 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useCurrentUser } from '@/hooks/use-current-user';
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { BeatLoader } from "react-spinners";
 import ChatTab from './components/chat-tab';
 import { useChatStore } from '@/hooks/use-chat-store';
 import { createChat } from '@/actions/chat/create-chat';
 import { getChatHistory } from '@/actions/chat/get-chat-history';
 import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 const Sidebar = () => {
+    const [isLoading, setIsLoading] = useState(true);
     const user = useCurrentUser();
     const { 
         chats, 
         activeChat, 
         setChats, 
         setActiveChat, 
-        setError 
+        setError,
+        isSidebarOpen,
+        toggleSidebar
     } = useChatStore();
 
     // Filter chats by date
@@ -39,6 +44,7 @@ const Sidebar = () => {
 
     useEffect(() => {
         const loadChats = async () => {
+            setIsLoading(true);
             const response = await getChatHistory();
             if (response.error) {
                 setError(response.error);
@@ -47,6 +53,7 @@ const Sidebar = () => {
             if (response.chats) {
                 setChats(response.chats);
             }
+            setIsLoading(false);
         };
         
         loadChats();
@@ -65,90 +72,119 @@ const Sidebar = () => {
     };
 
     return (
-        <div className="w-[260px] min-w-[260px] h-full overflow-y-auto p-2">
-            <div className="flex flex-col gap-2">
-                <div className="flex gap-1 p-3 items-center justify-center rounded-full">
-                    {user?.image ? (
-                        <Image 
-                            src={user.image} 
-                            alt="avatar" 
-                            width={54} 
-                            height={54} 
-                            className="rounded-full" 
+        <div className="relative h-full">
+            <button
+                onClick={toggleSidebar}
+                className={cn(
+                    "absolute top-4 right-4 z-50 p-2 rounded-full hover:bg-gray-100",
+                    !isSidebarOpen && "opacity-0"
+                )}
+            >
+                <XMarkIcon className="h-4 w-4" />
+            </button>
+
+            <div className={cn(
+                "h-full overflow-y-auto",
+                "transition-all duration-300 ease-in-out",
+                isSidebarOpen ? "w-[260px] min-w-[260px]" : "w-0 min-w-0 opacity-0"
+            )}>
+                {isLoading ? (
+                    <div className="h-full flex justify-center items-center">
+                        <BeatLoader 
+                            size={8}
+                            color="#3B82F6"
+                            speedMultiplier={0.7}
                         />
-                    ) : (
-                        <div className="w-16 h-16 bg-gray-200 rounded-full" />
-                    )}
-                    <div className="flex flex-col items-start justify-center text-start gap-1">
-                        <p className="text-black text-sm font-semibold leading-none">
-                            {user?.name?.split(' ')[0]}
-                        </p>
-                        <p className="text-gray-500 text-xs font-light leading-none">
-                            {user?.email}
-                        </p>
                     </div>
-                </div>
+                ) : (
+                    <div className="p-2 pt-16">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex gap-1 p-3 items-center justify-center rounded-full">
+                                {user?.image ? (
+                                    <Image 
+                                        src={user.image} 
+                                        alt="avatar" 
+                                        width={54} 
+                                        height={54} 
+                                        className="rounded-full" 
+                                    />
+                                ) : (
+                                    <div className="w-16 h-16 bg-gray-200 rounded-full" />
+                                )}
+                                <div className="flex flex-col items-start justify-center text-start gap-1">
+                                    <p className="text-black text-sm font-semibold leading-none">
+                                        {user?.name?.split(' ')[0]}
+                                    </p>
+                                    <p className="text-gray-500 text-xs font-light leading-none">
+                                        {user?.email}
+                                    </p>
+                                </div>
+                            </div>
 
-                {/* New Chat Button */}
-                <button
-                    onClick={handleNewChat}
-                    className="flex items-center gap-2 p-3 bg-gray-100 w-full rounded-sm hover:bg-gray-200 transition-colors"
-                >
-                    <PlusIcon className="h-4 w-4" />
-                    <p className="text-black text-sm font-medium leading-none">
-                        New Chat
-                    </p>
-                </button>
+                            <button
+                                onClick={handleNewChat}
+                                disabled={isLoading}
+                                className={cn(
+                                    "flex items-center gap-2 p-3 bg-gray-100 w-full rounded-sm transition-colors",
+                                    "hover:bg-gray-200",
+                                    isLoading && "opacity-50 cursor-not-allowed"
+                                )}
+                            >
+                                <PlusIcon className="h-4 w-4" />
+                                <p className="text-black text-sm font-medium leading-none">
+                                    New Chat
+                                </p>
+                            </button>
 
-                {/* Today's chats */}
-                {todayChats.length > 0 && (
-                    <>
-                        <p className="text-xs font-semibold text-gray-500 px-3 pt-2">Today</p>
-                        <div className="flex flex-col gap-1">
-                            {todayChats.map((chat) => (
-                                <ChatTab
-                                    key={chat.id}
-                                    title={chat.title}
-                                    isActive={activeChat?.id === chat.id}
-                                    onClick={() => setActiveChat(chat)}
-                                />
-                            ))}
+                            {todayChats.length > 0 && (
+                                <>
+                                    <p className="text-xs font-semibold text-gray-500 px-3 pt-2">Today</p>
+                                    <div className="flex flex-col gap-1">
+                                        {todayChats.map((chat) => (
+                                            <ChatTab
+                                                key={chat.id}
+                                                title={chat.title}
+                                                isActive={activeChat?.id === chat.id}
+                                                onClick={() => setActiveChat(chat)}
+                                            />
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+
+                            {lastWeekChats.length > 0 && (
+                                <>
+                                    <p className="text-xs font-semibold text-gray-500 px-3 pt-2">Last 7 Days</p>
+                                    <div className="flex flex-col gap-1">
+                                        {lastWeekChats.map((chat) => (
+                                            <ChatTab
+                                                key={chat.id}
+                                                title={chat.title}
+                                                isActive={activeChat?.id === chat.id}
+                                                onClick={() => setActiveChat(chat)}
+                                            />
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+
+                            {olderChats.length > 0 && (
+                                <>
+                                    <p className="text-xs font-semibold text-gray-500 px-3 pt-2">Older</p>
+                                    <div className="flex flex-col gap-1">
+                                        {olderChats.map((chat) => (
+                                            <ChatTab
+                                                key={chat.id}
+                                                title={chat.title}
+                                                isActive={activeChat?.id === chat.id}
+                                                onClick={() => setActiveChat(chat)}
+                                            />
+                                        ))}
+                                    </div>
+                                </>
+                            )}
                         </div>
-                    </>
-                )}
-
-                {/* Last 7 days chats */}
-                {lastWeekChats.length > 0 && (
-                    <>
-                        <p className="text-xs font-semibold text-gray-500 px-3 pt-2">Last 7 Days</p>
-                        <div className="flex flex-col gap-1">
-                            {lastWeekChats.map((chat) => (
-                                <ChatTab
-                                    key={chat.id}
-                                    title={chat.title}
-                                    isActive={activeChat?.id === chat.id}
-                                    onClick={() => setActiveChat(chat)}
-                                />
-                            ))}
-                        </div>
-                    </>
-                )}
-
-                {/* Older chats */}
-                {olderChats.length > 0 && (
-                    <>
-                        <p className="text-xs font-semibold text-gray-500 px-3 pt-2">Older</p>
-                        <div className="flex flex-col gap-1">
-                            {olderChats.map((chat) => (
-                                <ChatTab
-                                    key={chat.id}
-                                    title={chat.title}
-                                    isActive={activeChat?.id === chat.id}
-                                    onClick={() => setActiveChat(chat)}
-                                />
-                            ))}
-                        </div>
-                    </>
+                    </div>
                 )}
             </div>
         </div>
