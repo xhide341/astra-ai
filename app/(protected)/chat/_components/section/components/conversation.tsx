@@ -7,6 +7,7 @@ import { Message } from '@/types/chat';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import Image from 'next/image';
 import { BeatLoader } from 'react-spinners';
+import ReactMarkdown from 'react-markdown';
 
 const Conversation = () => {
     const { messages, isLoading, isLoadingConversation } = useChatStore();
@@ -23,7 +24,7 @@ const Conversation = () => {
     }, [messages.length, isLoading]);
 
     return (
-        <div className="relative flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="p-4 space-y-4">
             {isLoadingConversation ? (
                 <div className="absolute inset-0 flex items-center justify-center">
                     <BeatLoader 
@@ -67,12 +68,39 @@ const Conversation = () => {
 
                             {/* Message */}
                             <div className={cn(
-                                "max-w-[80%] rounded-full py-3 px-3 text-sm",
+                                "max-w-[80%] rounded-lg py-3 px-4",
                                 message.role === "USER"
                                     ? "bg-teal text-white" 
-                                    : "bg-transparent px-0 py-0 my-auto"
+                                    : "prose prose-sm dark:prose-invert max-w-none"
                             )}>
-                                {message.content}
+                                {message.role === "USER" ? (
+                                    message.content
+                                ) : (
+                                    <ReactMarkdown
+                                        components={{
+                                            h1: ({children}) => (
+                                                <h1 className="text-xl font-bold mb-4">{children}</h1>
+                                            ),
+                                            h2: ({children}) => (
+                                                <h2 className="text-lg font-semibold mt-4 mb-2">{children}</h2>
+                                            ),
+                                            p: ({children}) => (
+                                                <p className="mb-3">{children}</p>
+                                            ),
+                                            ul: ({children}) => (
+                                                <ul className="list-disc pl-4 mb-3">{children}</ul>
+                                            ),
+                                            ol: ({children}) => (
+                                                <ol className="list-decimal pl-4 mb-3">{children}</ol>
+                                            ),
+                                            code: ({children}) => (
+                                                <code className="bg-gray-100 dark:bg-gray-800 rounded px-1">{children}</code>
+                                            )
+                                        }}
+                                    >
+                                        {message.content}
+                                    </ReactMarkdown>
+                                )}
                             </div>
                         </div>
                     ))}

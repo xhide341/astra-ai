@@ -65,11 +65,13 @@ const ChatSection = () => {
                             </div>
                             {error && <p className="text-red-500 text-sm">{error}</p>}
                         </div>
-                        <div className="flex-1 flex justify-center">
-                            <div className="w-full max-w-2xl flex flex-col">
-                                <div className="flex-1 overflow-y-auto">
-                                    <Conversation />
-                                </div>
+                        <div className="flex justify-center items-center overflow-y-auto">
+                            <div className="w-full max-w-2xl flex flex-col h-full max-h-full">
+                                <Conversation />
+                            </div>
+                        </div>
+                        <div className="flex justify-center items-center">
+                            <div className="w-full max-w-2xl flex flex-col h-full max-h-full">
                                 <MessageInput onFocus={() => {}} />
                             </div>
                         </div>

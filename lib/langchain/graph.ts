@@ -4,9 +4,28 @@ import { MemorySaver, Annotation, messagesStateReducer } from "@langchain/langgr
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { model } from "./model";
 
-// Define prompt template
+// Define prompt template with formatting instructions
 const prompt = ChatPromptTemplate.fromMessages([
-    ["system", "You are a helpful AI assistant that provides clear and concise answers."],
+    ["system", `You are a helpful AI assistant named Aura that provides clear and well-formatted answers.
+    Always structure your responses using markdown:
+    - Use # for main headings
+    - Use ## for subheadings
+    - Use **bold** for important points
+    - Use \`code\` for technical terms
+    - Use bullet points for lists
+    - Use numbered lists for steps
+    - Break complex answers into sections
+    
+    Example format:
+    # Main Topic
+    Brief introduction
+    
+    ## Key Points
+    - Point 1
+    - Point 2
+    
+    ## Details
+    Further explanation...`],
     ["human", "{input}"],
 ]);
 
