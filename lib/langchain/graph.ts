@@ -7,33 +7,44 @@ import { model } from "./model";
 // Define prompt template with formatting instructions
 const prompt = ChatPromptTemplate.fromMessages([
     ["system", `You are a helpful AI assistant named Aura that provides clear and well-formatted answers.
-    Always structure your responses using markdown:
-    - Use # for main headings
-    - Use ## for subheadings
-    - Use **bold** for important points
+    If you think you need to structure your responses using markdown, follow these styling rules:
+    
+    Text Formatting:
+    - Use normal text size for all responses (no large text)
+    - Keep paragraphs concise and readable
+    - Use **bold** for emphasis sparingly
     - Use \`code\` for technical terms
-    - Use bullet points for lists
-    - Use numbered lists for steps
-    - Break complex answers into sections
     
-    For code examples, always use triple backticks with language specification:
+    Headings:
+    - Use ### for main headings (smaller than default)
+    - Use #### for subheadings (smaller than default)
     
-    \`\`\`python
-    print("Hello World")
+    Lists and Code:
+    - Use bullet points (-) for unordered lists
+    - Use numbers (1.) for ordered lists
+    - Indent nested lists with 2 spaces
+    - For code blocks, always specify language:
+    
+    \`\`\`language
+    code here
     \`\`\`
-
-    For inline code, use single backticks: \`const example = true\`
     
-    Example format:
-    # Main Topic
-    Brief introduction
+    Response Structure:
+    ### Main Topic
+    Brief, concise introduction
     
-    ## Key Points
+    #### Key Points
     - Point 1
     - Point 2
+      - Sub-point if needed
     
-    ## Details
-    Further explanation...`],
+    #### Details
+    Concise explanation with proper spacing
+    
+    Remember:
+    - Use spacing for readability
+    - Break long responses into smaller sections
+    - Avoid excessive formatting`],
     ["human", "{input}"],
 ]);
 
@@ -44,7 +55,7 @@ const StateAnnotation = Annotation.Root({
     }),
 });
 
-// 1. Define model call function with prompt
+// Define model call function with prompt
 async function callModel(state: typeof StateAnnotation.State) {
     const messages = state.messages;
     const formattedPrompt = await prompt.formatMessages({
@@ -92,7 +103,7 @@ export async function chatWithGraph(message: string, chatId: string) {
             },
             {
                 configurable: {
-                    thread_id: chatId,
+                    thread_id: chatId,  // Use chatId for persistent memory
                 }
             }
         );

@@ -72,13 +72,14 @@ const Conversation = () => {
                             <div className={cn(
                                 "max-w-[80%] rounded-lg py-3 px-4",
                                 message.role === "USER"
-                                    ? "bg-teal text-white" 
-                                    : "prose prose-sm dark:prose-invert max-w-none"
+                                    ? "bg-teal text-white text-sm" 
+                                    : "prose prose-sm dark:prose-invert max-w-none break-normal overflow-auto text-sm"
                             )}>
                                 {message.role === "USER" ? (
                                     message.content
                                 ) : (
                                     <ReactMarkdown
+                                        className="overflow-auto"
                                         components={{
                                             h1: ({children}) => (
                                                 <h1 className="text-xl font-bold mb-4">{children}</h1>
@@ -87,7 +88,7 @@ const Conversation = () => {
                                                 <h2 className="text-lg font-semibold mt-4 mb-2">{children}</h2>
                                             ),
                                             p: ({children}) => (
-                                                <p className="mb-3">{children}</p>
+                                                <p className="mb-3 break-words">{children}</p>
                                             ),
                                             ul: ({children}) => (
                                                 <ul className="list-disc pl-4 mb-3">{children}</ul>
@@ -99,17 +100,20 @@ const Conversation = () => {
                                                 const match = /language-(\w+)/.exec(className || '');
                                                 
                                                 return match ? (
-                                                    <SyntaxHighlighter
-                                                        language={match[1]}
-                                                        style={atomOneDarkReasonable}
-                                                        customStyle={{
-                                                            borderRadius: '0.5rem',
-                                                            padding: '1rem',
-                                                            margin: 0
-                                                        }}
-                                                    >
-                                                        {String(children).replace(/\n$/, '')}
-                                                    </SyntaxHighlighter>
+                                                    <div className="overflow-x-auto">
+                                                        <SyntaxHighlighter
+                                                            language={match[1]}
+                                                            style={atomOneDarkReasonable}
+                                                            customStyle={{
+                                                                borderRadius: '0.5rem',
+                                                                padding: '1rem',
+                                                                margin: 0,
+                                                                maxWidth: '100%',
+                                                            }}
+                                                        >
+                                                            {String(children).replace(/\n$/, '')}
+                                                        </SyntaxHighlighter>
+                                                    </div>
                                                 ) : (
                                                     <SyntaxHighlighter
                                                         language="text"
