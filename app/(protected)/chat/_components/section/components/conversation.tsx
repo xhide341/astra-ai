@@ -8,6 +8,8 @@ import { useCurrentUser } from '@/hooks/use-current-user';
 import Image from 'next/image';
 import { BeatLoader } from 'react-spinners';
 import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomOneDarkReasonable } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
 const Conversation = () => {
     const { messages, isLoading, isLoadingConversation } = useChatStore();
@@ -93,9 +95,37 @@ const Conversation = () => {
                                             ol: ({children}) => (
                                                 <ol className="list-decimal pl-4 mb-3">{children}</ol>
                                             ),
-                                            code: ({children}) => (
-                                                <code className="bg-gray-100 dark:bg-gray-800 rounded px-1">{children}</code>
-                                            )
+                                            code: ({className, children}) => {
+                                                const match = /language-(\w+)/.exec(className || '');
+                                                
+                                                return match ? (
+                                                    <SyntaxHighlighter
+                                                        language={match[1]}
+                                                        style={atomOneDarkReasonable}
+                                                        customStyle={{
+                                                            borderRadius: '0.5rem',
+                                                            padding: '1rem',
+                                                            margin: 0
+                                                        }}
+                                                    >
+                                                        {String(children).replace(/\n$/, '')}
+                                                    </SyntaxHighlighter>
+                                                ) : (
+                                                    <SyntaxHighlighter
+                                                        language="text"
+                                                        style={atomOneDarkReasonable}
+                                                        customStyle={{
+                                                            padding: '0.125rem 0.25rem',
+                                                            margin: 0,
+                                                            borderRadius: '0.25rem',
+                                                            display: 'inline',
+                                                        }}
+                                                        PreTag="span"
+                                                    >
+                                                        {String(children)}
+                                                    </SyntaxHighlighter>
+                                                );
+                                            }
                                         }}
                                     >
                                         {message.content}

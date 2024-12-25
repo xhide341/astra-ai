@@ -16,6 +16,14 @@ const prompt = ChatPromptTemplate.fromMessages([
     - Use numbered lists for steps
     - Break complex answers into sections
     
+    For code examples, always use triple backticks with language specification:
+    
+    \`\`\`python
+    print("Hello World")
+    \`\`\`
+
+    For inline code, use single backticks: \`const example = true\`
+    
     Example format:
     # Main Topic
     Brief introduction
