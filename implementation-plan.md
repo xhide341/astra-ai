@@ -9,27 +9,41 @@
 - [x] Add real-time updates (SSE for title changes)
 - [ ] Polish UI/UX
 
-Langchain Integration:
-- [ ] Memory Systems
-  - [ ] Buffer Memory (in-memory context)
-  - [ ] Local file-based storage
+Agent Integration:
+- [ ] Basic Agent Setup
+  - [ ] Setup Hugging Face model configuration
+  - [ ] Create base agent with chat memory
+  - [ ] Implement basic conversation chain
+  - [ ] Test basic Q&A functionality
 
-- [ ] Basic Document Processing
-  - [ ] Small file upload (text, markdown)
-  - [ ] Basic document parsing
-  - [ ] Local document storage
+- [ ] Visualization Tool
+  - [ ] Setup Mermaid.js for diagrams
+  - [ ] Create graph generation tool
+  - [ ] Implement chart types:
+    - [ ] Flowcharts
+    - [ ] Sequence diagrams
+    - [ ] Other diagram types
 
-- [ ] Enhanced Chat Features
-  - [ ] Structured output parsing
-  - [ ] Multiple chat types (Q&A, Analysis)
-  - [ ] Code formatting
+- [ ] Memory & Context
+  - [ ] Implement BufferMemory
+  - [ ] Store conversation history in database
+  - [ ] Context window management
+  - [ ] Memory serialization/deserialization
 
-- [ ] Basic Tools
-  - [ ] Calculator for math
-  - [ ] Code interpreter
-  - [ ] Text analysis tools
+- [ ] Agent Enhancement
+  - [ ] Add structured output formatting
+  - [ ] Implement error handling
+  - [ ] Add typing indicators
+  - [ ] Response streaming
 
-- [ ] Core Features
-  - [ ] Chat summarization
-  - [ ] Topic extraction
-  - [ ] Custom prompts-->
+- [ ] UI/UX Updates
+  - [ ] Graph rendering component
+  - [ ] Different message types display
+  - [ ] Loading states
+  - [ ] Error state handling
+
+- [ ] Testing & Optimization
+  - [ ] Test different conversation flows
+  - [ ] Test graph generation
+  - [ ] Handle rate limiting
+  - [ ] Performance monitoring-->
