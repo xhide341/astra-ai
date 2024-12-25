@@ -12,6 +12,7 @@
     "@auth/prisma-adapter": "^2.7.4",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^3.9.1",
+    "@langchain/core": "^0.3.26",
     "@phosphor-icons/react": "^2.1.7",
     "@prisma/client": "^6.1.0",
     "@radix-ui/react-checkbox": "^1.1.2",
@@ -26,6 +27,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "discord.js": "^14.16.3",
+    "langchain": "^0.3.8",
     "lucide-react": "^0.468.0",
     "motion": "12.0.0-alpha.2",
     "next": "15.0.3",
@@ -40,7 +42,7 @@
     "resend": "^4.0.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8",
+    "zod": "^3.24.1",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
