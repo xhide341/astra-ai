@@ -13,7 +13,6 @@
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import { SendMessageResponse } from "@/types/chat";
-import { revalidatePath } from "next/cache";
 
 export const sendMessage = async (
     chatId: string,
@@ -26,7 +25,7 @@ export const sendMessage = async (
             return { error: "Unauthorized" };
         }
 
-        // Create and return user message immediately
+        // Create user message
         const userMessage = await db.message.create({
             data: {
                 content,
@@ -35,24 +34,20 @@ export const sendMessage = async (
             }
         });
 
-        // Update chat title if this is the first message
+        // Update chat title if first message
         const messageCount = await db.message.count({
             where: { chatId }
         });
 
-        let updatedTitle;
         if (messageCount === 1) {
-            updatedTitle = content.slice(0, 50) + (content.length > 50 ? "..." : "");
+            const updatedTitle = content.slice(0, 50) + (content.length > 50 ? "..." : "");
             await db.chat.update({
                 where: { id: chatId },
                 data: { title: updatedTitle }
             });
         }
 
-        // Return user message first
-        revalidatePath('/chat');
-        return { message: userMessage, updatedTitle };
-
+        return { message: userMessage };
     } catch (error) {
         console.error("Error sending message:", error);
         return { error: "Failed to send message" };
@@ -78,7 +73,6 @@ export const generateAIResponse = async (
             }
         });
 
-        revalidatePath('/chat');
         return { assistantMessage };
     } catch (error) {
         console.error("Error generating AI response:", error);

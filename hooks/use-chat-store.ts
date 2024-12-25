@@ -11,6 +11,7 @@ interface ChatStore {
     error: string | null;
     isLoadingConversation: boolean;
     isSidebarOpen: boolean;
+    eventSource: EventSource | null;
 
     // Actions
     setChats: (chats: Chat[]) => void;
@@ -25,9 +26,11 @@ interface ChatStore {
     addMessage: (message: Message) => void;
     setIsLoadingConversation: (loading: boolean) => void;
     toggleSidebar: () => void;
+    connectToSSE: () => void;
+    disconnectFromSSE: () => void;
 }
 
-export const useChatStore = create<ChatStore>((set) => ({
+export const useChatStore = create<ChatStore>((set, get) => ({
     // Initial state
     chats: [],
     activeChat: null,
@@ -36,6 +39,7 @@ export const useChatStore = create<ChatStore>((set) => ({
     error: null,
     isLoadingConversation: false,
     isSidebarOpen: true,
+    eventSource: null,
 
     // Actions
     setChats: (chats) => set({ chats }),
@@ -98,4 +102,30 @@ export const useChatStore = create<ChatStore>((set) => ({
     })),
     setIsLoadingConversation: (loading) => set({ isLoadingConversation: loading }),
     toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+    connectToSSE: () => {
+        const eventSource = new EventSource('/api/chat/sse');
+        
+        eventSource.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            
+            if (data.type === 'titleUpdate') {
+                get().updateChatTitle(data.chatId, data.title);
+            }
+        };
+
+        eventSource.onerror = (error) => {
+            console.error('SSE Error:', error);
+            eventSource.close();
+            set({ eventSource: null });
+        };
+
+        set({ eventSource });
+    },
+    disconnectFromSSE: () => {
+        const { eventSource } = get();
+        if (eventSource) {
+            eventSource.close();
+            set({ eventSource: null });
+        }
+    }
 })); 

@@ -7,7 +7,6 @@ import { useChatStore } from "@/hooks/use-chat-store";
 import { createChat } from "@/actions/chat/create-chat";
 import { sendMessage, generateAIResponse } from "@/actions/chat/send-message";
 import { Input } from "@/components/ui/input";
-import { SendMessageResponse } from "@/types/chat";
 
 interface MessageInputProps {
     onFocus: () => void;
@@ -52,12 +51,13 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                         setError(response.error);
                         return;
                     }
+                    // Add user message to the chat
                     if (response.message) {
                         addMessage(response.message);
                     }
 
                     // Generate AI response for the new chat
-                    const aiResponse: SendMessageResponse = await generateAIResponse(chatResponse.chat.id);
+                    const aiResponse = await generateAIResponse(chatResponse.chat.id);
                     if (aiResponse.error) {
                         setError(aiResponse.error);
                         return;
@@ -80,7 +80,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                 }
 
                 // Generate AI response for existing chat
-                const aiResponse: SendMessageResponse = await generateAIResponse(activeChat.id);
+                const aiResponse = await generateAIResponse(activeChat.id);
                 if (aiResponse.error) {
                     setError(aiResponse.error);
                     return;
