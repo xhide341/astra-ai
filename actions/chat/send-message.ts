@@ -13,6 +13,7 @@
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import { SendMessageResponse } from "@/types/chat";
+import { chatWithGraph } from "@/lib/langchain/graph";
 
 export const sendMessage = async (
     chatId: string,
@@ -56,15 +57,12 @@ export const sendMessage = async (
 
 // Separate function for AI response
 export const generateAIResponse = async (
-    chatId: string
+    chatId: string,
+    content: string
 ): Promise<SendMessageResponse> => {
     try {
-        // Add artificial delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // TODO: Integrate with AI service
-        const aiResponse = "This is a mock AI response";
-
+        // Get AI response using graph
+        const aiResponse = await chatWithGraph(content, chatId);
         const assistantMessage = await db.message.create({
             data: {
                 content: aiResponse,

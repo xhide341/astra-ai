@@ -10,8 +10,8 @@
 - [ ] Polish UI/UX
 
 Agent Integration:
-- [ ] Basic Agent Setup
-  - [ ] Setup Hugging Face model configuration
+- [X] Basic Agent Setup
+  - [ ] Setup Together AI model configuration
   - [ ] Create base agent with chat memory
   - [ ] Implement basic conversation chain
   - [ ] Test basic Q&A functionality

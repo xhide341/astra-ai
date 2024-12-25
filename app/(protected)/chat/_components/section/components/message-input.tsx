@@ -57,7 +57,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                     }
 
                     // Generate AI response for the new chat
-                    const aiResponse = await generateAIResponse(chatResponse.chat.id);
+                    const aiResponse = await generateAIResponse(chatResponse.chat.id, message);
                     if (aiResponse.error) {
                         setError(aiResponse.error);
                         return;
@@ -80,7 +80,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                 }
 
                 // Generate AI response for existing chat
-                const aiResponse = await generateAIResponse(activeChat.id);
+                const aiResponse = await generateAIResponse(activeChat.id, message);
                 if (aiResponse.error) {
                     setError(aiResponse.error);
                     return;

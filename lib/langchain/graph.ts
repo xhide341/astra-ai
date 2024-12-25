@@ -52,19 +52,31 @@ const checkpointer = new MemorySaver();
 export const graph = workflow.compile({ checkpointer });
 
 // Usage graph via invoke
-export async function chatWithGraph(message: string) {
+export async function chatWithGraph(message: string, chatId: string) {
     try {
-        // 1. Start with human message
-        const finalState = await graph.invoke({
-            messages: [new HumanMessage(message)]
-        });
+        // Add input validation
+        if (!message.trim() || message.length > 2000) { // Common chat limit
+            throw new Error("Invalid message length");
+        }
+
+        const finalState = await graph.invoke(
+            {
+                messages: [new HumanMessage(message)]
+            },
+            {
+                configurable: {
+                    thread_id: chatId,
+                }
+            }
+        );
 
         // 2. Get last message from the conversation
         const lastMessage = finalState.messages[finalState.messages.length - 1];
         
         // 3. Check if it's an AI message
         if (lastMessage instanceof AIMessage) {
-            return lastMessage.content;
+            // Convert complex content to string
+            return String(lastMessage.content);
         }
         throw new Error("Unexpected message type");
     } catch (error) {
