@@ -3,13 +3,14 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useCurrentUser } from '@/hooks/use-current-user';
-import { PlusIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, ChevronLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { BeatLoader } from "react-spinners";
 import ChatTab from './components/chat-tab';
 import { useChatStore } from '@/hooks/use-chat-store';
 import { getChatHistory } from '@/actions/chat/get-chat-history';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { signOut } from 'next-auth/react';
 
 const Sidebar = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -66,6 +67,15 @@ const Sidebar = () => {
 
     return (
         <div className="relative h-full">
+
+            <button
+                onClick={() => signOut({ callbackUrl: "/auth/login" })}
+                className="absolute top-4 left-4 z-50 p-2 rounded-full hover:bg-gray-100"
+            >
+                Sign Out
+                <XMarkIcon className="h-5 w-5" />
+            </button>
+
             <button
                 onClick={toggleSidebar}
                 className={cn(

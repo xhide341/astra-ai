@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import db from "@/lib/db";
+import { emitter } from "@/lib/events";
 
 export async function GET(req: Request) {
     try {
@@ -17,6 +18,7 @@ export async function GET(req: Request) {
                     controller.enqueue(encoder.encode(`data: ${data}\n\n`));
                 };
 
+                // Title updates watcher
                 const watchTitleUpdates = async () => {
                     try {
                         const interval = setInterval(async () => {
@@ -49,7 +51,20 @@ export async function GET(req: Request) {
                     }
                 };
 
+                // Listen for UI updates from the graph action
+                emitter.on('ui-update', (update) => {
+                    console.log("SSE: Received UI update:", update);
+                    sendEvent(JSON.stringify(update));
+                });
+
+                console.log("SSE: Connection established");
+
                 watchTitleUpdates();
+
+                req.signal.addEventListener('abort', () => {
+                    console.log("SSE: Connection aborted");
+                    emitter.removeAllListeners('ui-update');
+                });
             }
         });
 

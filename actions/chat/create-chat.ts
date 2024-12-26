@@ -29,9 +29,13 @@ export const createChat = async (): Promise<CreateChatResponse> => {
             },
         });
 
+        if (!chat) {
+            return { error: "Failed to create chat" };
+        }
+
         return { chat };
     } catch (error) {
-        console.error("Error creating chat", error);
+        console.error("Error creating chat:", error);
         return { error: "Failed to create chat" };
     }
 }; 

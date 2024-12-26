@@ -15,7 +15,8 @@ enum UserRole {
 
 enum MessageRole {
   USER
-  ASSISTANT
+  TEACHER
+  FACILITATOR
 }
 
 model User {

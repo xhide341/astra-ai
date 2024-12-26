@@ -103,23 +103,35 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     setIsLoadingConversation: (loading) => set({ isLoadingConversation: loading }),
     toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
     connectToSSE: () => {
+        console.log("Store: Connecting to SSE");
         const eventSource = new EventSource('/api/chat/sse');
         
         eventSource.onmessage = (event) => {
+            console.log("Store: Received SSE message:", event.data);
             const data = JSON.parse(event.data);
             
-            if (data.type === 'titleUpdate') {
-                get().updateChatTitle(data.chatId, data.title);
+            if (data.type === 'newMessage') {
+                console.log("Store: Adding new message to UI");
+                const { addMessage } = get();
+                addMessage({
+                    id: data.id,
+                    content: data.content,
+                    role: data.role,
+                    chatId: data.chatId,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                });
             }
         };
 
         eventSource.onerror = (error) => {
-            console.error('SSE Error:', error);
+            console.error('Store: SSE Error:', error);
             eventSource.close();
             set({ eventSource: null });
         };
 
         set({ eventSource });
+        console.log("Store: SSE connection established");
     },
     disconnectFromSSE: () => {
         const { eventSource } = get();

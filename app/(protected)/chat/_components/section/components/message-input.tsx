@@ -5,7 +5,7 @@ import { FormEvent, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useChatStore } from "@/hooks/use-chat-store";
 import { createChat } from "@/actions/chat/create-chat";
-import { sendMessage, generateAIResponse } from "@/actions/chat/send-message";
+import { sendTopic, generateAIResponse } from "@/actions/chat/send-message";
 import { Input } from "@/components/ui/input";
 
 interface MessageInputProps {
@@ -19,12 +19,11 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         activeChat, 
         isLoading, 
         setIsLoading, 
-        setError, 
-        addMessage,
-        updateChatTitle,
+        setError,
         setActiveChat,
         setChats,
-        chats
+        chats,
+        addMessage
     } = useChatStore();
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -46,62 +45,33 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                     setChats([chatResponse.chat, ...chats]);
                     setActiveChat(chatResponse.chat);
                     
-                    const response = await sendMessage(chatResponse.chat.id, message);
+                    const response = await sendTopic(chatResponse.chat.id, message);
                     if (response.error) {
                         setError(response.error);
                         return;
                     }
-                    // Add user message to the chat
                     if (response.message) {
                         addMessage(response.message);
-                    }
-
-                    // Generate AI response for the new chat
-                    const aiResponse = await generateAIResponse(chatResponse.chat.id, message);
-                    if (aiResponse.error) {
-                        setError(aiResponse.error);
-                        return;
-                    }
-                    if (aiResponse.assistantMessage) {
-                        addMessage(aiResponse.assistantMessage);
-                        if (aiResponse.updatedTitle) {
-                            updateChatTitle(chatResponse.chat.id, aiResponse.updatedTitle);
+                        
+                        // Start streaming AI responses
+                        const aiResponse = await generateAIResponse(chatResponse.chat.id, message);
+                        if (aiResponse.error) {
+                            setError(aiResponse.error);
+                            return;
                         }
                     }
                 }
-            } else {
-                const response = await sendMessage(activeChat.id, message);
-                if (response.error) {
-                    setError(response.error);
-                    return;
-                }
-                if (response.message) {
-                    addMessage(response.message);
-                }
-
-                // Generate AI response for existing chat
-                const aiResponse = await generateAIResponse(activeChat.id, message);
-                if (aiResponse.error) {
-                    setError(aiResponse.error);
-                    return;
-                }
-                if (aiResponse.assistantMessage) {
-                    addMessage(aiResponse.assistantMessage);
-                    if (aiResponse.updatedTitle) {
-                        updateChatTitle(activeChat.id, aiResponse.updatedTitle);
-                    }
-                }
             }
-
             setMessage("");
             inputRef.current?.focus();
         } catch (error) {
-            console.log("Error sending message", error);
+            console.error("Error sending message:", error);
             setError('Failed to send message');
         } finally {
             setIsLoading(false);
         }
     };
+
 
     return (
         <form 
@@ -115,7 +85,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     onFocus={onFocus}
-                    placeholder="Type a message..."
+                    placeholder="Enter a topic to learn about..."
                     disabled={isLoading}
                     className="leading-relaxed py-5 resize-none focus-visible:ring-0 outline-none"
                 />

@@ -18,7 +18,7 @@ export interface Message {
     createdAt: Date;
     updatedAt: Date;
 }
-
+                             
 // API Response Types
 export interface ApiResponse {
     error?: string;
@@ -31,8 +31,8 @@ export interface CreateChatResponse extends ApiResponse {
 
 export interface SendMessageResponse extends ApiResponse {
     message?: Message;
-    assistantMessage?: Message;
-    updatedTitle?: string;
+    teacherMessages?: Message[];
+    facilitatorMessages?: Message[];
 }
 
 export interface GetChatsResponse extends ApiResponse {
@@ -62,4 +62,11 @@ export interface ChatTabProps {
     chat: Chat;
     isActive: boolean;
     onClick: () => void;
+}
+
+export interface StreamChunk {
+    type: 'messageChunk';
+    role: MessageRole;
+    content: string;
+    chatId: string;
 }

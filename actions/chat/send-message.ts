@@ -15,7 +15,7 @@ import db from "@/lib/db";
 import { SendMessageResponse } from "@/types/chat";
 import { chatWithGraph } from "@/lib/langchain/graph";
 
-export const sendMessage = async (
+export const sendTopic = async (
     chatId: string,
     content: string
 ): Promise<SendMessageResponse> => {
@@ -55,25 +55,22 @@ export const sendMessage = async (
     }
 };
 
-// Separate function for AI response
+// Separate function for teacher response
 export const generateAIResponse = async (
     chatId: string,
     content: string
 ): Promise<SendMessageResponse> => {
     try {
-        // Get AI response using graph
-        const aiResponse = await chatWithGraph(content, chatId);
-        const assistantMessage = await db.message.create({
-            data: {
-                content: aiResponse,
-                role: "ASSISTANT",
-                chatId
-            }
-        });
-
-        return { assistantMessage };
+        // Just initiate the streaming process
+        await chatWithGraph(content, chatId);
+        
+        // Return empty success response since messages will come through SSE
+        return { 
+            teacherMessages: [],
+            facilitatorMessages: []
+        };
     } catch (error) {
-        console.error("Error generating AI response:", error);
-        return { error: "Failed to generate AI response" };
+        console.error("Error generating responses:", error);
+        return { error: "Failed to generate responses" };
     }
 };
