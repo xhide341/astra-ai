@@ -10,40 +10,44 @@
 - [ ] Polish UI/UX
 
 Agent Integration:
-- [X] Basic Agent Setup
-  - [ ] Setup Together AI model configuration
-  - [ ] Create base agent with chat memory
-  - [ ] Implement basic conversation chain
-  - [ ] Test basic Q&A functionality
+- [ ] Dual Agent Setup
+  - [ ] Create primary teacher agent persona
+  - [ ] Create supportive facilitator agent persona
+  - [ ] Implement turn-taking conversation system
+  - [ ] Add therapeutic conversation techniques
+  - [ ] Design conversation flow patterns
 
-- [ ] Visualization Tool
-  - [ ] Setup Mermaid.js for diagrams
-  - [ ] Create graph generation tool
-  - [ ] Implement chart types:
-    - [ ] Flowcharts
-    - [ ] Sequence diagrams
-    - [ ] Other diagram types
+- [ ] Conversation Enhancement
+  - [ ] Implement structured dialogue patterns
+  - [ ] Add cognitive behavioral therapy elements
+  - [ ] Include active listening indicators
+  - [ ] Add learning checkpoints
+  - [ ] Implement knowledge reinforcement
 
 - [ ] Memory & Context
-  - [ ] Implement BufferMemory
-  - [ ] Store conversation history in database
-  - [ ] Context window management
-  - [ ] Memory serialization/deserialization
-
-- [ ] Agent Enhancement
-  - [ ] Add structured output formatting
-  - [ ] Implement error handling
-  - [ ] Add typing indicators
-  - [ ] Response streaming
+  - [ ] Track conversation themes
+  - [ ] Maintain learning progress
+  - [ ] Store key insights
+  - [ ] Implement topic linking
+  - [ ] Add concept reinforcement
 
 - [ ] UI/UX Updates
-  - [ ] Graph rendering component
-  - [ ] Different message types display
-  - [ ] Loading states
-  - [ ] Error state handling
+  - [ ] Design dual-agent chat interface
+  - [ ] Add visual distinction between agents
+  - [ ] Implement note-taking sidebar
+  - [ ] Add key points highlighting
+  - [ ] Create insight summaries
+
+- [ ] Learning Tools
+  - [ ] Add concept mapping
+  - [ ] Implement progress tracking
+  - [ ] Create learning pathways
+  - [ ] Add knowledge checks
+  - [ ] Include resource suggestions
 
 - [ ] Testing & Optimization
-  - [ ] Test different conversation flows
-  - [ ] Test graph generation
-  - [ ] Handle rate limiting
-  - [ ] Performance monitoring-->
+  - [ ] Test conversation flows
+  - [ ] Validate learning outcomes
+  - [ ] Measure engagement metrics
+  - [ ] Optimize response patterns
+  - [ ] Monitor therapeutic impact-->
