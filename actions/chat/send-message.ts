@@ -15,7 +15,7 @@ import db from "@/lib/db";
 import { SendMessageResponse } from "@/types/chat";
 import { chatWithGraph } from "@/lib/langchain/graph";
 
-export const sendTopic = async (
+export const sendMessage = async (
     chatId: string,
     content: string
 ): Promise<SendMessageResponse> => {
@@ -48,29 +48,12 @@ export const sendTopic = async (
             });
         }
 
+        // Start streaming response via graph
+        await chatWithGraph(content, chatId);
+
         return { message: userMessage };
     } catch (error) {
         console.error("Error sending message:", error);
         return { error: "Failed to send message" };
-    }
-};
-
-// Separate function for teacher response
-export const generateAIResponse = async (
-    chatId: string,
-    content: string
-): Promise<SendMessageResponse> => {
-    try {
-        // Just initiate the streaming process
-        await chatWithGraph(content, chatId);
-        
-        // Return empty success response since messages will come through SSE
-        return { 
-            teacherMessages: [],
-            facilitatorMessages: []
-        };
-    } catch (error) {
-        console.error("Error generating responses:", error);
-        return { error: "Failed to generate responses" };
     }
 };

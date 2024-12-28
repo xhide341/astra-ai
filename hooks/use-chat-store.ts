@@ -11,7 +11,6 @@ interface ChatStore {
     error: string | null;
     isLoadingConversation: boolean;
     isSidebarOpen: boolean;
-    eventSource: EventSource | null;
 
     // Actions
     setChats: (chats: Chat[]) => void;
@@ -26,11 +25,9 @@ interface ChatStore {
     addMessage: (message: Message) => void;
     setIsLoadingConversation: (loading: boolean) => void;
     toggleSidebar: () => void;
-    connectToSSE: () => void;
-    disconnectFromSSE: () => void;
 }
 
-export const useChatStore = create<ChatStore>((set, get) => ({
+export const useChatStore = create<ChatStore>((set) => ({
     // Initial state
     chats: [],
     activeChat: null,
@@ -39,12 +36,12 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     error: null,
     isLoadingConversation: false,
     isSidebarOpen: true,
-    eventSource: null,
 
     // Actions
     setChats: (chats) => set({ chats }),
     setActiveChat: async (chat) => {
         set({ activeChat: chat, messages: [], isLoadingConversation: true });
+        
         if (chat) {
             const response = await getMessages(chat.id);
             if (response.messages) {
@@ -54,6 +51,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
                 set({ error: response.error });
             }
         }
+        
         set({ isLoadingConversation: false });
     },
     setMessages: (messages) => set({ messages }),
@@ -102,42 +100,4 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     })),
     setIsLoadingConversation: (loading) => set({ isLoadingConversation: loading }),
     toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
-    connectToSSE: () => {
-        console.log("Store: Connecting to SSE");
-        const eventSource = new EventSource('/api/chat/sse');
-        
-        eventSource.onmessage = (event) => {
-            console.log("Store: Received SSE message:", event.data);
-            const data = JSON.parse(event.data);
-            
-            if (data.type === 'newMessage') {
-                console.log("Store: Adding new message to UI");
-                const { addMessage } = get();
-                addMessage({
-                    id: data.id,
-                    content: data.content,
-                    role: data.role,
-                    chatId: data.chatId,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                });
-            }
-        };
-
-        eventSource.onerror = (error) => {
-            console.error('Store: SSE Error:', error);
-            eventSource.close();
-            set({ eventSource: null });
-        };
-
-        set({ eventSource });
-        console.log("Store: SSE connection established");
-    },
-    disconnectFromSSE: () => {
-        const { eventSource } = get();
-        if (eventSource) {
-            eventSource.close();
-            set({ eventSource: null });
-        }
-    }
 })); 

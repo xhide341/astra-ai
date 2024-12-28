@@ -65,8 +65,17 @@ export interface ChatTabProps {
 }
 
 export interface StreamChunk {
-    type: 'messageChunk';
+    type: 'stream-chunk';
     role: MessageRole;
     content: string;
+    chatId: string;
+    isComplete: boolean;
+}
+
+export interface UIUpdate {
+    type: 'newMessage';
+    id: string;
+    content: string;
+    role: MessageRole;
     chatId: string;
 }

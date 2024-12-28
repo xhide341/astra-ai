@@ -12,7 +12,7 @@ const ChatSection = () => {
     const isCompactView = !activeChat;
 
     return (
-        <div className="flex flex-col h-full w-full p-2 bg-gray-100 border-4 border-gray-200 rounded-xl">
+        <div className="flex flex-col h-full w-full p-2 bg-gray-600 border-4 border-gray-200 rounded-xl">
             <AnimatePresence mode="wait">
                 {isCompactView ? (
                     <motion.div 

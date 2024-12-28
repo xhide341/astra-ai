@@ -4,64 +4,71 @@ import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { FormEvent, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useChatStore } from "@/hooks/use-chat-store";
-import { createChat } from "@/actions/chat/create-chat";
-import { sendTopic, generateAIResponse } from "@/actions/chat/send-message";
+// import { createChat } from "@/actions/chat/create-chat";
+// import { sendMessage } from "@/actions/chat/send-message";
 import { Input } from "@/components/ui/input";
+import testTrigger from "@/actions/chat/test-trigger";
 
 interface MessageInputProps {
     onFocus: () => void;
 }
 
 const MessageInput = ({ onFocus }: MessageInputProps) => {
-    const [message, setMessage] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
+    const [message, setMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const { 
-        activeChat, 
-        isLoading, 
-        setIsLoading, 
-        setError,
-        setActiveChat,
-        setChats,
-        chats,
-        addMessage
+        // activeChat,
+        // chats,
+        // setChats,
+        // setActiveChat,
+        // addMessage,
+        setError
     } = useChatStore();
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!message.trim()) return;
+        // if (!message.trim()) return;
         
         try {
-            setIsLoading(true);
-            setError(null);
+            // setIsLoading(true);
+            // setError(null);
 
-            // Create chat only when first message is being sent
-            if (!activeChat) {
-                const chatResponse = await createChat();
-                if (chatResponse.error) {
-                    setError(chatResponse.error);
-                    return;
-                }
-                if (chatResponse.chat) {
-                    setChats([chatResponse.chat, ...chats]);
-                    setActiveChat(chatResponse.chat);
+            // // Create chat if first message
+            // if (!activeChat) {
+            //     const chatResponse = await createChat();
+            //     if (chatResponse.error) {
+            //         setError(chatResponse.error);
+            //         return;
+            //     }
+            //     if (chatResponse.chat) {
+            //         setChats([chatResponse.chat, ...chats]);
+            //         setActiveChat(chatResponse.chat);
                     
-                    const response = await sendTopic(chatResponse.chat.id, message);
-                    if (response.error) {
-                        setError(response.error);
-                        return;
-                    }
-                    if (response.message) {
-                        addMessage(response.message);
-                        
-                        // Start streaming AI responses
-                        const aiResponse = await generateAIResponse(chatResponse.chat.id, message);
-                        if (aiResponse.error) {
-                            setError(aiResponse.error);
-                            return;
-                        }
-                    }
-                }
-            }
+            //         const response = await sendMessage(chatResponse.chat.id, message);
+            //         if (response.error) {
+            //             setError(response.error);
+            //             return;
+            //         }
+            //         if (response.message) {
+            //             addMessage(response.message);
+            //         }
+            //     }
+            // } else {
+            //     // Send message in existing chat
+            //     const response = await sendMessage(activeChat.id, message);
+            //     if (response.error) {
+            //         setError(response.error);
+            //         return;
+            //     }
+            //     if (response.message) {
+            //         addMessage(response.message);
+            //     }
+            // }
+
+            // Temporarily just trigger chatWithGraph
+            testTrigger("Where is the best place to visit in the world?", "test-chat-id");
+            
             setMessage("");
             inputRef.current?.focus();
         } catch (error) {
@@ -72,31 +79,20 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         }
     };
 
-
     return (
-        <form 
-            onSubmit={handleSubmit}
-            className="border-t p-4"
-        >
-            <div className="flex items-center gap-x-2">
-                <Input
-                    ref={inputRef}
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onFocus={onFocus}
-                    placeholder="Enter a topic to learn about..."
-                    disabled={isLoading}
-                    className="leading-relaxed py-5 resize-none focus-visible:ring-0 outline-none"
-                />
-                <Button 
-                    type="submit" 
-                    size="icon"
-                    disabled={isLoading || !message.trim()}
-                >
-                    <PaperAirplaneIcon className="h-4 w-4" />
-                </Button>
-            </div>
+        <form onSubmit={handleSubmit} className="flex gap-x-2">
+            <Input
+                ref={inputRef}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onFocus={onFocus}
+                placeholder="Type your message..."
+                disabled={isLoading}
+                className="flex-1"
+            />
+            <Button type="submit">
+                <PaperAirplaneIcon className="h-4 w-4" />
+            </Button>
         </form>
     );
 };
