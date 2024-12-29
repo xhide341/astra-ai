@@ -4,11 +4,11 @@ import { MemorySaver, Annotation, messagesStateReducer } from "@langchain/langgr
 import { teacherModel, facilitatorModel } from "./model";
 import { teacherPersona, facilitatorPersona } from "./personas";
 import { trimMessages } from "@langchain/core/messages";
-import { concat } from "@langchain/core/utils/stream";
-import { emitter } from "@/lib/sse";
+// import { concat } from "@langchain/core/utils/stream";
+// // import { StreamChunk } from "@/types/chat";
+// import { saveMessage } from "@/actions/chat/save-message";
+// import { MessageRole } from "@prisma/client";
 import { StreamChunk } from "@/types/chat";
-import { saveMessage } from "@/actions/chat/save-message";
-import { MessageRole } from "@prisma/client";
 
 const TOTAL_GRAPH_ITERATIONS = 2;
 
@@ -125,7 +125,13 @@ const checkpointer = new MemorySaver();
 export const graph = workflow.compile({ checkpointer });
 
 // Usage function
-export async function chatWithGraph(message: string, chatId: string) {
+export async function chatWithGraph(
+    message: string, 
+    chatId: string, 
+    emitChunk: (chunk: StreamChunk) => Promise<void>
+) {
+    console.log("Starting chat processing:", { message, chatId });
+    
     try {
         const events = await graph.streamEvents({
             messages: [new HumanMessage(message)],
@@ -141,59 +147,39 @@ export async function chatWithGraph(message: string, chatId: string) {
             const chunk = event.data.chunk;
             const node = event.metadata.langgraph_node;
             
-            if (event.event === "on_chain_start") {
-                console.log("Starting chain");
-                nodeOutput[node] = "";
-            } else if (event.event === "on_chain_end") {
-                console.log("Ending chain");
-                nodeOutput[node] = "";
-            } else if (event.event === "on_chat_model_start") {
-                console.log("Starting chat model");
-                nodeOutput[node] = "";
-            } else if (event.event === "on_chat_model_stream") {
-                nodeOutput[node] = concat(nodeOutput[node], chunk.content);
-                // console.log(event.event);
-                // Emit streaming chunks
-                emitter.emit(`chat:${chatId}`, {
-                    role: node,
+            if (event.event === "on_chat_model_stream") {
+                // Accumulate text for this node
+                nodeOutput[node] = nodeOutput[node] + (chunk.content || "");
+                
+                // Stream the chunk
+                await emitChunk({
+                    type: 'stream',
+                    role: node.toUpperCase(),
                     content: chunk.content,
                     chatId,
                     isComplete: false
-                } as StreamChunk);
-            } else if (event.event === "on_chat_model_end") {
-                // Save completed message to database
-                const savedMessage = await saveMessage({
-                    content: nodeOutput[node],
-                    role: node.toUpperCase() as MessageRole,
-                    chatId,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
                 });
-
-                if (savedMessage) {
-                    console.log("Completed message saved to database");
-                    console.log(savedMessage);
-                }
-
-                // Emit completion
-                emitter.emit(`chat:${chatId}`, {
-                    role: node,
+            } else if (event.event === "on_chat_model_end") {
+                // Send completion message
+                await emitChunk({
+                    type: 'complete',
+                    role: node.toUpperCase(),
                     content: nodeOutput[node],
                     chatId,
                     isComplete: true
-                } as StreamChunk);
+                });
                 
+                // Reset node output
                 nodeOutput[node] = "";
             }
         }
     } catch (error) {
         console.error("Graph chat error:", error);
-        emitter.emit(`chat:${chatId}`, {
-            role: 'system',
-            content: 'An error occurred during the conversation.',
-            chatId,
-            isComplete: true
-        } as StreamChunk);
+        await emitChunk({
+            type: 'error',
+            error: error instanceof Error ? error.message : 'AI processing failed',
+            chatId
+        });
         throw error;
     }
 }

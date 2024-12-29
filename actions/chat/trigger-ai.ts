@@ -7,10 +7,12 @@ export const triggerAI = async (
     chatId: string
 ): Promise<{ error?: string }> => {
     try {
+        console.log("triggerAI starting with:", { content, chatId });
         await chatWithGraph(content, chatId);
+        console.log("chatWithGraph completed");
         return {};
     } catch (error) {
-        console.error("Error triggering AI:", error);
-        return { error: "Failed to trigger AI response" };
+        console.error("Error in triggerAI:", error);
+        throw error; // Let's throw the error to see the full stack trace
     }
 }; 

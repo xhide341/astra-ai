@@ -12,8 +12,7 @@ export const publicRoutes = [
  * @type {string[]}
 **/  
 export const protectedRoutes = [
-    "/chat",
-    "/api/chat/[chatId]/stream"
+    "/chat"
 ];
 
 /**

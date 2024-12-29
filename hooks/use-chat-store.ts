@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { Chat, Message } from '@/types/chat';
+import { Chat, Message, StreamChunk } from '@/types/chat';
 import { getMessages } from "@/actions/chat/get-messages";
+import { MessageRole } from '@prisma/client';
 
 interface ChatStore {
     // State
@@ -11,6 +12,11 @@ interface ChatStore {
     error: string | null;
     isLoadingConversation: boolean;
     isSidebarOpen: boolean;
+
+    // New Streaming State
+    isStreaming: boolean;
+    currentStreamedContent: string;
+    streamRole: string | null;
 
     // Actions
     setChats: (chats: Chat[]) => void;
@@ -25,9 +31,14 @@ interface ChatStore {
     addMessage: (message: Message) => void;
     setIsLoadingConversation: (loading: boolean) => void;
     toggleSidebar: () => void;
+
+    // New Streaming Actions
+    startStreaming: () => void;
+    stopStreaming: () => void;
+    handleStreamChunk: (chunk: StreamChunk) => void;
 }
 
-export const useChatStore = create<ChatStore>((set) => ({
+export const useChatStore = create<ChatStore>((set, get) => ({
     // Initial state
     chats: [],
     activeChat: null,
@@ -36,6 +47,11 @@ export const useChatStore = create<ChatStore>((set) => ({
     error: null,
     isLoadingConversation: false,
     isSidebarOpen: true,
+
+    // New Streaming State
+    isStreaming: false,
+    currentStreamedContent: '',
+    streamRole: null,
 
     // Actions
     setChats: (chats) => set({ chats }),
@@ -100,4 +116,47 @@ export const useChatStore = create<ChatStore>((set) => ({
     })),
     setIsLoadingConversation: (loading) => set({ isLoadingConversation: loading }),
     toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+
+    // New Streaming Actions
+    startStreaming: () => set({ 
+        isStreaming: true, 
+        currentStreamedContent: '', 
+        error: null 
+    }),
+    stopStreaming: () => {
+        const state = get();
+        if (state.currentStreamedContent && state.activeChat) {
+            const newMessage: Message = {
+                id: Date.now().toString(), // Temporary ID
+                content: state.currentStreamedContent,
+                role: (state.streamRole as MessageRole) || 'AI',
+                chatId: state.activeChat.id,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            };
+            state.addMessage(newMessage);
+        }
+        set({ 
+            isStreaming: false, 
+            currentStreamedContent: '', 
+            streamRole: null 
+        });
+    },
+    handleStreamChunk: (chunk: StreamChunk) => {
+        if (chunk.type === 'error') {
+            set({ error: chunk.error, isStreaming: false });
+            return;
+        }
+
+        if (chunk.type === 'stream') {
+            set((state) => ({ 
+                currentStreamedContent: state.currentStreamedContent + (chunk.content || ''),
+                streamRole: chunk.role || state.streamRole
+            }));
+        }
+
+        if (chunk.type === 'complete') {
+            get().stopStreaming();
+        }
+    }
 })); 

@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button";
 import { useChatStore } from "@/hooks/use-chat-store";
 import { createChat } from "@/actions/chat/create-chat";
 import { Input } from "@/components/ui/input";
-import { useChatStream } from "@/hooks/use-chat-stream";
-import { triggerAI } from "@/actions/chat/trigger-ai";
 import { sendMessage } from "@/actions/chat/send-message";
 
 interface MessageInputProps {
@@ -17,15 +15,18 @@ interface MessageInputProps {
 const MessageInput = ({ onFocus }: MessageInputProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [message, setMessage] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
     const { 
         activeChat,
         chats,
         setChats,
         setActiveChat,
-        setError
+        setError,
+        startStreaming,
+        handleStreamChunk,
+        setIsLoading,
+        isLoading,
+        loadMessages
     } = useChatStore();
-    const { setupStream } = useChatStream();
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -34,33 +35,66 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         try {
             setIsLoading(true);
             setError(null);
+            console.log("Starting message submission...");
 
             // Create chat if needed
             let currentChatId = activeChat?.id;
             if (!currentChatId) {
+                console.log("Creating new chat...");
                 const chatResponse = await createChat();
                 if (!chatResponse.chat) {
                     setError("Failed to create chat");
                     return;
                 }
                 setChats([chatResponse.chat, ...chats]);
-                setActiveChat(chatResponse.chat);
+                await setActiveChat(chatResponse.chat);
                 currentChatId = chatResponse.chat.id;
+                console.log("New chat created:", currentChatId);
             }
 
             // Save user message
+            console.log("Saving user message...");
             const response = await sendMessage(currentChatId, message);
             if (response.error) {
                 throw new Error(response.error);
             }
 
-            // Setup stream first
-            await setupStream(currentChatId);
-            
-            // Then trigger AI
-            const aiResponse = await triggerAI(message, currentChatId);
-            if (aiResponse.error) {
-                throw new Error(aiResponse.error);
+            // Load messages after saving
+            await loadMessages(currentChatId);
+            console.log("User message saved");
+
+            // Start streaming mode
+            startStreaming();
+
+            // Send message and handle stream
+            const streamResponse = await fetch('/api/chat/trigger', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message,
+                    chatId: currentChatId
+                })
+            });
+
+            if (!streamResponse.ok) throw new Error('Failed to send message');
+
+            // Read the stream
+            const reader = streamResponse.body?.getReader();
+            if (!reader) throw new Error('No reader available');
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                // Parse chunks and handle them
+                const chunk = new TextDecoder().decode(value);
+                const lines = chunk.split('\n\n');
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        const data = JSON.parse(line.slice(5));
+                        handleStreamChunk(data);
+                    }
+                }
             }
 
             setMessage("");
@@ -69,6 +103,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
             setError("Failed to send message");
         } finally {
             setIsLoading(false);
+            setMessage("");
         }
     };
 

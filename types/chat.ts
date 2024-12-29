@@ -64,12 +64,15 @@ export interface ChatTabProps {
     onClick: () => void;
 }
 
-export interface StreamChunk {
-    role: 'teacher' | 'facilitator' | 'system';
-    content: string;
+export type StreamChunk = {
+    type: 'stream' | 'complete' | 'error';
+    role?: string;
+    content?: string;
     chatId: string;
+    messageId?: string;
     isComplete?: boolean;
-}
+    error?: string;
+};
 
 export interface UIUpdate {
     type: 'newMessage';
