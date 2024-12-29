@@ -65,11 +65,10 @@ export interface ChatTabProps {
 }
 
 export interface StreamChunk {
-    type: 'stream-chunk';
-    role: MessageRole;
+    role: 'teacher' | 'facilitator' | 'system';
     content: string;
     chatId: string;
-    isComplete: boolean;
+    isComplete?: boolean;
 }
 
 export interface UIUpdate {

@@ -13,7 +13,7 @@ export const publicRoutes = [
 **/  
 export const protectedRoutes = [
     "/chat",
-    "/api/chat/stream"
+    "/api/chat/[chatId]/stream"
 ];
 
 /**

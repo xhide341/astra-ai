@@ -13,7 +13,6 @@
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import { SendMessageResponse } from "@/types/chat";
-import { chatWithGraph } from "@/lib/langchain/graph";
 
 export const sendMessage = async (
     chatId: string,
@@ -47,9 +46,6 @@ export const sendMessage = async (
                 data: { title: updatedTitle }
             });
         }
-
-        // Start streaming response via graph
-        await chatWithGraph(content, chatId);
 
         return { message: userMessage };
     } catch (error) {

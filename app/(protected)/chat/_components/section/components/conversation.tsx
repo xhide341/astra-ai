@@ -6,36 +6,42 @@ import { useChatStore } from '@/hooks/use-chat-store';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomOneDarkReasonable } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
+// import { useChatStream } from '@/hooks/use-chat-stream';
 
 const Conversation = () => {
     const { 
         activeChat,
+        messages,
+        isLoading
     } = useChatStore();
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    
+    // Initialize stream connection
+    // useChatStream(activeChat?.id || '');
 
+    // Auto-scroll on new messages
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [activeChat?.id]);
+    }, [messages]);
 
     // Debug logs
     console.log("Conversation state:", {
         activeChat: activeChat?.id || 'none',
+        messageCount: messages.length
     });
-
-    const chatId = activeChat?.id;
-    
 
     return (
         <div className="p-4 space-y-4">
-            {chatId && (
-                <div className="flex items-start gap-x-2">
+            {messages.map((message) => (
+                <div key={message.id} className="flex items-start gap-x-2">
                     <div className="flex-shrink-0">
                         <div className={cn(
                             "w-[30px] h-[30px] rounded-full flex items-center justify-center",
                             "bg-blue-500"
                         )}>
                             <span className="text-white text-sm font-semibold">
-                                T
+                                {message.role === "USER" ? "U" : 
+                                 message.role === "TEACHER" ? "T" : "F"}
                             </span>
                         </div>
                     </div>
@@ -97,9 +103,14 @@ const Conversation = () => {
                                 }
                             }}
                         >
-                            {/* Add a message content here */}
+                            {message.content}
                         </ReactMarkdown>
                     </div>
+                </div>
+            ))}
+            {isLoading && (
+                <div className="flex items-center justify-center">
+                    <div className="animate-pulse">Thinking...</div>
                 </div>
             )}
             <div ref={messagesEndRef} />

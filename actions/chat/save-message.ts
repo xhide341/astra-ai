@@ -3,13 +3,29 @@
 import db from "@/lib/db";
 import { MessageRole } from "@prisma/client";
 
-export async function saveMessage(content: string, role: MessageRole, chatId: string) {
+interface SaveMessageParams {
+    content: string;
+    role: MessageRole;
+    chatId: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export async function saveMessage({
+    content,
+    role,
+    chatId,
+    createdAt,
+    updatedAt
+}: SaveMessageParams) {
     try {
         const message = await db.message.create({
             data: {
                 content,
                 role,
-                chatId
+                chatId,
+                createdAt,
+                updatedAt
             }
         });
         return message;
