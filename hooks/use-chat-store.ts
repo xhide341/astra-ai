@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Chat, Message, StreamChunk } from '@/types/chat';
 import { getMessages } from "@/actions/chat/get-messages";
 import { MessageRole } from '@prisma/client';
+// import { saveMessage } from '@/actions/chat/save-message';
 
 interface ChatStore {
     // State
@@ -17,6 +18,7 @@ interface ChatStore {
     isStreaming: boolean;
     currentStreamedContent: string;
     streamRole: string | null;
+    previousRole: string | null;
 
     // Actions
     setChats: (chats: Chat[]) => void;
@@ -52,6 +54,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     isStreaming: false,
     currentStreamedContent: '',
     streamRole: null,
+    previousRole: null,
 
     // Actions
     setChats: (chats) => set({ chats }),
@@ -142,21 +145,46 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             streamRole: null 
         });
     },
-    handleStreamChunk: (chunk: StreamChunk) => {
+    handleStreamChunk: async (chunk: StreamChunk) => {
+
         if (chunk.type === 'error') {
             set({ error: chunk.error, isStreaming: false });
             return;
         }
 
         if (chunk.type === 'stream') {
-            set((state) => ({ 
-                currentStreamedContent: state.currentStreamedContent + (chunk.content || ''),
-                streamRole: chunk.role || state.streamRole
-            }));
-        }
-
-        if (chunk.type === 'complete') {
-            get().stopStreaming();
+            const newRole = chunk.role || null;
+            const { previousRole } = get();
+            // Role change save point
+            if (newRole !== previousRole && previousRole !== null) {
+                const state = get();
+                if (state.currentStreamedContent) {
+                    const newMessage = {
+                        id: Date.now().toString(),
+                        content: state.currentStreamedContent,
+                        role: state.previousRole as MessageRole,
+                        chatId: chunk.chatId,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    };
+                    // Update UI state
+                    state.addMessage(newMessage);
+                    // Reset streaming state
+                    set({ 
+                        currentStreamedContent: chunk.content || '',
+                        streamRole: newRole,
+                        previousRole: newRole
+                    });
+                }
+            } else {
+                // Continue streaming current role
+                set((state) => ({ 
+                    currentStreamedContent: state.currentStreamedContent + (chunk.content || ''),
+                    streamRole: newRole,
+                    previousRole: newRole,
+                    isStreaming: true
+                }));
+            }
         }
     }
 })); 

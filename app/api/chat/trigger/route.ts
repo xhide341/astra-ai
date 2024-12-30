@@ -7,6 +7,16 @@ export async function POST(req: NextRequest) {
   const encoder = new TextEncoder();
   const stream = new TransformStream();
   const writer = stream.writable.getWriter();
+  const triggerLog: { 
+    chatId: string, 
+    userMessage: string,
+    aiMessage: string,
+    chunks: number,
+    role: string | null 
+  }[] = [];
+  let currentRole: string | null = null;
+  let chunkCount = 0;
+  let currentMessage = '';  // Track current AI message
 
   try {
     // 1. Auth check
@@ -34,7 +44,24 @@ export async function POST(req: NextRequest) {
       try {
         console.log("Starting AI processing");
         await chatWithGraph(message, chatId, async (chunk: StreamChunk) => {
-          console.log("Sending chunk:", chunk);
+          if (chunk.type === 'stream') {
+            chunkCount++;
+            currentMessage += chunk.content || '';  // Accumulate AI message
+            if (chunk.role !== currentRole) {
+              if (currentRole) {
+                triggerLog.push({ 
+                  chatId, 
+                  userMessage: message.slice(0, 50) + "...",
+                  aiMessage: currentMessage,  // Full AI message
+                  chunks: chunkCount,
+                  role: currentRole 
+                });
+                chunkCount = 1;
+                currentMessage = chunk.content || '';  // Reset for new role
+              }
+              currentRole = chunk.role || null;
+            }
+          }
           await writer.write(
             encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`)
           );
@@ -50,6 +77,17 @@ export async function POST(req: NextRequest) {
           encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`)
         );
       } finally {
+        // Push final role's stats
+        if (currentRole) {
+          triggerLog.push({ 
+            chatId, 
+            userMessage: message.slice(0, 50) + "...",
+            aiMessage: currentMessage,  // Final AI message
+            chunks: chunkCount,
+            role: currentRole 
+          });
+        }
+        console.log("Trigger stats:", JSON.stringify(triggerLog, null, 2));  // Pretty print
         await writer.close();
       }
     })();

@@ -41,7 +41,9 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
             let currentChatId = activeChat?.id;
             if (!currentChatId) {
                 console.log("Creating new chat...");
-                const chatResponse = await createChat();
+                // Use first 50 characters of message as title
+                const initialTitle = message.slice(0, 50) + (message.length > 50 ? "..." : "");
+                const chatResponse = await createChat(initialTitle);
                 if (!chatResponse.chat) {
                     setError("Failed to create chat");
                     return;

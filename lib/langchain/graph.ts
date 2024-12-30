@@ -6,7 +6,7 @@ import { teacherPersona, facilitatorPersona } from "./personas";
 import { trimMessages } from "@langchain/core/messages";
 // import { concat } from "@langchain/core/utils/stream";
 // // import { StreamChunk } from "@/types/chat";
-// import { saveMessage } from "@/actions/chat/save-message";
+import { saveMessage } from "@/actions/chat/save-message";
 // import { MessageRole } from "@prisma/client";
 import { StreamChunk } from "@/types/chat";
 
@@ -50,7 +50,7 @@ const messageTrimmer = trimMessages({
 
 // Teacher node with trimming
 async function teacherNode(state: typeof StateAnnotation.State) {
-    console.log("Teacher Node - Current iteration:", state.iteration);
+    console.log(`🎓 Teacher Turn (Iteration ${state.iteration})`);
     
     // Trim messages before processing
     const trimmedMessages = await messageTrimmer.invoke(state.messages);
@@ -72,7 +72,7 @@ async function teacherNode(state: typeof StateAnnotation.State) {
 
 // Facilitator node with trimming
 async function facilitatorNode(state: typeof StateAnnotation.State) {
-    console.log("Facilitator Node - Current iteration:", state.iteration);
+    console.log(`💬 Facilitator Turn (Iteration ${state.iteration})`);
     
     const trimmedMessages = await messageTrimmer.invoke(state.messages);
     const teacherMessage = trimmedMessages[trimmedMessages.length - 1].content;
@@ -89,7 +89,7 @@ async function facilitatorNode(state: typeof StateAnnotation.State) {
 
     const response = await facilitatorModel.invoke(formattedPrompt);
 
-    console.log("Facilitator Node - Completing iteration:", state.iteration);
+    console.log(`✅ Facilitator Complete (Iteration ${state.iteration})`);
     return { 
         messages: [...state.messages, new AIMessage({ 
             content: response.content,
@@ -100,13 +100,11 @@ async function facilitatorNode(state: typeof StateAnnotation.State) {
 
 // Define when to continue or end conversation
 function shouldContinue(state: typeof StateAnnotation.State): "__end__" | "teacher" {
-    console.log("ShouldContinue - Checking iteration:", state.iteration);
-    
     if (state.iteration >= TOTAL_GRAPH_ITERATIONS) {
-        console.log("ShouldContinue - Ending conversation");
+        console.log("🏁 Conversation Complete");
         return "__end__";
     }
-    console.log("ShouldContinue - Continuing to teacher");
+    console.log("➡️ Continuing to Teacher");
     return "teacher";
 }
 
@@ -130,7 +128,7 @@ export async function chatWithGraph(
     chatId: string, 
     emitChunk: (chunk: StreamChunk) => Promise<void>
 ) {
-    console.log("Starting chat processing:", { message, chatId });
+    console.log("🚀 Starting Chat:", { message, chatId });
     
     try {
         const events = await graph.streamEvents({
@@ -150,7 +148,6 @@ export async function chatWithGraph(
             if (event.event === "on_chat_model_stream") {
                 // Accumulate text for this node
                 nodeOutput[node] = nodeOutput[node] + (chunk.content || "");
-                
                 // Stream the chunk
                 await emitChunk({
                     type: 'stream',
@@ -160,21 +157,22 @@ export async function chatWithGraph(
                     isComplete: false
                 });
             } else if (event.event === "on_chat_model_end") {
-                // Send completion message
-                await emitChunk({
-                    type: 'complete',
-                    role: node.toUpperCase(),
+                const fullMessage = {
+                    id: Date.now().toString(),
                     content: nodeOutput[node],
+                    role: node.toUpperCase(),
                     chatId,
-                    isComplete: true
-                });
-                
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                }
+                await saveMessage(fullMessage);
+                console.log(`💾 Saved ${node} message`);
                 // Reset node output
                 nodeOutput[node] = "";
             }
         }
     } catch (error) {
-        console.error("Graph chat error:", error);
+        console.error("❌ Chat Error:", error);
         await emitChunk({
             type: 'error',
             error: error instanceof Error ? error.message : 'AI processing failed',

@@ -12,7 +12,7 @@ import { auth } from "@/auth";
 import db from "@/lib/db";
 import { CreateChatResponse } from "@/types/chat";
 
-export const createChat = async (): Promise<CreateChatResponse> => {
+export const createChat = async (title?: string): Promise<CreateChatResponse> => {
     try {
         const session = await auth();
         
@@ -25,7 +25,7 @@ export const createChat = async (): Promise<CreateChatResponse> => {
         const chat = await db.chat.create({
             data: {
                 userId,
-                title: "New Chat",
+                title: title || "New Chat",
             },
         });
 

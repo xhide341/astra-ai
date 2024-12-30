@@ -9,7 +9,6 @@ import { atomOneDarkReasonable } from 'react-syntax-highlighter/dist/cjs/styles/
 
 const Conversation = () => {
     const { 
-        activeChat,
         messages,
         isLoading,
         isStreaming,
@@ -23,12 +22,7 @@ const Conversation = () => {
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, currentStreamedContent]);
-
-    // Debug logs
-    console.log("Conversation state:", {
-        activeChat: activeChat?.id || 'none',
-        messageCount: messages.length
-    });
+    
 
     return (
         <div className="p-4 space-y-4">
