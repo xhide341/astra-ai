@@ -13,20 +13,24 @@ const Conversation = () => {
         isLoading,
         isStreaming,
         currentStreamedContent,
-        streamRole
+        streamRole,
+        activeChat
     } = useChatStore();
     const messagesEndRef = useRef<HTMLDivElement>(null);
-
 
     // Auto-scroll on new messages or streaming updates
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, currentStreamedContent]);
-    
+
+    // Filter messages to only show those matching active chat
+    const filteredMessages = messages.filter(message => 
+        message.chatId === activeChat?.id
+    );
 
     return (
         <div className="p-4 space-y-4">
-            {messages.map((message) => (
+            {filteredMessages.map((message) => (
                 <div key={message.id} className="flex items-start gap-x-2">
                     <div className="flex-shrink-0">
                         <div className={cn(
@@ -103,8 +107,8 @@ const Conversation = () => {
                 </div>
             ))}
 
-            {/* Show streaming message */}
-            {isStreaming && currentStreamedContent && (
+            {/* Only show streaming content if it matches active chat */}
+            {isStreaming && currentStreamedContent && activeChat && (
                 <div className="flex items-start gap-x-2">
                     <div className="flex-shrink-0">
                         <div className={cn(

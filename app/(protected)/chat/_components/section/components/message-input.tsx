@@ -25,7 +25,8 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         handleStreamChunk,
         setIsLoading,
         isLoading,
-        loadMessages
+        loadMessages,
+        stopStreaming
     } = useChatStore();
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -86,7 +87,9 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
 
             while (true) {
                 const { done, value } = await reader.read();
-                if (done) break;
+                if (done){
+                    break;
+                }
 
                 // Parse chunks and handle them
                 const chunk = new TextDecoder().decode(value);
@@ -101,9 +104,11 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
 
             setMessage("");
         } catch (error) {
+            stopStreaming();
             console.error("Error sending message:", error);
             setError("Failed to send message");
         } finally {
+            stopStreaming();
             setIsLoading(false);
             setMessage("");
         }

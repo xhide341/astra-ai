@@ -187,4 +187,13 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             }
         }
     }
-})); 
+}));
+
+useChatStore.subscribe((state) => {
+    console.log('Messages:', state.messages);
+    console.log('Current Stream:', {
+        content: state.currentStreamedContent,
+        isStreaming: state.isStreaming,
+        streamRole: state.streamRole
+    });
+}); 
