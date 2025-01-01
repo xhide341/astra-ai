@@ -28,14 +28,43 @@ const Conversation = () => {
         message.chatId === activeChat?.id
     );
 
+    const getBubbleColor = (role: string) => {
+        switch (role) {
+            case "USER":
+                return "bg-blue-500";
+            case "TEACHER":
+                return "bg-green-500";
+            case "FACILITATOR":
+                return "bg-purple-500";
+            default:
+                return "bg-gray-500";
+        }
+    };
+
+    const getMessageBgColor = (role: string) => {
+        switch (role) {
+            case "USER":
+                return "bg-blue-50";
+            case "TEACHER":
+                return "bg-green-50";
+            case "FACILITATOR":
+                return "bg-purple-50";
+            default:
+                return "bg-gray-50";
+        }
+    };
+
     return (
         <div className="p-4 space-y-4">
             {filteredMessages.map((message) => (
-                <div key={message.id} className="flex items-start gap-x-2">
+                <div key={message.id} className={cn(
+                    "flex items-start gap-x-2",
+                    message.role === "USER" ? "flex-row-reverse" : "flex-row"
+                )}>
                     <div className="flex-shrink-0">
                         <div className={cn(
                             "w-[30px] h-[30px] rounded-full flex items-center justify-center",
-                            "bg-blue-500"
+                            getBubbleColor(message.role)
                         )}>
                             <span className="text-white text-sm font-semibold">
                                 {message.role === "USER" ? "U" : 
@@ -45,7 +74,7 @@ const Conversation = () => {
                     </div>
                     <div className={cn(
                         "max-w-[80%] rounded-lg py-3 px-4 prose prose-sm dark:prose-invert max-w-none break-normal overflow-auto text-sm",
-                        "bg-blue-50"
+                        getMessageBgColor(message.role)
                     )}>
                         <ReactMarkdown
                             className="overflow-auto"
@@ -113,7 +142,7 @@ const Conversation = () => {
                     <div className="flex-shrink-0">
                         <div className={cn(
                             "w-[30px] h-[30px] rounded-full flex items-center justify-center",
-                            "bg-blue-500"
+                            getBubbleColor(streamRole ?? "DEFAULT")
                         )}>
                             <span className="text-white text-sm font-semibold">
                                 {streamRole === "TEACHER" ? "T" : 
@@ -123,7 +152,7 @@ const Conversation = () => {
                     </div>
                     <div className={cn(
                         "max-w-[80%] rounded-lg py-3 px-4 prose prose-sm dark:prose-invert max-w-none break-normal overflow-auto text-sm",
-                        "bg-blue-50"
+                        getMessageBgColor(streamRole ?? "DEFAULT")
                     )}>
                         <ReactMarkdown
                             className="overflow-auto"

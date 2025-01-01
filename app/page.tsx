@@ -14,20 +14,29 @@ export default function Home() {
         </nav>
       </header>
 
-      <main className="z-10 sm:pt-32 pt-24 flex flex-col items-center justify-center w-full px-6 lg:px-8">
+      <main className="z-10 sm:pt-24 pt-16 flex flex-col items-center justify-center w-full px-6 lg:px-8">
         {/* hero section */}
-        <section className="flex items-center justify-center w-full max-w-7xl mx-auto py-24">
-          <div className="flex flex-col gap-4 items-center">
-            <h1 className="text-5xl/[1.25] sm:text-6xl/[1.25] font-bold text-highlight max-w-2xl text-center leading-normal">
-              AI-Powered Learning, Personalized for You
-            </h1>
-            <p className="text-lg text-gray-300 max-w-2xl text-center">
-              Your intelligent study companion that adapts to your learning style
-              <br />
-              and helps you master any subject
-            </p>
-            <div className="flex items-center gap-4">
-              <GlowingButton text="Get started" href="/register" ariaLabel="Navigate to register page" />
+        <section className="flex items-center justify-center w-full max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="flex flex-col gap-6">
+              <h1 className="text-4xl/[1.25] sm:text-5xl/[1.25] font-bold text-highlight max-w-2xl leading-normal">
+                AI-Powered Learning, Personalized for You
+              </h1>
+              <p className="text-lg text-gray-300 max-w-2xl">
+                Your intelligent study companion that adapts to your learning style and helps you master any subject
+              </p>
+              <div className="flex items-center gap-4">
+                <GlowingButton text="Get started" href="/register" ariaLabel="Navigate to register page" />
+              </div>
+            </div>
+            <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900">
+              <Image
+                src="/hero-placeholder.png"
+                alt="AI Learning Platform"
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
           </div>
         </section>

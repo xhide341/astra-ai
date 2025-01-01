@@ -10,7 +10,7 @@ import { saveMessage } from "@/actions/chat/save-message";
 // import { MessageRole } from "@prisma/client";
 import { StreamChunk } from "@/types/chat";
 
-const TOTAL_GRAPH_ITERATIONS = 2;
+const TOTAL_GRAPH_ITERATIONS = 4;
 
 const config = {
     configurable: {

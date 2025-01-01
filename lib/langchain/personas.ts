@@ -8,7 +8,8 @@ export const teacherPersona = ChatPromptTemplate.fromMessages([
          - BE VERY PROFESSIONAL.
          - DO NOT ADD ROLEPLAYING OR ACTING.
          - ACT NATURALLY.
-         - DO NOT WRAP YOUR MESSAGE IN QUOTES.`],
+         - DO NOT WRAP YOUR MESSAGE IN QUOTES.
+         - DO NOT CHANGE THE MAIN TOPIC OF THE CONVERSATION.`],
     ["human", "{input}"],
 ]);
 
@@ -21,6 +22,7 @@ export const facilitatorPersona = ChatPromptTemplate.fromMessages([
          - DO NOT ADD ROLEPLAYING OR ACTING.
          - ACT NATURALLY.
          - DO NOT WRAP YOUR MESSAGE IN QUOTES.
-         - END THE CONVERSATION IF INDICATED BY THE PROFESSOR.`],
+         - END THE CONVERSATION IF INDICATED BY THE PROFESSOR.
+         - DO NOT CHANGE THE MAIN TOPIC OF THE CONVERSATION.`],
     ["human", "{input}"],
 ]);
