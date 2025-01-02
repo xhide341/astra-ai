@@ -1,6 +1,6 @@
 'use client';
 
-import { Bars3Icon } from "@heroicons/react/24/outline";
+import { Bars3Icon, ChatBubbleLeftIcon } from "@heroicons/react/24/solid";
 import Conversation from './components/conversation';
 import MessageInput from './components/message-input';
 import { useChatStore } from '@/hooks/use-chat-store';
@@ -12,7 +12,7 @@ const ChatSection = () => {
     const isCompactView = !activeChat;
 
     return (
-        <div className="flex flex-col h-full w-full p-2 bg-gray-200 border-4 border-gray-200 rounded-xl">
+        <div className="flex flex-col h-full w-full p-2 bg-zinc-700 border-0 rounded-xl">
             <AnimatePresence mode="wait">
                 {isCompactView ? (
                     <motion.div 
@@ -32,10 +32,13 @@ const ChatSection = () => {
                             <Bars3Icon className="h-5 w-5" />
                         </button>
                         <div className="flex flex-col items-center justify-center h-full">
-                            <div className="w-full max-w-md space-y-6">
-                                <h1 className="text-2xl font-semibold text-center text-gray-800">
-                                    What do you want to learn?
+                            <div className="w-full max-w-md">
+                                <h1 className="text-2xl font-semibold text-center text-gray-800 dark:text-white/90 mb-4">
+                                    Enter a topic
                                 </h1>
+                                <p className="text-gray-800 dark:text-white/90 text-xs font-thin mx-auto mb-6 text-center">
+                                    Please note that the topic must be for educational purposes only.
+                                </p>
                                 <MessageInput onFocus={() => {}} />
                             </div>
                         </div>
@@ -49,29 +52,28 @@ const ChatSection = () => {
                         className="flex flex-col h-full"
                     >
                         <div className="flex items-center justify-between p-4 border-b">
-                            <div className="flex items-center gap-x-3">
-                                <button
-                                    onClick={toggleSidebar}
-                                    className={cn(
-                                        "p-2 hover:bg-gray-200 rounded-full",
-                                        isSidebarOpen && "hidden"
-                                    )}
-                                >
-                                    <Bars3Icon className="h-5 w-5" />
-                                </button>
-                                <h2 className="text-xl font-semibold">
-                                    {activeChat?.title || 'New Chat'}
-                                </h2>
-                            </div>
+                            <button
+                                onClick={toggleSidebar}
+                                className={cn(
+                                    "p-2 hover:bg-gray-200 rounded-full items-center justify-start",
+                                    isSidebarOpen && "hidden"
+                                )}
+                            >
+                                <Bars3Icon className="h-5 w-5" />
+                            </button>
+                            <h2 className="px-6 max-w-2xl w-full text-xl font-semibold mx-auto text-start text-black-600 dark:text-white/90 flex items-center gap-2">
+                                <ChatBubbleLeftIcon className="h-6 w-6" />
+                                {activeChat?.title || 'New Chat'}
+                            </h2>
                             {error && <p className="text-red-500 text-sm">{error}</p>}
                         </div>
-                        <div className="flex justify-center items-center overflow-y-auto">
+                        <div className="flex-1 flex justify-center items-center overflow-y-auto">
                             <div className="w-full max-w-2xl flex flex-col h-full max-h-full">
                                 <Conversation />
                             </div>
                         </div>
-                        <div className="flex justify-center items-center">
-                            <div className="w-full max-w-2xl flex flex-col h-full max-h-full">
+                        <div className="flex justify-center items-center py-4 sticky bottom-0 bg-zinc-700">
+                            <div className="w-full max-w-2xl">
                                 <MessageInput onFocus={() => {}} />
                             </div>
                         </div>

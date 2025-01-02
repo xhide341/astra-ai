@@ -1,6 +1,6 @@
 'use client';
 
-import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import { FormEvent, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useChatStore } from "@/hooks/use-chat-store";
@@ -123,10 +123,10 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                 onFocus={onFocus}
                 placeholder="Type your message..."
                 disabled={isLoading}
-                className="flex-1"
+                className="flex-1 bg-white/90 dark:bg-zinc-900/75 dark:backdrop-blur-md dark:border-zinc-800 text-black-600 dark:text-white/90 placeholder:text-gray-600 dark:placeholder:text-white/70"
             />
-            <Button type="submit">
-                <PaperAirplaneIcon className="h-4 w-4" />
+            <Button type="submit" disabled={isLoading} className="disabled:opacity-50 disabled:cursor-not-allowed bg-primary-color hover:bg-secondary-color">
+                <PaperAirplaneIcon className="h-3 w-3 text-white/80" />
             </Button>
         </form>
     );
