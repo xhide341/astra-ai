@@ -103,7 +103,7 @@ const Sidebar = () => {
                 isSidebarOpen ? "w-[260px] min-w-[260px]" : "w-0 min-w-0 hidden"
             )}>
                 {isLoading ? (
-                    <div className="h-full flex justify-center items-center">
+                    <div className="h-full flex justify-center items-center my-auto">
                         <BeatLoader 
                             size={8}
                             color="var(--primary-color)"

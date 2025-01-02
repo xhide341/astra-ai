@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { LoginForm } from "@/components/auth/login-form";
 import { AuthCard } from "@/components/auth/auth-card";
 
@@ -8,7 +9,9 @@ const LoginPage = () => {
         title="Welcome back"
         description="Enter your credentials to access your account"
       >
-        <LoginForm />
+        <Suspense fallback={<div>Loading...</div>}>
+          <LoginForm />
+        </Suspense>
       </AuthCard>
     </div>
   );

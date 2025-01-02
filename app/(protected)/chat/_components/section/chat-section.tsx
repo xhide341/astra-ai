@@ -25,11 +25,11 @@ const ChatSection = () => {
                         <button
                             onClick={toggleSidebar}
                             className={cn(
-                                "absolute top-2 left-2 p-2 hover:bg-gray-200 rounded-full",
+                                "absolute top-2 left-2 p-2 rounded-full",
                                 isSidebarOpen && "hidden"
                             )}
                         >
-                            <Bars3Icon className="h-5 w-5" />
+                            <Bars3Icon className="h-5 w-5 text-primary-color dark:text-white/90" />
                         </button>
                         <div className="flex flex-col items-center justify-center h-full">
                             <div className="w-full max-w-md">
