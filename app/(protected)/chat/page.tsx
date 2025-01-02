@@ -9,7 +9,7 @@ const ChatPage = () => {
     const { isSidebarOpen } = useChatStore();
 
     return (
-        <div className="flex h-screen w-full max-w-screen">
+        <div className="flex h-screen w-full max-w-screen dark:bg-zinc-900">
             <div className={cn(
                 "transition-all duration-300 ease-in-out",
                 isSidebarOpen ? "w-[260px]" : "w-0"

@@ -3,14 +3,13 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useCurrentUser } from '@/hooks/use-current-user';
-import { PlusIcon, ChevronLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { BeatLoader } from "react-spinners";
 import ChatTab from './components/chat-tab';
 import { useChatStore } from '@/hooks/use-chat-store';
 import { getChatHistory } from '@/actions/chat/get-chat-history';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { signOut } from 'next-auth/react';
 
 const Sidebar = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -66,63 +65,54 @@ const Sidebar = () => {
     };
 
     return (
-        <div className="relative h-full">
-
-            <button
-                onClick={() => signOut({ callbackUrl: "/auth/login" })}
-                className="absolute top-4 left-4 z-50 p-2 rounded-full hover:bg-gray-100"
-            >
-                Sign Out
-                <XMarkIcon className="h-5 w-5" />
-            </button>
-
-            <button
-                onClick={toggleSidebar}
-                className={cn(
-                    "absolute top-4 right-4 z-50 p-2 rounded-full hover:bg-gray-100",
+        <div className="relative h-screen max-h-screen">                
+            <div className="px-2">
+                <div className={cn(
+                    "flex px-2 py-3 gap-2 items-center justify-start rounded-full",
                     !isSidebarOpen && "hidden"
-                )}
-            >
-                <ChevronLeftIcon className="h-5 w-5" />
-            </button>
+                )}>
+                    {user?.image ? (
+                        <Image
+                            src={user.image}
+                            alt="avatar"
+                            width={50}
+                            height={50}
+                            className="rounded-full"
+                        />
+                    ) : (
+                        <div className="w-16 h-16 bg-gray-200 rounded-full" />
+                    )}
+                    <p className="text-black text-sm font-lg leading-none dark:text-white/80">
+                        {user?.name?.split(' ')[0]}
+                    </p>
+                </div>
+                {/* Sidebar toggle*/}
+                <button
+                    onClick={toggleSidebar}
+                    className={cn(
+                        "absolute top-4 right-4 z-50 p-2 rounded-full",
+                        !isSidebarOpen && "hidden"
+                    )}
+                >
+                    <ChevronLeftIcon className="h-5 w-5 text-primary-color dark:text-white/80" />
+                </button>
+            </div>
 
             <div className={cn(
-                "h-full overflow-y-auto",
-                "transition-all duration-300 ease-in-out",
-                isSidebarOpen ? "w-[260px] min-w-[260px]" : "w-0 min-w-0 opacity-0"
+                "transition-all overflow-y-auto duration-300 ease-in-out",
+                isSidebarOpen ? "w-[260px] min-w-[260px]" : "w-0 min-w-0 hidden"
             )}>
                 {isLoading ? (
                     <div className="h-full flex justify-center items-center">
                         <BeatLoader 
                             size={8}
-                            color="#3B82F6"
+                            color="var(--primary-color)"
                             speedMultiplier={0.7}
                         />
                     </div>
                 ) : (
-                    <div className="p-2 pt-16">
+                    <div className="p-2">
                         <div className="flex flex-col gap-2">
-                            <div className="flex gap-1 p-3 items-center justify-center rounded-full">
-                                {user?.image ? (
-                                    <Image 
-                                        src={user.image} 
-                                        alt="avatar" 
-                                        width={54} 
-                                        height={54} 
-                                        className="rounded-full" 
-                                    />
-                                ) : (
-                                    <div className="w-16 h-16 bg-gray-200 rounded-full" />
-                                )}
-                                <div className="flex flex-col items-start justify-center text-start gap-1">
-                                    <p className="text-black text-sm font-semibold leading-none">
-                                        {user?.name?.split(' ')[0]}
-                                    </p>
-                                    <p className="text-gray-500 text-xs font-light leading-none">
-                                        {user?.email}
-                                    </p>
-                                </div>
-                            </div>
 
                             <button
                                 onClick={handleNewChat}
@@ -133,7 +123,7 @@ const Sidebar = () => {
                                 )}
                             >
                                 <PlusIcon className="h-4 w-4" />
-                                <p className="text-black text-sm font-medium leading-none z-10">
+                                <p className="text-black-600 text-sm font-medium leading-none z-10">
                                     New Chat
                                 </p>
                             </button>
