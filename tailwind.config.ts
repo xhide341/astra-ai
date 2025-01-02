@@ -2,8 +2,7 @@ import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
 export default {
-    // darkMode: ["class"],
-	// darkMode: false,
+    darkMode: ["class"],	
     content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -12,6 +11,9 @@ export default {
   theme: {
   	extend: {
   		colors: {
+			'primary-color': 'var(--primary-color)',
+			'secondary-color': 'var(--secondary-color)',
+			'dark-primary-color': 'var(--dark-primary-color)',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			primary: {
@@ -22,14 +24,10 @@ export default {
   				DEFAULT: 'var(--secondary)',
   				foreground: 'var(--secondary-foreground)'
   			},
-  			tertiary: '#99D9C9',
   			accent: {
   				DEFAULT: 'hsl(var(--accent))',
   				foreground: 'hsl(var(--accent-foreground))'
   			},
-  			highlight: '#F2F2F2',
-  			obsidian: '#040615',
-			teal: '#10b981',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
