@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import { useTheme } from "next-themes";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 
@@ -14,8 +15,6 @@ interface SparklesProps {
   opacity?: number;
   opacitySpeed?: number;
   minOpacity?: number | null;
-  color?: string;
-  background?: string;
   options?: Record<string, unknown>;
 }
 
@@ -29,11 +28,11 @@ export function Sparkles({
   opacity = 1,
   opacitySpeed = 3,
   minOpacity = null,
-  color = "#FFFFFF",
-  background = "transparent",
   options = {},
 }: SparklesProps) {
   const [isReady, setIsReady] = useState(false);
+  const { theme } = useTheme();
+  const id = useId();
 
   useEffect(() => {
     initParticlesEngine(async (engine) => {
@@ -43,12 +42,10 @@ export function Sparkles({
     });
   }, []);
 
-  const id = useId();
-
   const defaultOptions = {
     background: {
       color: {
-        value: background,
+        value: "transparent",
       },
     },
     fullScreen: {
@@ -58,7 +55,7 @@ export function Sparkles({
     fpsLimit: 120,
     particles: {
       color: {
-        value: color,
+        value: theme === 'dark' ? "#FFFFFF" : "var(--primary-color)",
       },
       move: {
         enable: true,

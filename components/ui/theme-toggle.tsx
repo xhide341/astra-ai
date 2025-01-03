@@ -1,55 +1,44 @@
 'use client';
 
-import { SunIcon, MoonIcon } from "@heroicons/react/24/outline";
-import { motion } from "motion/react";
+import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
-export const ThemeToggle = () => {
+export const ThemeToggle = ({ className }: { className?: string }) => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const isDark = theme === "dark";
 
-  // Prevent hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) {
-    return <div className="w-9 h-9" />; // Placeholder with same dimensions
+    return <div className="w-12 h-6" />; // Smaller placeholder
   }
 
   return (
-    <motion.button
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="relative p-2 rounded-lg bg-zinc-800/20 hover:bg-zinc-800/30 transition-colors"
-      whileTap={{ scale: 0.95 }}
-      transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-    >
-      <motion.div
-        initial={false}
-        animate={{
-          scale: theme === 'dark' ? 1 : 0,
-          rotate: theme === 'dark' ? 0 : 180,
-        }}
-        transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-        className="absolute inset-0 flex items-center justify-center"
-      >
-        <MoonIcon className="h-5 w-5 text-primary-color dark:text-white/90" />
-      </motion.div>
-      
-      <motion.div
-        initial={false}
-        animate={{
-          scale: theme === 'light' ? 1 : 0,
-          rotate: theme === 'light' ? 0 : -180,
-        }}
-        transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-        className="absolute inset-0 flex items-center justify-center"
-      >
-        <SunIcon className="h-5 w-5 text-primary-color dark:text-white/90" />
-      </motion.div>
-      
-      <span className="sr-only">Toggle theme</span>
-    </motion.button>
+    <label className={cn(
+      "relative inline-flex items-center cursor-pointer",
+      className
+    )}>
+      <input
+        type="checkbox"
+        className="sr-only"
+        checked={isDark}
+        onChange={() => setTheme(isDark ? "light" : "dark")}
+      />
+      <div className="flex h-6 w-12 items-center rounded-full bg-gray-400 p-0.5 dark:bg-gray-700">
+        <div className="flex w-full items-center justify-between px-1.5">
+          <SunIcon className={`h-3 w-3 ${!isDark ? 'text-yellow-500 drop-shadow-[0_0_4px_rgba(250,204,21,0.6)]' : 'text-gray-500 opacity-50'} transition-all duration-300`} />
+          <MoonIcon className={`h-3 w-3 ${isDark ? 'text-white drop-shadow-[0_0_4px_rgba(96,165,250,0.6)]' : 'text-gray-500 opacity-50'} transition-all duration-300`} />
+        </div>
+        <div 
+          className={`absolute h-5 w-5 rounded-full bg-white shadow-md transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] dark:bg-slate-800
+            ${isDark ? 'opacity-30 translate-x-[1.35rem]' : 'opacity-30 translate-x-0.5'}`}
+        />
+      </div>
+    </label>
   );
 }; 

@@ -10,7 +10,6 @@ export const teacherPersona = ChatPromptTemplate.fromMessages([
          - ACT NATURALLY.
          - DO NOT WRAP YOUR MESSAGE IN QUOTES.
          - DO NOT CHANGE THE MAIN TOPIC OF THE CONVERSATION.
-         - YOU ARE OBSERVED BY AN AUDIENCE OF ENTHUSIASTIC STUDENTS.
          `],
     ["human", "{input}"],
 ]);
@@ -26,7 +25,6 @@ export const facilitatorPersona = ChatPromptTemplate.fromMessages([
          - DO NOT WRAP YOUR MESSAGE IN QUOTES.
          - END THE CONVERSATION IF INDICATED BY THE PROFESSOR.
          - DO NOT CHANGE THE MAIN TOPIC OF THE CONVERSATION.
-         - YOU ARE OBSERVED BY AN AUDIENCE OF ENTHUSIASTIC STUDENTS.
          `],
     ["human", "{input}"],
 ]);

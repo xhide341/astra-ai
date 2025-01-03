@@ -3,6 +3,7 @@ import Link from "next/link";
 import GlowingButton from "@/components/ui/buttons/glowing-button";
 import { StarIcon } from "@heroicons/react/24/solid";
 import { Sparkles } from "@/components/ui/sparkles";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
           <nav className="flex items-center gap-6 tracking-wide">
             <Link href="/auth/login" className="text-white/80 font-thin text-sm hover:text-white">Login</Link>
             <GlowingButton text="Register" href="/auth/register" ariaLabel="Navigate to register page" />
+            <ThemeToggle />
           </nav>
         </div>
       </header>
