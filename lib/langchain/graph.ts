@@ -38,11 +38,11 @@ const StateAnnotation = Annotation.Root({
     })
 });
 
-// Configure message trimmer
+// Configure message trimmer with stricter settings
 const messageTrimmer = trimMessages({
-    maxTokens: 4000, // Adjust based on your model's context window
+    maxTokens: 3000,
     strategy: "last",
-    tokenCounter: (text) => Math.ceil(text.length / 4), // Simple approximation
+    tokenCounter: (text) => Math.ceil(text.length / 4),
     includeSystem: true,
     allowPartial: false,
     startOn: "human"
@@ -52,8 +52,13 @@ const messageTrimmer = trimMessages({
 async function teacherNode(state: typeof StateAnnotation.State) {
     console.log(`🎓 Teacher Turn (Iteration ${state.iteration})`);
     
-    // Trim messages before processing
     const trimmedMessages = await messageTrimmer.invoke(state.messages);
+    console.log("🔍 Window Messages:", {
+        original: state.messages.length,
+        trimmed: trimmedMessages.length,
+        window: "Last " + 4 + " messages kept"
+    });
+    
     const lastMessage = trimmedMessages[trimmedMessages.length - 1].content;
     
     const formattedPrompt = await teacherPersona.formatMessages({
@@ -75,6 +80,11 @@ async function facilitatorNode(state: typeof StateAnnotation.State) {
     console.log(`💬 Facilitator Turn (Iteration ${state.iteration})`);
     
     const trimmedMessages = await messageTrimmer.invoke(state.messages);
+    console.log("🔍 Window Messages:", {
+        original: state.messages.length,
+        trimmed: trimmedMessages.length,
+        window: "Last " + 4 + " messages kept"
+    });
     const teacherMessage = trimmedMessages[trimmedMessages.length - 1].content;
     
     // Add flag for final iteration

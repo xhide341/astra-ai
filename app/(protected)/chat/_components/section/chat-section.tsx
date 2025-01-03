@@ -1,6 +1,7 @@
 'use client';
 
 import { Bars3Icon, ChatBubbleLeftIcon } from "@heroicons/react/24/solid";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import Conversation from './components/conversation';
 import MessageInput from './components/message-input';
 import { useChatStore } from '@/hooks/use-chat-store';
@@ -12,7 +13,7 @@ const ChatSection = () => {
     const isCompactView = !activeChat;
 
     return (
-        <div className="flex flex-col h-full w-full p-2 bg-zinc-700 border-0 rounded-xl">
+        <div className="flex flex-col h-full w-full p-2 bg-gray-300 dark:bg-zinc-700 border-0 rounded-xl">
             <AnimatePresence mode="wait">
                 {isCompactView ? (
                     <motion.div 
@@ -22,6 +23,9 @@ const ChatSection = () => {
                         exit={{ opacity: 0 }}
                         className="flex flex-col h-full relative"
                     >
+                        <div className="absolute top-2 right-2 z-10">
+                            <ThemeToggle />
+                        </div>
                         <button
                             onClick={toggleSidebar}
                             className={cn(
@@ -65,14 +69,17 @@ const ChatSection = () => {
                                 <ChatBubbleLeftIcon className="h-6 w-6" />
                                 {activeChat?.title || 'New Chat'}
                             </h2>
-                            {error && <p className="text-red-500 text-sm">{error}</p>}
+                            <div className="flex items-center gap-4">
+                                <ThemeToggle />
+                                {error && <p className="text-red-500 text-sm">{error}</p>}
+                            </div>
                         </div>
                         <div className="flex-1 flex justify-center items-center overflow-y-auto">
                             <div className="w-full max-w-2xl flex flex-col h-full max-h-full">
                                 <Conversation />
                             </div>
                         </div>
-                        <div className="flex justify-center items-center py-4 sticky bottom-0 bg-zinc-700">
+                        <div className="flex justify-center items-center py-4 sticky bottom-0">
                             <div className="w-full max-w-2xl">
                                 <MessageInput onFocus={() => {}} />
                             </div>
