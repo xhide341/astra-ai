@@ -65,11 +65,11 @@ const Sidebar = () => {
     };
 
     return (
-        <div className="relative h-screen max-h-screen">                
+        <div className="relative h-screen">
             <div className="px-2">
                 <div className={cn(
-                    "flex px-2 py-3 gap-2 items-center justify-start rounded-full",
-                    !isSidebarOpen && "hidden"
+                    "flex px-2 pt-4 pb-2 gap-2 items-center justify-start rounded-full transition-all duration-300 ease-in-out",
+                    isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
                 )}>
                     {user?.image ? (
                         <Image
@@ -90,8 +90,8 @@ const Sidebar = () => {
                 <button
                     onClick={toggleSidebar}
                     className={cn(
-                        "absolute top-4 right-4 z-50 p-2 rounded-full",
-                        !isSidebarOpen && "hidden"
+                        "absolute top-4 right-4 z-50 pt-2 rounded-full hover:scale-105 transition-all duration-300",
+                        isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
                     )}
                 >
                     <ChevronLeftIcon className="h-5 w-5 text-primary-color dark:text-white/80" />
@@ -99,11 +99,13 @@ const Sidebar = () => {
             </div>
 
             <div className={cn(
-                "transition-all overflow-y-auto duration-300 ease-in-out",
-                isSidebarOpen ? "w-[260px] min-w-[260px]" : "w-0 min-w-0 hidden"
+                "transition-all duration-300 ease-in-out",
+                isSidebarOpen 
+                    ? "w-[260px] min-w-[260px] opacity-100" 
+                    : "w-0 min-w-0 opacity-0 pointer-events-none"
             )}>
                 {isLoading ? (
-                    <div className="h-full flex justify-center items-center my-auto">
+                    <div className="h-full flex items-center justify-center">
                         <BeatLoader 
                             size={8}
                             color="var(--primary-color)"
@@ -112,44 +114,43 @@ const Sidebar = () => {
                     </div>
                 ) : (
                     <div className="p-2">
-                        <div className="flex flex-col gap-2">
-
+                        <div className={cn(
+                            "flex flex-col gap-2 transition-all duration-300 ease-in-out",
+                            isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+                        )}>
                             <button
                                 onClick={handleNewChat}
-                                className={cn(
-                                    "flex items-center gap-2 p-3 bg-gray-100 w-full rounded-sm transition-colors",
-                                    "hover:bg-gray-200",
-                                    activeChat === null && "bg-gray-200"
-                                )}
-                            >
-                                <PlusIcon className="h-4 w-4" />
-                                <p className="text-black-600 text-sm font-medium leading-none z-10">
+                                className="flex items-center gap-2 p-3 bg-primary-color hover:bg-secondary-color w-full rounded-sm transition-colors">
+                                <PlusIcon className="h-4 w-4 text-white/90 dark:text-white/80" />
+                                <p className="text-white/90 dark:text-white/80 text-sm font-medium leading-none z-10">
                                     New Chat
                                 </p>
                             </button>
 
                             {/* Divider */}
-                            <div className="h-px w-full bg-gray-200" />
+                            <div className="h-px w-full bg-gray-200 dark:bg-zinc-800" />
 
-                            {todayChats.length > 0 && (
-                                <>
-                                    <p className="text-xs font-semibold text-gray-500 px-3 pt-2">Today</p>
-                                    <div className="flex flex-col gap-1">
-                                        {todayChats.map((chat) => (
-                                            <ChatTab
-                                                key={chat.id}
-                                                title={chat.title}
-                                                isActive={activeChat?.id === chat.id}
-                                                onClick={() => setActiveChat(chat)}
-                                            />
-                                        ))}
-                                    </div>
-                                </>
-                            )}
+                            {/* Chat sections with transitions */}
+                            <div className="transition-all duration-300 ease-in-out">
+                                {todayChats.length > 0 && (
+                                    <>
+                                        <p className="text-xs font-semibold text-gray-500 px-3 pt-2 pb-1">Today</p>
+                                        <div className="flex flex-col gap-1">
+                                            {todayChats.map((chat) => (
+                                                <ChatTab
+                                                    key={chat.id}
+                                                    title={chat.title}
+                                                    isActive={activeChat?.id === chat.id}
+                                                    onClick={() => setActiveChat(chat)}
+                                                />
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
 
                                 {lastWeekChats.length > 0 && (
                                     <>
-                                        <p className="text-xs font-semibold text-gray-500 px-3 pt-2">Last 7 Days</p>
+                                        <p className="text-xs font-semibold text-gray-500 px-3 pt-2 pb-1">Last 7 Days</p>
                                         <div className="flex flex-col gap-1">
                                             {lastWeekChats.map((chat) => (
                                                 <ChatTab
@@ -163,21 +164,22 @@ const Sidebar = () => {
                                     </>
                                 )}
 
-                            {olderChats.length > 0 && (
-                                <>
-                                    <p className="text-xs font-semibold text-gray-500 px-3 pt-2">Older</p>
-                                    <div className="flex flex-col gap-1">
-                                        {olderChats.map((chat) => (
-                                            <ChatTab
-                                                key={chat.id}
-                                                title={chat.title}
-                                                isActive={activeChat?.id === chat.id}
-                                                onClick={() => setActiveChat(chat)}
-                                            />
-                                        ))}
-                                    </div>
-                                </>
-                            )}
+                                {olderChats.length > 0 && (
+                                    <>
+                                        <p className="text-xs font-semibold text-gray-500 px-3 pt-2 pb-1">Older</p>
+                                        <div className="flex flex-col gap-1">
+                                            {olderChats.map((chat) => (
+                                                <ChatTab
+                                                    key={chat.id}
+                                                    title={chat.title}
+                                                    isActive={activeChat?.id === chat.id}
+                                                    onClick={() => setActiveChat(chat)}
+                                                />
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </div>
                 )}

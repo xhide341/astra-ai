@@ -55,7 +55,7 @@ export function Sparkles({
     fpsLimit: 120,
     particles: {
       color: {
-        value: theme === 'dark' ? "#FFFFFF" : "var(--primary-color)",
+        value: theme === 'dark' ? "#FFFFFF" : "hsl(100, 30%, 35%)",
       },
       move: {
         enable: true,

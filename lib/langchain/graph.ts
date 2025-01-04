@@ -1,13 +1,10 @@
 import { AIMessage, BaseMessage, HumanMessage } from "@langchain/core/messages";
 import { StateGraph } from "@langchain/langgraph";
-import { MemorySaver, Annotation, messagesStateReducer } from "@langchain/langgraph";
+import { MemorySaver, Annotation, messagesStateReducer} from "@langchain/langgraph";
 import { teacherModel, facilitatorModel } from "./model";
 import { teacherPersona, facilitatorPersona } from "./personas";
 import { trimMessages } from "@langchain/core/messages";
-// import { concat } from "@langchain/core/utils/stream";
-// // import { StreamChunk } from "@/types/chat";
 import { saveMessage } from "@/actions/chat/save-message";
-// import { MessageRole } from "@prisma/client";
 import { StreamChunk } from "@/types/chat";
 
 const TOTAL_GRAPH_ITERATIONS = 4;
@@ -26,7 +23,11 @@ const StateAnnotation = Annotation.Root({
     }),
     iteration: Annotation<number>({
         default: () => 0,
-        reducer: (prev) => prev + 0.5
+        reducer: (prev) => {
+            // Ensure we don't exceed TOTAL_GRAPH_ITERATIONS
+            const next = prev + 0.5;
+            return Math.min(next, TOTAL_GRAPH_ITERATIONS);
+        }
     }),
     history: Annotation<BaseMessage[]>({
         default: () => [],
@@ -110,8 +111,9 @@ async function facilitatorNode(state: typeof StateAnnotation.State) {
 
 // Define when to continue or end conversation
 function shouldContinue(state: typeof StateAnnotation.State): "__end__" | "teacher" {
+    // Force end when we hit or exceed the limit
     if (state.iteration >= TOTAL_GRAPH_ITERATIONS) {
-        console.log("🏁 Conversation Complete");
+        console.log("🏁 Conversation Complete - Max iterations reached");
         return "__end__";
     }
     console.log("➡️ Continuing to Teacher");
@@ -143,7 +145,8 @@ export async function chatWithGraph(
     try {
         const events = await graph.streamEvents({
             messages: [new HumanMessage(message)],
-            chatId
+            chatId,
+            iteration: 0
         }, config);
             
         const nodeOutput: Record<string, string> = {

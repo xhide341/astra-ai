@@ -146,7 +146,6 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         });
     },
     handleStreamChunk: async (chunk: StreamChunk) => {
-
         if (chunk.type === 'error') {
             set({ error: chunk.error, isStreaming: false });
             return;
@@ -154,15 +153,17 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
         if (chunk.type === 'stream') {
             const newRole = chunk.role || null;
-            const { previousRole } = get();
-            // Role change save point
-            if (newRole !== previousRole && previousRole !== null) {
+            const { previousRole, currentStreamedContent } = get();
+            
+            // Save message when role changes OR if it's the first message
+            if ((newRole !== previousRole && previousRole !== null) || 
+                (currentStreamedContent && !previousRole)) {
                 const state = get();
                 if (state.currentStreamedContent) {
                     const newMessage = {
                         id: Date.now().toString(),
                         content: state.currentStreamedContent,
-                        role: state.previousRole as MessageRole,
+                        role: (state.previousRole || newRole) as MessageRole,
                         chatId: chunk.chatId,
                         createdAt: new Date(),
                         updatedAt: new Date()
@@ -181,7 +182,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
                 set((state) => ({ 
                     currentStreamedContent: state.currentStreamedContent + (chunk.content || ''),
                     streamRole: newRole,
-                    previousRole: newRole,
+                    previousRole: newRole || state.previousRole,
                     isStreaming: true
                 }));
             }

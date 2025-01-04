@@ -33,14 +33,14 @@ const ChatSection = () => {
                                 isSidebarOpen && "hidden"
                             )}
                         >
-                            <Bars3Icon className="h-5 w-5 text-primary-color dark:text-white/90" />
+                            <Bars3Icon className="h-5 w-5 text-primary-color dark:text-white/90 hover:scale-105 transition-all duration-300" />
                         </button>
                         <div className="flex flex-col items-center justify-center h-full">
                             <div className="w-full max-w-md">
                                 <h1 className="text-2xl font-semibold text-center text-gray-800 dark:text-white/90 mb-4">
                                     Enter a topic
                                 </h1>
-                                <p className="text-gray-800 dark:text-white/90 text-xs font-thin mx-auto mb-6 text-center">
+                                <p className="text-slate-800 dark:text-white/90 text-xs font-regular mx-auto mb-6 text-center">
                                     Please note that the topic must be for educational purposes only.
                                 </p>
                                 <MessageInput onFocus={() => {}} />
@@ -59,11 +59,11 @@ const ChatSection = () => {
                             <button
                                 onClick={toggleSidebar}
                                 className={cn(
-                                    "p-2 hover:bg-gray-200 rounded-full items-center justify-start",
-                                    isSidebarOpen && "hidden"
+                                    "p-2 hover:scale-105 transition-all duration-300 rounded-full items-center justify-start",
+                                    isSidebarOpen && "opacity-0 pointer-events-none"
                                 )}
                             >
-                                <Bars3Icon className="h-5 w-5" />
+                                <Bars3Icon className="h-5 w-5 text-primary-color dark:text-white/90" />
                             </button>
                             <h2 className="px-6 max-w-2xl w-full text-xl font-semibold mx-auto text-start text-black-600 dark:text-white/90 flex items-center gap-2">
                                 <ChatBubbleLeftIcon className="h-6 w-6" />

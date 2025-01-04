@@ -13,7 +13,8 @@ const ChatTab = ({ title, isActive, onClick }: ChatTabProps) => {
         <button
             onClick={onClick}
             className={cn(
-                "flex items-center gap-2 w-full rounded-sm transition-colors",
+                "flex items-center gap-2 w-full rounded-sm",
+                "transition-all duration-300 ease-in-out",
                 "hover:bg-gray-200 dark:hover:bg-zinc-800",
                 isActive && "bg-gray-200 dark:bg-zinc-800"
             )}

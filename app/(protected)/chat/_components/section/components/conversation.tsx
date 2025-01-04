@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useChatStore } from '@/hooks/use-chat-store';
 import ReactMarkdown from 'react-markdown';
@@ -17,6 +18,34 @@ const Conversation = () => {
         activeChat
     } = useChatStore();
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const conversationEndedRef = useRef(false);
+    const lastProcessedMessageId = useRef<string | null>(null);
+
+    // Track conversation end
+    useEffect(() => {
+        const lastMessage = messages[messages.length - 1];
+        
+        // Only show toast when streaming ends AND we have messages
+        if (!isLoading && 
+            !isStreaming && 
+            messages.length > 0 && 
+            !conversationEndedRef.current &&
+            lastMessage?.role !== "USER" && // Ensure last message is from AI
+            lastMessage?.id !== lastProcessedMessageId.current // Only process new completions
+        ) {
+            conversationEndedRef.current = true;
+            lastProcessedMessageId.current = lastMessage.id;
+            toast.success("Conversation saved!", {
+                description: "Feel free to ask another question.",
+                duration: 5000
+            });
+        }
+        
+        // Reset the refs when a new conversation starts
+        if (isStreaming || isLoading) {
+            conversationEndedRef.current = false;
+        }
+    }, [isLoading, isStreaming, messages]);
 
     // Auto-scroll on new messages or streaming updates
     useEffect(() => {
