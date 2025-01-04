@@ -155,28 +155,25 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             const newRole = chunk.role || null;
             const { previousRole, currentStreamedContent } = get();
             
-            // Save message when role changes OR if it's the first message
-            if ((newRole !== previousRole && previousRole !== null) || 
-                (currentStreamedContent && !previousRole)) {
+            // Modified condition to handle first message
+            if (newRole !== previousRole && currentStreamedContent) {
                 const state = get();
-                if (state.currentStreamedContent) {
-                    const newMessage = {
-                        id: Date.now().toString(),
-                        content: state.currentStreamedContent,
-                        role: (state.previousRole || newRole) as MessageRole,
-                        chatId: chunk.chatId,
-                        createdAt: new Date(),
-                        updatedAt: new Date()
-                    };
-                    // Update UI state
-                    state.addMessage(newMessage);
-                    // Reset streaming state
-                    set({ 
-                        currentStreamedContent: chunk.content || '',
-                        streamRole: newRole,
-                        previousRole: newRole
-                    });
-                }
+                const newMessage = {
+                    id: Date.now().toString(),
+                    content: state.currentStreamedContent,
+                    role: (state.previousRole || newRole) as MessageRole,
+                    chatId: chunk.chatId,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                };
+                // Update UI state
+                state.addMessage(newMessage);
+                // Reset streaming state
+                set({ 
+                    currentStreamedContent: chunk.content || '',
+                    streamRole: newRole,
+                    previousRole: newRole
+                });
             } else {
                 // Continue streaming current role
                 set((state) => ({ 

@@ -1,6 +1,6 @@
 import { AIMessage, BaseMessage, HumanMessage } from "@langchain/core/messages";
 import { StateGraph } from "@langchain/langgraph";
-import { MemorySaver, Annotation, messagesStateReducer} from "@langchain/langgraph";
+import { Annotation, messagesStateReducer} from "@langchain/langgraph";
 import { teacherModel, facilitatorModel } from "./model";
 import { teacherPersona, facilitatorPersona } from "./personas";
 import { trimMessages } from "@langchain/core/messages";
@@ -8,13 +8,6 @@ import { saveMessage } from "@/actions/chat/save-message";
 import { StreamChunk } from "@/types/chat";
 
 const TOTAL_GRAPH_ITERATIONS = 4;
-
-const config = {
-    configurable: {
-      thread_id: "stream_events",
-    },
-    version: "v2" as const,
-  };
 
 // Define state structure
 const StateAnnotation = Annotation.Root({
@@ -114,6 +107,8 @@ function shouldContinue(state: typeof StateAnnotation.State): "__end__" | "teach
     // Force end when we hit or exceed the limit
     if (state.iteration >= TOTAL_GRAPH_ITERATIONS) {
         console.log("🏁 Conversation Complete - Max iterations reached");
+        // Reset iteration for next conversation
+        state.iteration = 0;
         return "__end__";
     }
     console.log("➡️ Continuing to Teacher");
@@ -126,13 +121,10 @@ const workflow = new StateGraph(StateAnnotation)
     .addNode("facilitator", facilitatorNode)
     .addEdge("__start__", "teacher")
     .addEdge("teacher", "facilitator")
-    .addConditionalEdges("facilitator", shouldContinue)
-
-// Initialize memory
-const checkpointer = new MemorySaver();
+    .addConditionalEdges("facilitator", shouldContinue);
 
 // Compile the workflow
-export const graph = workflow.compile({ checkpointer });
+export const graph = workflow.compile();
 
 // Usage function
 export async function chatWithGraph(
@@ -143,6 +135,13 @@ export async function chatWithGraph(
     console.log("🚀 Starting Chat:", { message, chatId });
     
     try {
+        const config = {
+            configurable: {
+              thread_id: "stream_events",
+            },
+            version: "v2" as const,
+          };
+
         const events = await graph.streamEvents({
             messages: [new HumanMessage(message)],
             chatId,
