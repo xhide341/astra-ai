@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
-import { Toaster } from 'sonner';
-import { CheckCircleIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { Toaster } from 'react-hot-toast';
 import '@/app/globals.css';
 
 // TODO: Add required assets to /public directory:
@@ -49,29 +48,35 @@ export default function RootLayout({
         >
           {children}
           <Toaster
+            position="bottom-right"
+            gutter={12}
+            containerStyle={{
+              bottom: 40,
+              right: 40,
+              animation: 'ease-out'
+            }}
             toastOptions={{
-              unstyled: true,
-              classNames: {
-                toast: 'group flex w-full gap-3 items-center bg-white dark:bg-zinc-800 shadow-lg rounded-lg p-4 border border-zinc-200 dark:border-zinc-700 transition-all',
-                title: 'text-zinc-900 dark:text-zinc-100 text-sm font-medium',
-                description: 'text-zinc-600 dark:text-zinc-400 text-sm',
-                actionButton: 'bg-primary-500 text-white px-3 py-2 text-sm font-medium rounded-md hover:bg-primary-600 transition-colors',
-                cancelButton: 'bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400 px-3 py-2 text-sm font-medium rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-600 transition-colors',
-                closeButton: 'relative group/close p-1.5 rounded-md text-zinc-400 hover:text-zinc-500 dark:text-zinc-500 dark:hover:text-zinc-400 transition-colors',
+              className: 'bg-white text-zinc-900 border border-zinc-200',
+              style: {
+                padding: '16px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                maxWidth: '500px',
+                animation: 'cubic-bezier(0.2, 0.6, 0.2, 1)',
+              },
+              success: {
+                iconTheme: {
+                  primary: '#10B981',
+                  secondary: 'white'
+                }
+              },
+              error: {
+                iconTheme: {
+                  primary: '#EF4444',
+                  secondary: 'white'
+                }
               }
             }}
-            icons={{
-              success: <CheckCircleIcon className="w-5 h-5 text-green-500 dark:text-green-400" />,
-              error: <XCircleIcon className="w-5 h-5 text-red-500 dark:text-red-400" />,
-              close: (
-                <div className="rounded-full p-1 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors">
-                  <XMarkIcon className="w-3 h-3 group-hover/close:scale-110 transition-transform" />
-                </div>
-              )
-            }}
-            position="bottom-right"
-            expand
-            closeButton
           />
         </ThemeProvider>
       </body>

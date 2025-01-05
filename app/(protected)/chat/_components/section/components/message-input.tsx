@@ -7,6 +7,7 @@ import { useChatStore } from "@/hooks/use-chat-store";
 import { createChat } from "@/actions/chat/create-chat";
 import { Input } from "@/components/ui/input";
 import { sendMessage } from "@/actions/chat/send-message";
+import { showToast } from '@/lib/toast';
 
 interface MessageInputProps {
     onFocus: () => void;
@@ -55,7 +56,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                 await setActiveChat(chatResponse.chat);
                 setIsCompact(false);
                 currentChatId = chatResponse.chat.id;
-                console.log("New chat created:", currentChatId);
+                showToast.success("New chat created");
             }
 
             // Save user message
@@ -110,6 +111,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
             stopStreaming();
             console.error("Error sending message:", error);
             setError("Failed to send message");
+            showToast.error("Failed to send message");
         } finally {
             stopStreaming();
             setIsLoading(false);
@@ -117,7 +119,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         }
     };
 
-    const isDisabled = isLoading || (!isCompact && isSidebarLoading);
+    const isDisabled = isLoading || (isCompact && isSidebarLoading);
 
     return (
         <form onSubmit={handleSubmit} className="flex gap-x-2">

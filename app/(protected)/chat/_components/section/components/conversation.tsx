@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useChatStore } from '@/hooks/use-chat-store';
 import ReactMarkdown from 'react-markdown';
@@ -56,14 +55,6 @@ const Conversation = () => {
         }
     }, [messages, activeChat, setIsLoading]);
 
-    useEffect(() => {
-        if (!isStreaming && currentStreamedContent) {
-            toast.success("Response saved", {
-                duration: 3000
-            });
-        }
-    }, [isStreaming, currentStreamedContent]);
-
     const getBubbleColor = (role: string) => {
         switch (role) {
             case "USER":
@@ -91,7 +82,7 @@ const Conversation = () => {
     };
 
     return (
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-4 relative min-h-[calc(100vh-200px)]">
             {filteredMessages.map((message) => (
                 <div key={message.id} className={cn(
                     "flex items-start gap-x-2",
@@ -251,7 +242,7 @@ const Conversation = () => {
             )}
 
             {isLoading && (
-                <div className="flex items-center justify-center py-4">
+                <div className="absolute inset-0 flex items-center justify-center">
                     <BeatLoader 
                         size={8}
                         color="var(--primary-color)"
