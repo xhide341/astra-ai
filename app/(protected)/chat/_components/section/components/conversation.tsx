@@ -7,15 +7,17 @@ import { useChatStore } from '@/hooks/use-chat-store';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomOneDarkReasonable } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
+import { BeatLoader } from "react-spinners";
 
 const Conversation = () => {
     const { 
         messages,
         isLoading,
+        setIsLoading,
         isStreaming,
         currentStreamedContent,
         streamRole,
-        activeChat
+        activeChat,
     } = useChatStore();
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const conversationEndedRef = useRef(false);
@@ -25,24 +27,23 @@ const Conversation = () => {
     useEffect(() => {
         const lastMessage = messages[messages.length - 1];
         
-        // Only show toast when streaming ends AND we have messages
+        // Only show toast when streaming ends AND we have a new message completion
         if (!isLoading && 
             !isStreaming && 
             messages.length > 0 && 
-            !conversationEndedRef.current &&
-            lastMessage?.role !== "USER" && // Ensure last message is from AI
-            lastMessage?.id !== lastProcessedMessageId.current // Only process new completions
+            lastMessage?.role !== "USER" &&
+            lastMessage?.id !== lastProcessedMessageId.current &&
+            !conversationEndedRef.current
         ) {
             conversationEndedRef.current = true;
             lastProcessedMessageId.current = lastMessage.id;
-            toast.success("Conversation saved!", {
-                description: "Feel free to ask another question.",
+            toast.success("Conversation saved automatically!", {
                 duration: 5000
             });
         }
         
-        // Reset the refs when a new conversation starts
-        if (isStreaming || isLoading) {
+        // Reset the refs when a new conversation starts (i.e., when streaming begins)
+        if (isStreaming) {
             conversationEndedRef.current = false;
         }
     }, [isLoading, isStreaming, messages]);
@@ -56,6 +57,13 @@ const Conversation = () => {
     const filteredMessages = messages.filter(message => 
         message.chatId === activeChat?.id
     );
+
+    useEffect(() => {
+        // Set loading to false when we have messages for the active chat
+        if (messages.some(m => m.chatId === activeChat?.id)) {
+            setIsLoading(false);
+        }
+    }, [isLoading, messages, activeChat, setIsLoading]);
 
     const getBubbleColor = (role: string) => {
         switch (role) {
@@ -244,8 +252,12 @@ const Conversation = () => {
             )}
 
             {isLoading && (
-                <div className="flex items-center justify-center">
-                    <div className="animate-pulse">Thinking...</div>
+                <div className="flex items-center justify-center py-4">
+                    <BeatLoader 
+                        size={8}
+                        color="var(--primary-color)"
+                        speedMultiplier={0.7}
+                    />
                 </div>
             )}
             <div ref={messagesEndRef} />

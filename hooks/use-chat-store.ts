@@ -13,6 +13,7 @@ interface ChatStore {
     error: string | null;
     isLoadingConversation: boolean;
     isSidebarOpen: boolean;
+    isSidebarLoading: boolean;
 
     // New Streaming State
     isStreaming: boolean;
@@ -33,6 +34,7 @@ interface ChatStore {
     addMessage: (message: Message) => void;
     setIsLoadingConversation: (loading: boolean) => void;
     toggleSidebar: () => void;
+    setIsSidebarLoading: (isSidebarLoading: boolean) => void;
 
     // New Streaming Actions
     startStreaming: () => void;
@@ -49,6 +51,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     error: null,
     isLoadingConversation: false,
     isSidebarOpen: true,
+    isSidebarLoading: false,
 
     // New Streaming State
     isStreaming: false,
@@ -79,6 +82,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             messages: [...state.messages, ...newMessages] 
         })),
     setIsLoading: (isLoading) => set({ isLoading }),
+    setIsSidebarLoading: (isSidebarLoading) => set({ isSidebarLoading }),
     setError: (error) => set({ error }),
     reset: () => set({ 
         chats: [], 

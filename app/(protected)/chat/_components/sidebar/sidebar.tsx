@@ -22,7 +22,8 @@ const Sidebar = () => {
         setError,
         isSidebarOpen,
         toggleSidebar,
-        setMessages
+        setMessages,
+        setIsSidebarLoading
     } = useChatStore();
 
     // Filter chats by date
@@ -45,19 +46,26 @@ const Sidebar = () => {
     useEffect(() => {
         const loadChats = async () => {
             setIsLoading(true);
-            const response = await getChatHistory();
-            if (response.error) {
-                setError(response.error);
-                return;
+            setIsSidebarLoading(true);
+            try {
+                const response = await getChatHistory();
+                if (response.error) {
+                    setError(response.error);
+                    return;
+                }
+                if (response.chats) {
+                    setChats(response.chats);
+                }
+            } catch (error) {
+                setError(`Failed to load chats: ${error}`);
+            } finally {
+                setIsLoading(false);
+                setIsSidebarLoading(false);
             }
-            if (response.chats) {
-                setChats(response.chats);
-            }
-            setIsLoading(false);
         };
         
         loadChats();
-    }, [setChats, setError]);
+    }, [setChats, setError, setIsSidebarLoading]);
 
     const handleNewChat = () => {
         setActiveChat(null);
@@ -66,8 +74,8 @@ const Sidebar = () => {
 
     return (
         <div className={cn(
-            "relative h-screen overflow-y-auto overflow-x-clip transition-all duration-300 ease-in-out",
-            isSidebarOpen ? "w-[260px] min-w-[270px] flex-shrink-0" : "w-0"
+            "relative h-screen overflow-y-auto transition-all duration-300 ease-in-out flex-shrink-0",
+            isSidebarOpen ? "w-[270px] flex-shrink-0 opacity-100" : "w-0"
         )}>
             <div className="px-2">
                 <div className={cn(
@@ -93,22 +101,22 @@ const Sidebar = () => {
                 <button
                     onClick={toggleSidebar}
                     className={cn(
-                        "absolute top-4 right-4 z-50 pt-2 rounded-full hover:scale-105 transition-all duration-300",
+                        "absolute top-4 right-4 z-50 pt-2 rounded-full",
                         isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
                     )}
                 >
-                    <ChevronLeftIcon className="h-5 w-5 text-primary-color dark:text-white/80" />
+                    <ChevronLeftIcon className="h-5 w-5 text-slate-500 hover:text-slate-900 dark:text-white/90 dark:hover:text-white" />
                 </button>
             </div>
 
             <div className={cn(
-                "transition-all duration-300 ease-in-out",
+                "transition-all duration-300 ease-in-out flex-shrink-0",
                 isSidebarOpen 
-                    ? "w-[260px] min-w-[260px] opacity-100" 
-                    : "w-0 min-w-0 opacity-0 pointer-events-none"
+                    ? "w-[254px] flex-shrink-0 opacity-100" 
+                    : "w-0 opacity-0 pointer-events-none"
             )}>
                 {isLoading ? (
-                    <div className="h-full flex items-center justify-center">
+                    <div className="absolute inset-0 flex items-center justify-center">
                         <BeatLoader 
                             size={8}
                             color="var(--primary-color)"
