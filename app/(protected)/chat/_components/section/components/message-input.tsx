@@ -128,9 +128,9 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onFocus={onFocus}
-                placeholder="Type your message..."
+                placeholder="Enter a topic..."
                 disabled={isDisabled}
-                className="flex-1 bg-white/90 dark:bg-zinc-900/75 dark:backdrop-blur-md dark:border-zinc-800 text-black-600 dark:text-white/90 placeholder:text-gray-600 dark:placeholder:text-white/70"
+                className="text-sm flex-1 bg-white/90 dark:bg-zinc-900/75 dark:backdrop-blur-md dark:border-zinc-800 text-black-600 dark:text-white/90 placeholder:text-gray-600 dark:placeholder:text-white/70"
             />
             <Button 
                 type="submit" 

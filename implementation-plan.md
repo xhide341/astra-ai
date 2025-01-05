@@ -41,6 +41,27 @@ Implementation Order:
 - [x] Add email verification
 - [x] Add password reset functionality
 - [x] Polish UI/UX
+- [x] Implement toast notifications system
+- [x] Refine error handling with toast feedback
+
+Next Steps:
+- [ ] Chat Limitations
+  - [ ] Implement 3 chats per user limit
+  - [ ] Add chat count display
+  - [ ] Add delete chat functionality
+  - [ ] Show feedback when limit reached
+
+- [ ] Message Cooldown
+  - [ ] Add 12-second cooldown between messages
+  - [ ] Create cooldown indicator
+  - [ ] Add visual feedback during cooldown
+  - [ ] Implement server-side validation
+
+- [ ] Chat Management UI
+  - [ ] Add chat deletion confirmation modal
+  - [ ] Implement chat title editing
+  - [ ] Add hover states for actions
+  - [ ] Show success/error feedback
 
 Agent Integration:
 - [x] Dual Agent Setup
