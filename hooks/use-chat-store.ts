@@ -40,6 +40,9 @@ interface ChatStore {
     startStreaming: () => void;
     stopStreaming: () => void;
     handleStreamChunk: (chunk: StreamChunk) => void;
+
+    isCompact: boolean;
+    setIsCompact: (value: boolean) => void;
 }
 
 export const useChatStore = create<ChatStore>((set, get) => ({
@@ -188,7 +191,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
                 }));
             }
         }
-    }
+    },
+
+    isCompact: true,
+    setIsCompact: (value) => set({ isCompact: value }),
 }));
 
 useChatStore.subscribe((state) => {

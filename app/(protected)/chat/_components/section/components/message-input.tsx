@@ -27,6 +27,8 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         isLoading,
         loadMessages,
         stopStreaming,
+        setIsCompact,
+        isCompact,
         isSidebarLoading
     } = useChatStore();
 
@@ -43,7 +45,6 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
             let currentChatId = activeChat?.id;
             if (!currentChatId) {
                 console.log("Creating new chat...");
-                // Use first 50 characters of message as title
                 const initialTitle = message.slice(0, 50) + (message.length > 50 ? "..." : "");
                 const chatResponse = await createChat(initialTitle);
                 if (!chatResponse.chat) {
@@ -52,6 +53,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                 }
                 setChats([chatResponse.chat, ...chats]);
                 await setActiveChat(chatResponse.chat);
+                setIsCompact(false);
                 currentChatId = chatResponse.chat.id;
                 console.log("New chat created:", currentChatId);
             }
@@ -115,6 +117,8 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         }
     };
 
+    const isDisabled = isLoading || (!isCompact && isSidebarLoading);
+
     return (
         <form onSubmit={handleSubmit} className="flex gap-x-2">
             <Input
@@ -123,10 +127,14 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                 onChange={(e) => setMessage(e.target.value)}
                 onFocus={onFocus}
                 placeholder="Type your message..."
-                disabled={isLoading || isSidebarLoading}
+                disabled={isDisabled}
                 className="flex-1 bg-white/90 dark:bg-zinc-900/75 dark:backdrop-blur-md dark:border-zinc-800 text-black-600 dark:text-white/90 placeholder:text-gray-600 dark:placeholder:text-white/70"
             />
-            <Button type="submit" disabled={isLoading || isSidebarLoading} className="disabled:opacity-50 disabled:cursor-not-allowed bg-primary-color hover:bg-secondary-color">
+            <Button 
+                type="submit" 
+                disabled={isDisabled}
+                className="disabled:opacity-50 disabled:cursor-not-allowed bg-primary-color hover:bg-secondary-color"
+            >
                 <PaperAirplaneIcon className="h-3 w-3 text-white/80" />
             </Button>
         </form>

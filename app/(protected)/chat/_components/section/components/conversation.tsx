@@ -13,40 +13,24 @@ const Conversation = () => {
     const { 
         messages,
         isLoading,
-        setIsLoading,
         isStreaming,
         currentStreamedContent,
         streamRole,
         activeChat,
+        setIsLoading
     } = useChatStore();
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const conversationEndedRef = useRef(false);
-    const lastProcessedMessageId = useRef<string | null>(null);
+    const lastMessageIdRef = useRef<string | null>(null);
 
-    // Track conversation end
+    
     useEffect(() => {
-        const lastMessage = messages[messages.length - 1];
-        
-        // Only show toast when streaming ends AND we have a new message completion
-        if (!isLoading && 
-            !isStreaming && 
-            messages.length > 0 && 
-            lastMessage?.role !== "USER" &&
-            lastMessage?.id !== lastProcessedMessageId.current &&
-            !conversationEndedRef.current
-        ) {
-            conversationEndedRef.current = true;
-            lastProcessedMessageId.current = lastMessage.id;
-            toast.success("Conversation saved automatically!", {
-                duration: 5000
-            });
-        }
-        
         // Reset the refs when a new conversation starts (i.e., when streaming begins)
         if (isStreaming) {
-            conversationEndedRef.current = false;
+            lastMessageIdRef.current = null;
         }
-    }, [isLoading, isStreaming, messages]);
+
+        // Show toast when AI completes its response
+    }, [messages, isStreaming]);
 
     // Auto-scroll on new messages or streaming updates
     useEffect(() => {
@@ -59,11 +43,26 @@ const Conversation = () => {
     );
 
     useEffect(() => {
-        // Set loading to false when we have messages for the active chat
-        if (messages.some(m => m.chatId === activeChat?.id)) {
+        // Only set loading when we have an active chat
+        if (activeChat) {
+            setIsLoading(true);
+            // Set loading to false when we have messages for the active chat
+            if (messages.some(m => m.chatId === activeChat.id)) {
+                setIsLoading(false);
+            }
+        } else {
+            // If no active chat (new chat state), ensure loading is false
             setIsLoading(false);
         }
-    }, [isLoading, messages, activeChat, setIsLoading]);
+    }, [messages, activeChat, setIsLoading]);
+
+    useEffect(() => {
+        if (!isStreaming && currentStreamedContent) {
+            toast.success("Response saved", {
+                duration: 3000
+            });
+        }
+    }, [isStreaming, currentStreamedContent]);
 
     const getBubbleColor = (role: string) => {
         switch (role) {

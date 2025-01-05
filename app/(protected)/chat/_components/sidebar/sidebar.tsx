@@ -23,8 +23,11 @@ const Sidebar = () => {
         isSidebarOpen,
         toggleSidebar,
         setMessages,
-        setIsSidebarLoading
+        setIsSidebarLoading,
+        setIsCompact
     } = useChatStore();
+
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     // Filter chats by date
     const today = new Date();
@@ -45,8 +48,11 @@ const Sidebar = () => {
 
     useEffect(() => {
         const loadChats = async () => {
+            if (!isInitialLoad) return; // Only run on initial mount
+            
             setIsLoading(true);
             setIsSidebarLoading(true);
+            
             try {
                 const response = await getChatHistory();
                 if (response.error) {
@@ -61,15 +67,18 @@ const Sidebar = () => {
             } finally {
                 setIsLoading(false);
                 setIsSidebarLoading(false);
+                setIsInitialLoad(false);
             }
         };
         
         loadChats();
-    }, [setChats, setError, setIsSidebarLoading]);
+    }, [setChats, setError, setIsSidebarLoading, isInitialLoad]);
 
     const handleNewChat = () => {
-        setActiveChat(null);
         setMessages([]);
+        setIsSidebarLoading(false);
+        setIsCompact(true);
+        setActiveChat(null);
     };
 
     return (

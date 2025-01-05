@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from "@/lib/utils";
+import { useChatStore } from "@/hooks/use-chat-store";
 
 interface ChatTabProps {
     title: string;
@@ -9,9 +10,16 @@ interface ChatTabProps {
 }
 
 const ChatTab = ({ title, isActive, onClick }: ChatTabProps) => {
+    const { setIsCompact } = useChatStore();
+
+    const handleClick = () => {
+        setIsCompact(false);
+        onClick();
+    };
+
     return (
         <button
-            onClick={onClick}
+            onClick={handleClick}
             className={cn(
                 "flex items-center gap-2 w-full rounded-sm",
                 "transition-all duration-300 ease-in-out",

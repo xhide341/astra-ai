@@ -9,13 +9,12 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from 'motion/react';
 
 const ChatSection = () => {
-    const { activeChat, error, isSidebarOpen, toggleSidebar } = useChatStore();
-    const isCompactView = !activeChat;
+    const { isCompact, error, isSidebarOpen, activeChat, toggleSidebar } = useChatStore();
 
     return (
         <div className="flex flex-col h-full w-full p-2 bg-gray-300 dark:bg-zinc-700 border-0 rounded-xl">
             <AnimatePresence mode="wait">
-                {isCompactView ? (
+                {isCompact && activeChat === null ? (
                     <motion.div 
                         key="compact"
                         initial={{ opacity: 0 }}
