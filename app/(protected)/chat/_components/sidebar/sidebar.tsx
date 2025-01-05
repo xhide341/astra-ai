@@ -121,7 +121,7 @@ const Sidebar = () => {
             <div className={cn(
                 "transition-all duration-300 ease-in-out flex-shrink-0",
                 isSidebarOpen 
-                    ? "w-[254px] flex-shrink-0 opacity-100" 
+                    ? "w-[254px] max-w-[254px] flex-shrink-0 opacity-100" 
                     : "w-0 opacity-0 pointer-events-none"
             )}>
                 {isLoading ? (
@@ -159,6 +159,7 @@ const Sidebar = () => {
                                             {todayChats.map((chat) => (
                                                 <ChatTab
                                                     key={chat.id}
+                                                    id={chat.id}
                                                     title={chat.title}
                                                     isActive={activeChat?.id === chat.id}
                                                     onClick={() => setActiveChat(chat)}
@@ -175,6 +176,7 @@ const Sidebar = () => {
                                             {lastWeekChats.map((chat) => (
                                                 <ChatTab
                                                     key={chat.id}
+                                                    id={chat.id}
                                                     title={chat.title}
                                                     isActive={activeChat?.id === chat.id}
                                                     onClick={() => setActiveChat(chat)}
@@ -191,6 +193,7 @@ const Sidebar = () => {
                                             {olderChats.map((chat) => (
                                                 <ChatTab
                                                     key={chat.id}
+                                                    id={chat.id}
                                                     title={chat.title}
                                                     isActive={activeChat?.id === chat.id}
                                                     onClick={() => setActiveChat(chat)}

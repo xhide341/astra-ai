@@ -46,8 +46,7 @@ Implementation Order:
 
 Next Steps:
 - [ ] Chat Limitations
-  - [ ] Implement 3 chats per user limit
-  - [ ] Add chat count display
+  - [x] Implement 3 chats per user limit
   - [ ] Add delete chat functionality
   - [ ] Show feedback when limit reached
 
