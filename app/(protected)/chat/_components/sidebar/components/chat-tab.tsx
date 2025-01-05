@@ -9,6 +9,9 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import ChatEditForm from "./chat-edit-form";
+import { useState } from "react";
+import { updateChatTitle } from "@/actions/chat/update-chat";
 
 interface ChatTabProps {
     id: string;
@@ -19,6 +22,7 @@ interface ChatTabProps {
 
 const ChatTab = ({ id, title, isActive, onClick }: ChatTabProps) => {
     const { setIsCompact } = useChatStore();
+    const [isEditing, setIsEditing] = useState(false);
 
     const handleClick = () => {
         setIsCompact(false);
@@ -32,9 +36,26 @@ const ChatTab = ({ id, title, isActive, onClick }: ChatTabProps) => {
     };
 
     const handleRename = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Prevent chat selection
-        // TODO: Add rename functionality
+        e.stopPropagation();
+        setIsEditing(true);
     };
+
+    const handleSubmitEdit = async (newTitle: string) => {
+        const result = await updateChatTitle(id, newTitle);
+        if (result.success) {
+            setIsEditing(false);
+        }
+    };
+
+    if (isEditing) {
+        return (
+            <ChatEditForm
+                initialTitle={title}
+                onSubmit={handleSubmitEdit}
+                onCancel={() => setIsEditing(false)}
+            />
+        );
+    }
 
     return (
         <div

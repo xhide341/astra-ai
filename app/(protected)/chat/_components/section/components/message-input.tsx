@@ -40,16 +40,13 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         try {
             setIsLoading(true);
             setError(null);
-            console.log("Starting message submission...");
 
             // Create chat if needed
             let currentChatId = activeChat?.id;
             if (!currentChatId) {
-                console.log("Creating new chat...");
                 const initialTitle = message.slice(0, 50) + (message.length > 50 ? "..." : "");
                 const chatResponse = await createChat(initialTitle);
                 
-                // Handle chat limit error
                 if (chatResponse.error) {
                     showToast.error(chatResponse.error);
                     setIsLoading(false);
@@ -68,9 +65,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                 currentChatId = chatResponse.chat.id;
                 showToast.success("New chat created");
             }
-
-            // Save user message
-            console.log("Saving user message...");
+            
             const response = await sendMessage(currentChatId, message);
             if (response.error) {
                 throw new Error(response.error);
@@ -78,7 +73,6 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
 
             // Load messages after saving
             await loadMessages(currentChatId);
-            console.log("User message saved");
 
             // Start streaming mode
             startStreaming();
