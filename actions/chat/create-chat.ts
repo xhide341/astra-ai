@@ -1,24 +1,27 @@
-/*
-***
-1. Create a new chat session
-2. Associate it with the current user
-3. Return the chat ID and initial state
-***
-*/
-
 'use server';
 
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import { CreateChatResponse } from "@/types/chat";
 
+const MAX_CHATS_PER_USER = 3;
+
 export const createChat = async (title?: string): Promise<CreateChatResponse> => {
     try {
         const session = await auth();
-        
         const userId = session?.user?.id;
+        
         if (!userId) {
             return { error: "Unauthorized" };
+        }
+
+        // Check user's chat count
+        const chatCount = await db.chat.count({
+            where: { userId }
+        });
+
+        if (chatCount >= MAX_CHATS_PER_USER) {
+            return { error: "Sorry, you've reached the maximum number of chats." };
         }
 
         // Create chat with default title first

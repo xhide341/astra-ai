@@ -48,10 +48,20 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                 console.log("Creating new chat...");
                 const initialTitle = message.slice(0, 50) + (message.length > 50 ? "..." : "");
                 const chatResponse = await createChat(initialTitle);
-                if (!chatResponse.chat) {
-                    setError("Failed to create chat");
+                
+                // Handle chat limit error
+                if (chatResponse.error) {
+                    showToast.error(chatResponse.error);
+                    setIsLoading(false);
                     return;
                 }
+                
+                if (!chatResponse.chat) {
+                    showToast.error("Failed to create chat");
+                    setIsLoading(false);
+                    return;
+                }
+                
                 setChats([chatResponse.chat, ...chats]);
                 await setActiveChat(chatResponse.chat);
                 setIsCompact(false);
