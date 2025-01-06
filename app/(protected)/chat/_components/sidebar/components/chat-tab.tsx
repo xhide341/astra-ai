@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState, useRef } from "react";
 import { updateChatTitle } from "@/actions/chat/update-chat";
+import { deleteChat } from "@/actions/chat/delete-chat";
+import { showToast } from "@/lib/toast";
 
 interface ChatTabProps {
     id: string;
@@ -32,7 +34,16 @@ const ChatTab = ({ id, title, isActive, onClick }: ChatTabProps) => {
 
     const handleDelete = async (e: React.MouseEvent) => {
         e.stopPropagation();
-        console.log("Deleting chat:", id);
+        const result = await deleteChat(id);
+
+        if (result.success) {
+            showToast.success(success);
+            return;
+        }
+        if (result.error) {
+            showToast.error(error);
+            return;
+        }
     };
 
     const handleRename = (e: React.MouseEvent) => {
