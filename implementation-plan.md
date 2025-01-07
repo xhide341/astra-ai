@@ -50,17 +50,23 @@ Next Steps:
   - [x] Add delete chat functionality
   - [x] Show feedback when limit reached
 
-- [ ] Message Cooldown
-  - [ ] Add 12-second cooldown between messages
-  - [ ] Create cooldown indicator
-  - [ ] Add visual feedback during cooldown
-  - [ ] Implement server-side validation
+- [x] Prompt Rate Limiting
+  - [x] Limit one prompt per conversation
+  - [x] Add warning message with icon
+  - [x] Implement input disabling
+  - [x] Add visual feedback
 
 - [ ] Chat Management UI
   - [ ] Add chat deletion confirmation modal
   - [ ] Implement chat title editing
   - [ ] Add hover states for actions
   - [ ] Show success/error feedback
+
+- [ ] Agent UI Updates
+  - [ ] Update teacher avatar/image
+  - [ ] Update facilitator avatar/image
+  - [ ] Ensure consistent sizing
+  - [ ] Add visual distinction between agents
 
 Agent Integration:
 - [x] Dual Agent Setup
