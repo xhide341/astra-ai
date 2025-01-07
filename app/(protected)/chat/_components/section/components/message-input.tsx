@@ -1,7 +1,7 @@
 'use client';
 
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
-import { FormEvent, useState, useRef, useEffect } from "react";
+import { FormEvent, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useChatStore } from "@/hooks/use-chat-store";
 import { createChat } from "@/actions/chat/create-chat";
@@ -30,13 +30,13 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         stopStreaming,
         setIsCompact,
         isCompact,
-        isSidebarLoading
+        isSidebarLoading,
+        isStreaming
     } = useChatStore();
-    const [cooldownRemaining, setCooldownRemaining] = useState<number>(0);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!message.trim()) return;
+        if (!message.trim() || isStreaming) return;
         
         try {
             setIsLoading(true);
@@ -115,7 +115,6 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
             }
 
             setMessage("");
-            setCooldownRemaining(12);
         } catch (error) {
             stopStreaming();
             console.error("Error sending message:", error);
@@ -128,16 +127,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         }
     };
 
-    useEffect(() => {
-        if (cooldownRemaining > 0) {
-            const timer = setInterval(() => {
-                setCooldownRemaining(prev => prev - 1);
-            }, 1000);
-            return () => clearInterval(timer);
-        }
-    }, [cooldownRemaining]);
-
-    const isDisabled = isLoading || (isCompact && isSidebarLoading);
+    const isDisabled = isLoading || isStreaming || (isCompact && isSidebarLoading);
 
     return (
         <div className="flex flex-col gap-2">
@@ -148,22 +138,17 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                     onChange={(e) => setMessage(e.target.value)}
                     onFocus={onFocus}
                     placeholder="Enter a topic..."
-                    disabled={isDisabled || cooldownRemaining > 0}
+                    disabled={isDisabled}
                     className="text-sm flex-1 bg-white/90 dark:bg-zinc-900/75 dark:backdrop-blur-md dark:border-zinc-800 text-black-600 dark:text-white/90 placeholder:text-gray-600 dark:placeholder:text-white/70"
                 />
                 <Button 
                     type="submit" 
-                    disabled={isDisabled || cooldownRemaining > 0}
+                    disabled={isDisabled}
                     className="disabled:opacity-50 disabled:cursor-not-allowed bg-primary-color hover:bg-secondary-color"
                 >
                     <PaperAirplaneIcon className="h-3 w-3 text-white/80" />
                 </Button>
             </form>
-            {cooldownRemaining > 0 && (
-                <p className="text-xs text-muted-foreground">
-                    Please wait {cooldownRemaining}s before sending another message...
-                </p>
-            )}
         </div>
     );
 };

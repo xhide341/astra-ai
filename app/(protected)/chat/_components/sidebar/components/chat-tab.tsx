@@ -22,7 +22,7 @@ interface ChatTabProps {
 }
 
 const ChatTab = ({ id, title, isActive, onClick }: ChatTabProps) => {
-    const { setIsCompact } = useChatStore();
+    const { setIsCompact, setChats, chats } = useChatStore();
     const [isEditing, setIsEditing] = useState(false);
     const [currentTitle, setCurrentTitle] = useState(title);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -37,11 +37,12 @@ const ChatTab = ({ id, title, isActive, onClick }: ChatTabProps) => {
         const result = await deleteChat(id);
 
         if (result.success) {
-            showToast.success(success);
+            setChats(chats.filter(chat => chat.id !== id));
+            showToast.success(result.success);
             return;
         }
         if (result.error) {
-            showToast.error(error);
+            showToast.error(result.error);
             return;
         }
     };

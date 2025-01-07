@@ -1,23 +1,28 @@
+'use server';
 
-import db from '@/lib/db';
-import { auth } from '@/auth';
-
+import { auth } from "@/auth";
+import db from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
 export async function deleteChat(chatId: string) {
-    try {
-        const session = await auth();
-        const userId = session?.user?.id;
-        if (!userId) {
-            return { error: "Unauthorized" };
-        }
-
-        await db.chat.delete({
-            where: { id: chatId, userId }
-        });
-
-        return { success: "Conversation deleted successfully." };
-
-    } catch(error) {
-        return { error: "Failed to delete conversation." };
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return { error: "Unauthorized" };
     }
+
+    await db.chat.delete({
+      where: {
+        id: chatId,
+        userId: session.user.id
+      }
+    });
+
+    revalidatePath('/chat');
+    return { success: "Conversation deleted successfully." };
+  } catch (error) {
+    return { 
+      error: error instanceof Error ? error.message : "Failed to delete conversation." 
+    };
+  }
 }

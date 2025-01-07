@@ -84,7 +84,7 @@ const Sidebar = () => {
     return (
         <div className={cn(
             "relative h-screen overflow-y-auto transition-all duration-300 ease-in-out flex-shrink-0",
-            isSidebarOpen ? "w-[270px] flex-shrink-0 opacity-100" : "w-0"
+            isSidebarOpen ? "w-[260px] flex-shrink-0 opacity-100" : "w-0"
         )}>
             <div className="px-2">
                 <div className={cn(
