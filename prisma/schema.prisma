@@ -31,7 +31,6 @@ model User {
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
   chats                 Chat[]
-  lastMessageAt         DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

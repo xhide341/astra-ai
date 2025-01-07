@@ -1,6 +1,7 @@
 'use client';
 
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
+import { ShieldExclamationIcon } from "@heroicons/react/20/solid";
 import { FormEvent, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useChatStore } from "@/hooks/use-chat-store";
@@ -18,6 +19,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
     const [message, setMessage] = useState("");
     const { 
         activeChat,
+        messages,
         chats,
         setChats,
         setActiveChat,
@@ -33,6 +35,32 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         isSidebarLoading,
         isStreaming
     } = useChatStore();
+
+    // Check if first message is from user
+    const isFirstMessageFromUser = messages.length > 0 && messages[0].role === 'USER';
+
+    // Debug logs
+    console.log('Store State:', {
+        activeChat: activeChat?.id,
+        messagesCount: messages.length,
+        firstMessage: messages[0],
+        isFirstMessageFromUser,
+        isLoading,
+        isStreaming,
+        isCompact,
+        isSidebarLoading
+    });
+
+    const isDisabled = isLoading || isStreaming || (isCompact && isSidebarLoading) || isFirstMessageFromUser;
+
+    // Debug disabled state
+    console.log('Input Disabled:', {
+        isDisabled,
+        reason: isFirstMessageFromUser ? 'User already sent message' : 
+                isLoading ? 'Loading' :
+                isStreaming ? 'Streaming' :
+                (isCompact && isSidebarLoading) ? 'Sidebar Loading' : 'None'
+    });
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -127,10 +155,14 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         }
     };
 
-    const isDisabled = isLoading || isStreaming || (isCompact && isSidebarLoading);
-
     return (
         <div className="flex flex-col gap-2">
+            {isFirstMessageFromUser && (
+                <div className="flex items-center gap-1.5 justify-center h-full w-full">
+                    <ShieldExclamationIcon className="h-3 w-3 text-yellow-500" />
+                    <p className="text-xs text-gray-700 dark:text-white/70">Conversation is limited to one prompt to limit token usage.</p>
+                </div>
+            )}
             <form onSubmit={handleSubmit} className="flex gap-x-2">
                 <Input
                     ref={inputRef}

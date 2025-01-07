@@ -7,6 +7,7 @@ export interface Chat {
     userId: string;
     createdAt: Date;
     updatedAt: Date;
+    messages: Message[];
 }
 
 // Message Types
