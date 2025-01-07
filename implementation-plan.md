@@ -45,10 +45,10 @@ Implementation Order:
 - [x] Refine error handling with toast feedback
 
 Next Steps:
-- [ ] Chat Limitations
+- [x] Chat Limitations
   - [x] Implement 3 chats per user limit
-  - [ ] Add delete chat functionality
-  - [ ] Show feedback when limit reached
+  - [x] Add delete chat functionality
+  - [x] Show feedback when limit reached
 
 - [ ] Message Cooldown
   - [ ] Add 12-second cooldown between messages

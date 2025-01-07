@@ -1,7 +1,7 @@
 'use client';
 
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
-import { FormEvent, useState, useRef } from "react";
+import { FormEvent, useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useChatStore } from "@/hooks/use-chat-store";
 import { createChat } from "@/actions/chat/create-chat";
@@ -32,6 +32,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         isCompact,
         isSidebarLoading
     } = useChatStore();
+    const [cooldownRemaining, setCooldownRemaining] = useState<number>(0);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -87,7 +88,10 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
                 })
             });
 
-            if (!streamResponse.ok) throw new Error('Failed to send message');
+            if (!streamResponse.ok) {
+                const errorData = await streamResponse.json();
+                throw new Error(errorData.error || 'Failed to send message');
+            }
 
             // Read the stream
             const reader = streamResponse.body?.getReader();
@@ -111,11 +115,12 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
             }
 
             setMessage("");
+            setCooldownRemaining(12);
         } catch (error) {
             stopStreaming();
             console.error("Error sending message:", error);
             setError("Failed to send message");
-            showToast.error("Failed to send message");
+            showToast.error(error instanceof Error ? error.message : "Failed to send message");
         } finally {
             stopStreaming();
             setIsLoading(false);
@@ -123,27 +128,43 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
         }
     };
 
+    useEffect(() => {
+        if (cooldownRemaining > 0) {
+            const timer = setInterval(() => {
+                setCooldownRemaining(prev => prev - 1);
+            }, 1000);
+            return () => clearInterval(timer);
+        }
+    }, [cooldownRemaining]);
+
     const isDisabled = isLoading || (isCompact && isSidebarLoading);
 
     return (
-        <form onSubmit={handleSubmit} className="flex gap-x-2">
-            <Input
-                ref={inputRef}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onFocus={onFocus}
-                placeholder="Enter a topic..."
-                disabled={isDisabled}
-                className="text-sm flex-1 bg-white/90 dark:bg-zinc-900/75 dark:backdrop-blur-md dark:border-zinc-800 text-black-600 dark:text-white/90 placeholder:text-gray-600 dark:placeholder:text-white/70"
-            />
-            <Button 
-                type="submit" 
-                disabled={isDisabled}
-                className="disabled:opacity-50 disabled:cursor-not-allowed bg-primary-color hover:bg-secondary-color"
-            >
-                <PaperAirplaneIcon className="h-3 w-3 text-white/80" />
-            </Button>
-        </form>
+        <div className="flex flex-col gap-2">
+            <form onSubmit={handleSubmit} className="flex gap-x-2">
+                <Input
+                    ref={inputRef}
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onFocus={onFocus}
+                    placeholder="Enter a topic..."
+                    disabled={isDisabled || cooldownRemaining > 0}
+                    className="text-sm flex-1 bg-white/90 dark:bg-zinc-900/75 dark:backdrop-blur-md dark:border-zinc-800 text-black-600 dark:text-white/90 placeholder:text-gray-600 dark:placeholder:text-white/70"
+                />
+                <Button 
+                    type="submit" 
+                    disabled={isDisabled || cooldownRemaining > 0}
+                    className="disabled:opacity-50 disabled:cursor-not-allowed bg-primary-color hover:bg-secondary-color"
+                >
+                    <PaperAirplaneIcon className="h-3 w-3 text-white/80" />
+                </Button>
+            </form>
+            {cooldownRemaining > 0 && (
+                <p className="text-xs text-muted-foreground">
+                    Please wait {cooldownRemaining}s before sending another message...
+                </p>
+            )}
+        </div>
     );
 };
 

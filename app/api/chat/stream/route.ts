@@ -1,3 +1,5 @@
+'use server';
+
 import { NextRequest } from "next/server";
 
 export const runtime = 'edge';

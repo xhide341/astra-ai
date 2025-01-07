@@ -1,7 +1,10 @@
+'use server';
+
 import { NextRequest } from "next/server";
 import { chatWithGraph } from "@/lib/langchain/graph";
 import { StreamChunk } from "@/types/chat";
 import { auth } from "@/auth";
+import db from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const encoder = new TextEncoder();
@@ -39,7 +42,23 @@ export async function POST(req: NextRequest) {
       throw new Error('ChatId is required and must be a string');
     }
 
-    // 3. Process in background
+    // 3. Validate cooldown + lastMessageAt
+    const getLastMessage = await db.user.findUnique({
+      where: { id: session.user.id },
+      select: { lastMessageAt: true }
+    });
+    const lastMessage = getLastMessage?.lastMessageAt;
+    if (lastMessage && (Date.now() - lastMessage.getTime()) < 1000 * 12) {
+      throw new Error('Please wait 12 seconds between messages');
+    }
+
+    // 4. Update lastMessageAt
+    await db.user.update({
+      where: { id: session.user.id },
+      data: { lastMessageAt: new Date() }
+    });
+
+    // 5. Process in background
     (async () => {
       try {
         console.log("Starting AI processing");
