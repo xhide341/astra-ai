@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomOneDarkReasonable } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import { BeatLoader } from "react-spinners";
+import Image from 'next/image';
 
 const Conversation = () => {
     const { 
@@ -55,19 +56,6 @@ const Conversation = () => {
         }
     }, [messages, activeChat, setIsLoading]);
 
-    const getBubbleColor = (role: string) => {
-        switch (role) {
-            case "USER":
-                return "bg-blue-500";
-            case "TEACHER":
-                return "bg-green-500";
-            case "FACILITATOR":
-                return "bg-purple-500";
-            default:
-                return "bg-gray-500";
-        }
-    };
-
     const getMessageBgColor = (role: string) => {
         switch (role) {
             case "USER":
@@ -89,15 +77,13 @@ const Conversation = () => {
                     message.role === "USER" ? "flex-row-reverse" : "flex-row"
                 )}>
                     <div className="flex-shrink-0">
-                        <div className={cn(
-                            "w-[30px] h-[30px] rounded-full flex items-center justify-center",
-                            getBubbleColor(message.role)
-                        )}>
-                            <span className="text-white text-sm font-semibold">
-                                {message.role === "USER" ? "U" : 
-                                 message.role === "TEACHER" ? "T" : "F"}
-                            </span>
-                        </div>
+                        <Image 
+                            src={`https://ui-avatars.com/api/?name=${message.role}&background=${message.role === "USER" ? "4F46E5" : message.role === "TEACHER" ? "22C55E" : "A855F7"}&color=ffffff`}
+                            alt={`${message.role} avatar`}
+                            className="w-[30px] h-[30px] rounded-full"
+                            width={30}
+                            height={30}
+                        />
                     </div>
                     <div className={cn(
                         "max-w-[80%] rounded-lg py-3 px-4 prose prose-sm dark:prose-invert max-w-none break-normal overflow-auto text-sm",
@@ -167,15 +153,13 @@ const Conversation = () => {
             {isStreaming && currentStreamedContent && activeChat && (
                 <div className="flex items-start gap-x-2">
                     <div className="flex-shrink-0">
-                        <div className={cn(
-                            "w-[30px] h-[30px] rounded-full flex items-center justify-center",
-                            getBubbleColor(streamRole ?? "DEFAULT")
-                        )}>
-                            <span className="text-white text-sm font-semibold">
-                                {streamRole === "TEACHER" ? "T" : 
-                                 streamRole === "FACILITATOR" ? "F" : "AI"}
-                            </span>
-                        </div>
+                        <Image 
+                            src={`https://ui-avatars.com/api/?name=${streamRole ?? "AI"}&background=${streamRole === "TEACHER" ? "22C55E" : streamRole === "FACILITATOR" ? "A855F7" : "6B7280"}&color=ffffff`}
+                            alt={`${streamRole ?? "AI"} avatar`}
+                            className="w-[30px] h-[30px] rounded-full"
+                            width={30}
+                            height={30}
+                        />
                     </div>
                     <div className={cn(
                         "max-w-[80%] rounded-lg py-3 px-4 prose prose-sm dark:prose-invert max-w-none break-normal overflow-auto text-sm",
