@@ -62,7 +62,7 @@ export default {
   			'hero-gradient': 'radial-gradient(80% 40% at 50% -20%, var(--primary-color), var(--obsidian))'
   		},
   		boxShadow: {
-  			glow: '0 0 20px var(--primary-color)'
+  			glow: '0 0 20px hsl(100, 30%, 35%)'
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
