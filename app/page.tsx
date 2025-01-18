@@ -11,15 +11,18 @@ export default function Home() {
       <main className="z-10 flex flex-1 flex-col items-center justify-between w-full px-6 lg:px-8">
         <section className="flex flex-col items-center w-full mx-auto pt-20 flex-1">
           <div className="text-center pt-20">
+            <h1 className="text-5xl/[1.25] sm:text-6xl/[1.25] font-bold text-white/90 mb-6">
+              AURA BOT
+            </h1>
             <h2 className="text-3xl/[1.25] sm:text-4xl/[1.25] mb-4 font-bold text-white/80 max-w-2xl leading-normal">
               Just enter a topic and...
             </h2>
             <DynamicTagline 
               taglines={[
-                "and let two AI minds discuss it in depth.",
-                "watch as AI agents debate and explore ideas.",
-                "experience dynamic AI-powered conversations.",
-                "discover new perspectives through AI dialogue."
+                "🤖 let two AI minds discuss it in depth.",
+                "💭 watch as AI agents debate and explore ideas.",
+                "✨ experience dynamic AI-powered conversations.",
+                "🔍 discover new perspectives through AI dialogue."
               ]}
               className="text-md text-white/80 max-w-[500px] mb-6"
             />
