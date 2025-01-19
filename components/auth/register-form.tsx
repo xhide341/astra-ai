@@ -131,7 +131,7 @@ export const RegisterForm = ({ onToggleView }: RegisterFormProps) => {
             <FormSuccess message={success} />
           </div>
 
-          <Button className="w-full" type="submit" disabled={isPending}>
+          <Button className="w-full bg-primary-color text-white/90 transition-all hover:bg-secondary-color" type="submit" disabled={isPending}>
             Create account
           </Button>
 

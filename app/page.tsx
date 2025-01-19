@@ -16,7 +16,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col font-poppins w-full relative min-h-screen overflow-clip bg-gray-100 dark:bg-zinc-900">
+    <div className="flex flex-col font-poppins w-full relative min-h-screen overflow-clip bg-zinc-900">
       <main className="z-10 flex flex-1 flex-col items-center justify-between w-full px-6 lg:px-8">
         <section className="flex flex-col items-center w-full mx-auto pt-20 flex-1">
           <div className="text-center pt-20">
@@ -40,7 +40,7 @@ export default function Home() {
             <Button 
               variant="secondary" 
               onClick={() => handleAuthClick('register')}
-              className="bg-primary-color transition-all hover:bg-secondary-color"
+              className="bg-primary-color text-white/90 transition-all hover:bg-secondary-color"
             >
               Try for free
             </Button>

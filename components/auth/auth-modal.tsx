@@ -2,7 +2,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { LoginForm } from "@/components/auth/login-form";
 import { RegisterForm } from "@/components/auth/register-form";
 import { useState } from "react";
-import { ThemeProvider } from "next-themes";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -29,20 +28,18 @@ export function AuthModal({ isOpen, onClose, initialView = 'login' }: AuthModalP
   const currentView = modalContent[view];
 
   return (
-    <ThemeProvider attribute="class" forcedTheme="dark">
-      <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-[425px] bg-background">
+            <DialogHeader>
             <DialogTitle className="text-2xl text-center">
-              {currentView.title}
+                {currentView.title}
             </DialogTitle>
             <DialogDescription className="text-center">
-              {currentView.description}
+                {currentView.description}
             </DialogDescription>
-          </DialogHeader>
-          {currentView.component}
+            </DialogHeader>
+            {currentView.component}
         </DialogContent>
-      </Dialog>
-    </ThemeProvider>
+    </Dialog>
   );
 }

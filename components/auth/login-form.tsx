@@ -222,7 +222,7 @@ export const LoginForm = ({ onToggleView }: LoginFormProps) => {
             <FormSuccess message={success} />
           </div>
           
-          <Button className="w-full" type="submit" disabled={isPending}>
+          <Button className="w-full bg-primary-color text-white/90 transition-all hover:bg-secondary-color" type="submit" disabled={isPending}>
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

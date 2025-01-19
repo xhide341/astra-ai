@@ -15,8 +15,8 @@ export default function DynamicTagline({ taglines, className }: TProps) {
         if (taglineRef.current) {
             const typed = new Typed(taglineRef.current, {
                 strings: taglines,
-                typeSpeed: 15,
-                backSpeed: 6,
+                typeSpeed: 10,
+                backSpeed: 10,
                 loop: true,
             });
 
