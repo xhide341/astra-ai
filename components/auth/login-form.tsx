@@ -4,15 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { loginSchema } from "@/schemas";
+import { login } from "@/actions/login";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import Link from "next/link";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { login } from "@/actions/login";
 import { Loader2 } from "lucide-react";
 import { useTransition, useState } from "react";
 import {
@@ -26,7 +25,11 @@ import { Separator } from "@/components/ui/separator";
 import { SocialLoginButtons } from "@/components/auth/social-login-buttons";
 import { useSearchParams } from "next/navigation";
 
-export const LoginForm = () => {
+interface LoginFormProps {
+  onToggleView: () => void;
+}
+
+export const LoginForm = ({ onToggleView }: LoginFormProps) => {
   const searchParams = useSearchParams();
   const urlError = searchParams.get("error") === "OAuthAccountNotLinked" 
     ? "Email already linked to another provider" 
@@ -93,10 +96,10 @@ export const LoginForm = () => {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {showTwoFactor && (
-          <>
+    <div className="px-4 py-2">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {showTwoFactor ? (
             <div className="space-y-4">
               <FormField
                 control={form.control}
@@ -138,131 +141,131 @@ export const LoginForm = () => {
                 </button>
               </div>
             </div>
-          </>
-        )}
-
-        {!showTwoFactor && (
-          <>
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="email">Email</Label>
-                  <FormControl>
-                    <Input
-                      {...field}                  
-                      id="email"
-                      type="email"
-                      placeholder="name@example.com"
-                      disabled={isPending}
-                      autoComplete="email"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="password">Password</Label>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      id="password"
-                      type="password"
-                      placeholder="••••••••"
-                      disabled={isPending}
-                      autoComplete="current-password"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex items-center justify-between">
+          ) : (
+            <>
               <FormField
                 control={form.control}
-                name="remember"
+                name="email"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                  <FormItem>
+                    <Label htmlFor="email">Email</Label>
                     <FormControl>
-                      <Checkbox
-                        id="remember"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
+                      <Input
+                        {...field}                  
+                        id="email"
+                        type="email"
+                        placeholder="name@example.com"
                         disabled={isPending}
+                        autoComplete="email"
                       />
                     </FormControl>
-                    <Label 
-                      htmlFor="remember" 
-                      className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Remember me
-                    </Label>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
-              <Link
-                href="/auth/reset-password"
-                className="text-sm text-primary hover:underline"
-              >
-                Forgot password?
-              </Link>
-            </div>
-          </>
-        )}
-
-        <div className="space-y-2">
-          <FormError message={error} />
-          <FormSuccess message={success} />
-        </div>
-        
-        <Button className="w-full" type="submit" disabled={isPending}>
-          {isPending ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Loading...
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label htmlFor="password">Password</Label>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        id="password"
+                        type="password"
+                        placeholder="••••••••"
+                        disabled={isPending}
+                        autoComplete="current-password"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex items-center justify-between">
+                <FormField
+                  control={form.control}
+                  name="remember"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          id="remember"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                      <Label 
+                        htmlFor="remember" 
+                        className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        Remember me
+                      </Label>
+                    </FormItem>
+                  )}
+                />
+                <button
+                  type="button"
+                  onClick={() => {}} // TODO: Add forgot password handler
+                  className="text-sm text-primary hover:underline"
+                >
+                  Forgot password?
+                </button>
+              </div>
             </>
-          ) : showTwoFactor ? (
-            "Verify Code"
-          ) : (
-            "Sign in"
           )}
-        </Button>
 
-        {!showTwoFactor && (
-          <>
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-            
-            <div className="mt-6">
-              <SocialLoginButtons />
-            </div>
+          <div className="space-y-2">
+            <FormError message={error} />
+            <FormSuccess message={success} />
+          </div>
+          
+          <Button className="w-full" type="submit" disabled={isPending}>
+            {isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Loading...
+              </>
+            ) : showTwoFactor ? (
+              "Verify Code"
+            ) : (
+              "Sign in"
+            )}
+          </Button>
 
-            <div className="text-center text-sm">
-              <Link 
-                className="text-primary hover:underline"
-                href="/auth/register"
-              >
-                Don&apos;t have an account? Sign up
-              </Link>
-            </div>
-          </>
-        )}
-      </form>
-    </Form>
+          {!showTwoFactor && (
+            <>
+              <div className="relative mt-6">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <SocialLoginButtons />
+              </div>
+
+              <div className="mt-4 text-center text-sm">
+                <button
+                  type="button"
+                  onClick={onToggleView}
+                  className="text-primary hover:underline"
+                >
+                  Don&apos;t have an account? Sign up
+                </button>
+              </div>
+            </>
+          )}
+        </form>
+      </Form>
+    </div>
   );
 }
 

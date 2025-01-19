@@ -20,8 +20,6 @@ export const protectedRoutes = [
  * @type {string[]}
 **/  
 export const authRoutes = [
-    "/auth/login",
-    "/auth/register",
     "/auth/error",
     "/auth/reset-password",
     "/auth/new-password"
