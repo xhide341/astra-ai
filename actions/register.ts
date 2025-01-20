@@ -52,8 +52,7 @@ export const register = async (
     await db.user.create({
       data: { name, email, password: hashedPassword },
     });
-
-    // TODO: Send verification token to email
+    
     const verificationToken = await generateVerificationToken(email);
     await sendVerificationEmail(email, verificationToken);
 

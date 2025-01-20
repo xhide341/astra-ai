@@ -24,6 +24,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SocialLoginButtons } from "@/components/auth/social-login-buttons";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 interface LoginFormProps {
   onToggleView: () => void;
@@ -56,13 +57,7 @@ export const LoginForm = ({ onToggleView }: LoginFormProps) => {
     
     startTransition(async () => {
       try {
-        console.log("Submitting form with values:", {
-          ...values,
-          password: "REDACTED" // Don't log passwords
-        });
-
         const response = await login(values);
-        console.log("Login response:", response);
         
         if (response.error) {
           if (response.error._form) {
@@ -206,13 +201,13 @@ export const LoginForm = ({ onToggleView }: LoginFormProps) => {
                     </FormItem>
                   )}
                 />
-                <button
-                  type="button"
-                  onClick={() => {}} // TODO: Add forgot password handler
+                <Link
+                  href="/auth/reset-password"
                   className="text-sm text-primary hover:underline"
+                  onClick={() => onToggleView()}
                 >
                   Forgot password?
-                </button>
+                </Link>
               </div>
             </>
           )}
