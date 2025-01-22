@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import { CreateChatResponse } from "@/types/chat";
+import { revalidatePath } from "next/cache";
 
 const MAX_CHATS_PER_USER = 3;
 
@@ -30,11 +31,16 @@ export const createChat = async (title?: string): Promise<CreateChatResponse> =>
                 userId,
                 title: title || "New Chat",
             },
+            include: {
+                messages: true
+            }
         });
 
         if (!chat) {
             return { error: "Failed to create chat" };
         }
+
+        revalidatePath("/chat");
 
         return { chat };
     } catch (error) {
