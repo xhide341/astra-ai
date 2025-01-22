@@ -18,14 +18,14 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: 'AURA - AI Learning Platform',
-    template: '%s | AURA'
+    default: 'ASTRA - AI Learning Platform',
+    template: '%s | ASTRA'
   },
   description: 'Experience dynamic learning through dual AI minds that observe, reflect, and teach together.',
   keywords: ['AI learning', 'education', 'artificial intelligence', 'tutoring', 'personalized learning'],
-  authors: [{ name: 'AURA Team' }],
-  creator: 'AURA Team',
-  publisher: 'AURA',
+  authors: [{ name: 'ASTRA Team' }],
+  creator: 'ASTRA Team',
+  publisher: 'ASTRA',
   robots: {
     index: true,
     follow: true,
