@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@auth/prisma-adapter':
         specifier: ^2.7.4
-        version: 2.7.4(@prisma/client@6.1.0(prisma@6.1.0))
+        version: 2.7.4(@prisma/client@6.2.1(prisma@6.1.0))
       '@heroicons/react':
         specifier: ^2.2.0
         version: 2.2.0(react@19.0.0-rc-66855b96-20241106)
@@ -33,8 +33,8 @@ importers:
         specifier: ^2.1.7
         version: 2.1.7(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
       '@prisma/client':
-        specifier: ^6.1.0
-        version: 6.1.0(prisma@6.1.0)
+        specifier: ^6.2.0
+        version: 6.2.1(prisma@6.1.0)
       '@radix-ui/react-checkbox':
         specifier: ^1.1.3
         version: 1.1.3(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
@@ -1255,8 +1255,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@prisma/client@6.1.0':
-    resolution: {integrity: sha512-AbQYc5+EJKm1Ydfq3KxwcGiy7wIbm4/QbjCKWWoNROtvy7d6a3gmAGkKjK0iUCzh+rHV8xDhD5Cge8ke/kiy5Q==}
+  '@prisma/client@6.2.1':
+    resolution: {integrity: sha512-msKY2iRLISN8t5X0Tj7hU0UWet1u0KuxSPHWuf3IRkB4J95mCvGpyQBfQ6ufcmvKNOMQSq90O2iUmJEN2e5fiA==}
     engines: {node: '>=18.18'}
     peerDependencies:
       prisma: '*'
@@ -5003,10 +5003,10 @@ snapshots:
       preact: 10.24.3
       preact-render-to-string: 6.5.11(preact@10.24.3)
 
-  '@auth/prisma-adapter@2.7.4(@prisma/client@6.1.0(prisma@6.1.0))':
+  '@auth/prisma-adapter@2.7.4(@prisma/client@6.2.1(prisma@6.1.0))':
     dependencies:
       '@auth/core': 0.37.4
-      '@prisma/client': 6.1.0(prisma@6.1.0)
+      '@prisma/client': 6.2.1(prisma@6.1.0)
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
       - '@simplewebauthn/server'
@@ -5646,7 +5646,7 @@ snapshots:
     dependencies:
       playwright: 1.49.1
 
-  '@prisma/client@6.1.0(prisma@6.1.0)':
+  '@prisma/client@6.2.1(prisma@6.1.0)':
     optionalDependencies:
       prisma: 6.1.0
 
