@@ -1,8 +1,10 @@
+export const runtime = 'nodejs'
+
 import Credentials from "next-auth/providers/credentials";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import type { NextAuthConfig } from "next-auth";
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcryptjs";
 import { loginSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
 
@@ -29,7 +31,7 @@ export default {
                     }
 
                     // Step 4: Compare provided password with hashed password in database
-                    const passwordsMatch = await bcryptjs.compare(
+                    const passwordsMatch = await bcrypt.compare(
                         password,
                         user.password
                     );
