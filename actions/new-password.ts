@@ -4,7 +4,7 @@ import * as z from "zod";
 import { newPasswordSchema } from "@/schemas";
 import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 import { getUserByEmail } from "@/data/user";
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcrypt";
 import db from "@/lib/db";
 
 
@@ -42,7 +42,7 @@ export const newPassword = async (
         return { error: "Email not found" };
     }
 
-    const hashedPassword = await bcryptjs.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
         await db.user.update({

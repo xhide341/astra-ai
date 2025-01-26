@@ -10,7 +10,7 @@ import { generateVerificationToken,
 import { getUserByEmail } from "@/data/user";
 import { sendVerificationEmail,
          sendTwoFactorEmail } from "@/lib/mail";
-import * as bcryptjs from "bcryptjs";
+import * as bcrypt from "bcrypt";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import db from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
@@ -62,7 +62,7 @@ export const login = async (
         };
     }
         
-    const passwordsMatch = await bcryptjs.compare(password, existingUser.password);
+    const passwordsMatch = await bcrypt.compare(password, existingUser.password);
     if (!passwordsMatch) {
         return { error: { password: ["Invalid credentials"] } };
     }  
