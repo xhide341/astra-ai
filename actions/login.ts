@@ -10,7 +10,7 @@ import { generateVerificationToken,
 import { getUserByEmail } from "@/data/user";
 import { sendVerificationEmail,
          sendTwoFactorEmail } from "@/lib/mail";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcryptjs";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import db from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
