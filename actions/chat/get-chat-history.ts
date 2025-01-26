@@ -1,15 +1,17 @@
-/*
-***
-1. Fetch all chats for current user
-2. Return formatted chat history
-***
-*/
-
 'use server';
 
 import { auth } from "@/auth";
 import db from "@/lib/db";
-import { GetChatsResponse } from "@/types/chat";
+import { GetChatsResponse, Message } from "@/types/chat";
+import { Chat } from "@prisma/client";
+
+// Define the type for chat with _count
+type ChatWithCount = Chat & {
+    _count: {
+        messages: number;
+    };
+    messages: Message[];
+};
 
 export const getChatHistory = async (): Promise<GetChatsResponse> => {
     try {
@@ -26,7 +28,8 @@ export const getChatHistory = async (): Promise<GetChatsResponse> => {
             include: {
                 _count: {
                     select: { messages: true }
-                }
+                },
+                messages: true
             },
             orderBy: { createdAt: "desc" }
         });
@@ -41,12 +44,16 @@ export const getChatHistory = async (): Promise<GetChatsResponse> => {
         }
 
         // Get remaining chats (now all have messages)
-        const remainingChats = chats.filter(chat => chat._count.messages > 0);
+        const remainingChats = chats.filter((chat: ChatWithCount) => chat._count.messages > 0);
         
         // Format chats for response
-        const formattedChats = remainingChats.map(chat => ({
-            ...chat,
-            _count: undefined
+        const formattedChats = remainingChats.map((chat: ChatWithCount) => ({
+            id: chat.id,
+            title: chat.title,
+            userId: chat.userId,
+            createdAt: chat.createdAt,
+            updatedAt: chat.updatedAt,
+            messages: chat.messages
         }));
 
         return { chats: formattedChats };

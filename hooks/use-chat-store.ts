@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { Chat, Message, StreamChunk } from '@/types/chat';
 import { getMessages } from "@/actions/chat/get-messages";
 import { MessageRole } from '@prisma/client';
-// import { saveMessage } from '@/actions/chat/save-message';
 
 interface ChatStore {
     // State
