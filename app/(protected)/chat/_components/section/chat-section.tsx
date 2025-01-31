@@ -40,7 +40,7 @@ const ChatSection = () => {
                                     Enter a topic
                                 </h1>
                                 <p className="text-slate-800 dark:text-white/90 text-xs font-regular mx-auto mb-6 text-center">
-                                    Please use a topic that is for educational purposes only.
+                                    Please enter a topic intended solely for educational use.
                                 </p>
                                 <MessageInput onFocus={() => {}} />
                             </div>

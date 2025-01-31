@@ -86,7 +86,7 @@ const Conversation = () => {
                         />
                     </div>
                     <div className={cn(
-                        "max-w-[80%] rounded-lg py-3 px-4 prose prose-sm dark:prose-invert max-w-none break-normal overflow-auto text-sm",
+                        "max-w-[80%] rounded-lg py-3 px-4 prose prose-sm dark:prose-invert dark:text-black max-w-none break-normal overflow-auto text-sm",
                         getMessageBgColor(message.role)
                     )}>
                         <ReactMarkdown
