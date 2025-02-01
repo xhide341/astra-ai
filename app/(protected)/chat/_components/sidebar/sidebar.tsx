@@ -10,6 +10,7 @@ import { useChatStore } from '@/hooks/use-chat-store';
 import { getChatHistory } from '@/actions/chat/get-chat-history';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import LogOut from './components/log-out';
 
 const Sidebar = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -206,6 +207,9 @@ const Sidebar = () => {
                         </div>
                     </div>
                 )}
+            </div>
+            <div className="absolute bottom-0 left-0 w-full flex flex-grow justify-center items-center p-2">
+                <LogOut />
             </div>
         </div>
     );

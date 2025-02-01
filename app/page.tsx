@@ -40,7 +40,7 @@ export default function Home() {
               "✨ experience dynamic AI-powered conversations.",
               "🔍 discover new perspectives through AI dialogue."
             ]}
-            className="text-md text-white/80 max-w-[500px] mb-6"
+            className="text-sm md:text-md text-white/80 max-w-[500px] mb-6"
           />
           <div className="flex flex-row justify-center items-center gap-8 max-w-2xl mx-auto mt-6 z-10">
             <Button 
@@ -56,7 +56,7 @@ export default function Home() {
             onClose={() => setShowAuthModal(false)}
             initialView={authView}
           />
-          <div className="fixed bottom-0 left-0 right-0 h-64 lg:h-96 w-screen overflow-hidden [mask-image:radial-gradient(50%_50%,white,transparent)] before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_bottom_center,var(--primary-color),transparent_40%)] before:opacity-40 after:absolute after:-left-1/2 after:top-1/2 after:aspect-[1/0.7] after:w-[200%] after:rounded-[100%] after:border-t after:border-secondary-color after:bg-zinc-900">
+          <div className="fixed bottom-0 left-0 right-0 h-48 lg:h-64 xl:h-80 2xl:h-96 w-screen overflow-hidden [mask-image:radial-gradient(50%_50%,white,transparent)] before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_bottom_center,var(--primary-color),transparent_40%)] before:opacity-40 after:absolute after:-left-1/2 after:top-1/2 after:aspect-[1/0.7] after:w-[200%] after:rounded-[100%] after:border-t after:border-secondary-color after:bg-zinc-900">
             <Sparkles
               density={1200}
               className="absolute inset-x-0 bottom-0 h-full w-full [mask-image:radial-gradient(50%_50%,white,transparent_85%)]"
