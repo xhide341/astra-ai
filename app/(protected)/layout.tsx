@@ -4,8 +4,8 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 
 export const metadata: Metadata = {
-  title: "AURA Bot",
-  description: "AURA Bot",
+  title: "ASTRA AI",
+  description: "ASTRA AI",
 };
 
 export default async function ProtectedLayout({
