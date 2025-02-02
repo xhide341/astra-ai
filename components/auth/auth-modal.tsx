@@ -29,7 +29,7 @@ export function AuthModal({ isOpen, onClose, initialView = 'login' }: AuthModalP
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-[425px] bg-background">
+        <DialogContent className="sm:max-w-[425px] bg-background z-50">
             <DialogHeader>
             <DialogTitle className="text-2xl text-center">
                 {currentView.title}
