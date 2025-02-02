@@ -38,29 +38,7 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
 
     // Check if first message is from user
     const isFirstMessageFromUser = messages.length > 0 && messages[0].role === 'USER';
-
-    // Debug logs
-    console.log('Store State:', {
-        activeChat: activeChat?.id,
-        messagesCount: messages.length,
-        firstMessage: messages[0],
-        isFirstMessageFromUser,
-        isLoading,
-        isStreaming,
-        isCompact,
-        isSidebarLoading
-    });
-
     const isDisabled = isLoading || isStreaming || (isCompact && isSidebarLoading) || isFirstMessageFromUser;
-
-    // Debug disabled state
-    console.log('Input Disabled:', {
-        isDisabled,
-        reason: isFirstMessageFromUser ? 'User already sent message' : 
-                isLoading ? 'Loading' :
-                isStreaming ? 'Streaming' :
-                (isCompact && isSidebarLoading) ? 'Sidebar Loading' : 'None'
-    });
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -145,7 +123,6 @@ const MessageInput = ({ onFocus }: MessageInputProps) => {
             setMessage("");
         } catch (error) {
             stopStreaming();
-            console.error("Error sending message:", error);
             setError("Failed to send message");
             showToast.error(error instanceof Error ? error.message : "Failed to send message");
         } finally {

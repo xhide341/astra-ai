@@ -44,7 +44,6 @@ export async function POST(req: NextRequest) {
     // 5. Process in background
     (async () => {
       try {
-        console.log("Starting AI processing");
         await chatWithGraph(message, chatId, async (chunk: StreamChunk) => {
           if (chunk.type === 'stream') {
             chunkCount++;
@@ -89,7 +88,6 @@ export async function POST(req: NextRequest) {
             role: currentRole 
           });
         }
-        console.log("Trigger stats:", JSON.stringify(triggerLog, null, 2));  // Pretty print
         await writer.close();
       }
     })();
