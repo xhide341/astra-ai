@@ -11,9 +11,13 @@ import { getChatHistory } from '@/actions/chat/get-chat-history';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import LogOut from './components/log-out';
+import { signOut } from 'next-auth/react';
+import ConfirmLogoutModal from './components/confirm-logout-modal';
 
 const Sidebar = () => {
     const [isLoading, setIsLoading] = useState(true);
+    
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
     const user = useCurrentUser();
     const { 
         chats, 
@@ -80,6 +84,19 @@ const Sidebar = () => {
         setIsSidebarLoading(false);
         setIsCompact(true);
         setActiveChat(null);
+    };
+
+    const handleLogOut = () => {
+        setIsLogoutModalOpen(true);
+    };
+
+    const confirmLogOut = () => {
+        signOut();
+        setIsLogoutModalOpen(false);
+    };
+
+    const cancelLogOut = () => {
+        setIsLogoutModalOpen(false);
     };
 
     return (
@@ -209,8 +226,13 @@ const Sidebar = () => {
                 )}
             </div>
             <div className="absolute bottom-0 left-0 w-full flex flex-grow justify-center items-center p-2">
-                <LogOut />
+                <LogOut onLogout={handleLogOut}/>
             </div>
+            <ConfirmLogoutModal 
+                isOpen={isLogoutModalOpen} 
+                onClose={cancelLogOut} 
+                onConfirm={confirmLogOut} 
+            />
         </div>
     );
 };

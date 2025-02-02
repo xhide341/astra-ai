@@ -1,15 +1,20 @@
-"use client";
+'use client';
 
 import { Button } from "@/components/ui/button";
-import { signOut } from "next-auth/react";
 
-export default function LogOut() {
+interface LogOutProps {
+    onLogout: () => void;
+}
 
-    return <div className="w-full">
-        <Button className="w-full shadow-none" onClick={() => {
-            signOut();
-        }}>
-            Log out
-        </Button>
-    </div>
+export default function LogOut({ onLogout }: LogOutProps) {
+    return (
+        <div className="w-full">
+            <Button
+                className="w-full text-white dark:text-white/90 bg-red-500 hover:bg-red-600"
+                onClick={onLogout}
+            >
+                Log out
+            </Button>
+        </div>
+    );
 }
