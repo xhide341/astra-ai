@@ -1,8 +1,6 @@
-# ASTRA AI
+# ASTRA AI - Observational learning with AI.
 
 🧠 Explore discussions with dual AI minds that observe, reflect, and teach together.
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## 🎯 Project Overview
 
@@ -55,10 +53,11 @@ This project serves as a practice ground for:
 ## 📝 Development Notes
 
 - Package management with pnpm.
+- Implemented neonpgsql for the database, prisma/authjs for auth, llama 3.1b for the llm, and langgraph for the ai framework.
 - Uses React Server Components.
 - Implemented two custom APIs, one for SSE connection (/chat/stream) and another for message processing (/chat/trigger).
 - Features a simple UI with dark-mode feature.
 
 ## 🚀 Deployment
 
-The application can be deployed on Vercel for optimal performance.
+- **Web App** [astra-ai-iota.vercel.app](https://astra-ai-iota.vercel.app/)
