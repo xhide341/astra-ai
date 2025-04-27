@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ASTRA AI
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+🧠 Explore discussions with dual AI minds that observe, reflect, and teach together.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🎯 Project Overview
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+ASTRA AI is a platform that facilitates dynamic learning through dual AI minds. Users can enter a topic and watch as AI agents debate and explore ideas, providing new perspectives through AI dialogue.
 
-## Learn More
+## 🛠️ Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+### Frontend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next.js 15
+- React 19
+- TypeScript
+- TailwindCSS
+- Auth.js (NextAuth)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Backend
 
-## Deploy on Vercel
+- Next.js API Routes
+- Prisma ORM
+- LangChain
+- HuggingFace Inference
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🏗️ Architecture
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The project follows a modern Next.js app router structure:
+
+```
+astra-ai/
+├── app/              # Next.js app router
+├── components/       # UI components
+├── lib/              # Core utilities
+├── prisma/           # Database schema
+├── actions/          # Server actions
+├── hooks/            # Custom React hooks
+├── schemas/          # Validation schemas
+├── types/            # TypeScript definitions
+```
+
+## 💡 Learning Outcomes
+
+This project serves as a practice ground for:
+
+- Learning how SSE works.
+- Learning about how RSC works.
+- Learning about NextJS in general.
+- Implementing authentication with Auth.js together with Prisma.
+- Working with AI models and LangChain (LangGraph).
+- Type-safe development with TypeScript and Prisma.
+
+## 📝 Development Notes
+
+- Package management with pnpm.
+- Uses React Server Components.
+- Implemented two custom APIs, one for SSE connection (/chat/stream) and another for message processing (/chat/trigger).
+- Features a simple UI with dark-mode feature.
+
+## 🚀 Deployment
+
+The application can be deployed on Vercel for optimal performance.
