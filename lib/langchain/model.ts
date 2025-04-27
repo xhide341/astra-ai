@@ -12,7 +12,7 @@ const teacherModel = new ChatTogetherAI({
 
 const facilitatorModel = new ChatTogetherAI({
   model: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
-  temperature: 0.85, // Slightly higher for more engaging dialogue
+  temperature: 0.85,
   maxTokens: 1000,
   streaming: true,
   stop: ["<end>", "</answer>", "<script>"],
