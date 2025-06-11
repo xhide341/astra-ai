@@ -1,9 +1,5 @@
 # ASTRA AI - Observational learning with AI.
 
-🧠 Explore discussions with dual AI minds that observe, reflect, and teach together.
-
-## 🎯 Project Overview
-
 ASTRA AI is a platform that facilitates dynamic learning through dual AI minds. Users can enter a topic and watch as AI agents debate and explore ideas, providing new perspectives through AI dialogue.
 
 ## 🛠️ Tech Stack
