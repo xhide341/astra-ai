@@ -1,6 +1,8 @@
 # ASTRA AI - Observational learning with AI.
 
-ASTRA AI is a platform that facilitates dynamic learning through dual AI minds. Users can enter a topic and watch as AI agents debate and explore ideas, providing new perspectives through AI dialogue.
+Drawing inspiration from the Latin word "astra" meaning "stars" or "to the stars," ASTRA AI embodies the pursuit of knowledge and exploration. Just as ancient astronomers learned by observing celestial bodies, this platform enables users to learn through observation of AI-driven discourse.
+
+ASTRA AI is a platform that facilitates dynamic learning through dual AI minds. Users can enter a topic and watch as AI agents—a knowledgeable professor and a curious student engage and explore ideas from multiple angles. The design reflects its namesake's philosophy: reaching for understanding through guided observation and interactive exploration.
 
 ## 🛠️ Tech Stack
 
@@ -17,7 +19,7 @@ ASTRA AI is a platform that facilitates dynamic learning through dual AI minds. 
 - Next.js API Routes
 - Prisma ORM
 - LangChain
-- HuggingFace Inference
+- HuggingFace Inference / TogetherAI API
 
 ## 🏗️ Architecture
 
